@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Modules\SchoolManager\Features;
+
+use App\Contracts\BaseTasks;
+use App\Contracts\FeatureContract;
+use App\Modules\SchoolManager\Tasks\CreateStudentTasks;
+
+class CreateStudentFeature extends FeatureContract {
+
+    public function __construct(){
+        $this->tasks = new CreateStudentTasks();
+    }
+    
+    public function handle(BaseTasks $task, array $args = [])
+    {
+        try {
+            // code...
+        } catch (\Throwable $th) {
+
+            throw $th;
+        }
+    }
+}

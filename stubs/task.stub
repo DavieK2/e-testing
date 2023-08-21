@@ -1,0 +1,11 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Contracts\BaseTasks;
+
+class {{ class }} extends BaseTasks{
+
+    //
+    
+}

@@ -1,0 +1,13 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Http\Resources\BaseResource;
+
+class {{ class }} extends BaseResource
+{
+    public function toArray($request)
+    {
+        return parent::toArray($request);
+    }
+}
