@@ -132,6 +132,11 @@ class ExamController extends Controller
                                 ->select('assessment_sessions.student_answer as studentAnswer', 'assessment_sessions.marked_for_review as markedForReview', 'questions.uuid as questionId')
                                 ->get();
 
+        $student_responses = $student_responses->flatMap( function($response) {
+
+            $not_answered = (! $response->marked_for_rewiew && is_null( $response->student_answer ) );
+        });
+
         dd($student_responses);
     }
 
