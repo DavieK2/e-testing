@@ -127,7 +127,7 @@
             <div class="flex items-center justify-between">
                 <div class="flex space-x-3 items-center">
                     <Icons icon="chart" className="h-6 w-6" />
-                    <span class="mx-2 text-xl font-medium text-gray-800">Assessments</span>
+                    <span class="mx-2 text-lg font-medium text-gray-800">Assessments</span>
                 </div>
                 <Dropdown className="text-sm text-left" placeholder="New Assessment" >
                    <div class="flex flex-col w-full">

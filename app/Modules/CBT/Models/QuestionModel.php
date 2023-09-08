@@ -14,4 +14,9 @@ class QuestionModel extends Model
     protected $guarded = ['id'];
 
     protected $casts = ['options' => 'array'];
+
+    public function assessment()
+    {
+        return $this->belongsTo(AssessmentModel::class, 'assessment_id');
+    }
 }

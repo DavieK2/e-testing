@@ -15,7 +15,11 @@ class CreateStudentFeature extends FeatureContract {
     public function handle(BaseTasks $task, array $args = [])
     {
         try {
-            // code...
+            
+            $builder = $task->start($args)->createStudent();
+
+            return $task::formatResponse( $builder->empty() );
+
         } catch (\Throwable $th) {
 
             throw $th;

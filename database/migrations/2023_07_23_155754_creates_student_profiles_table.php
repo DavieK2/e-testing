@@ -11,13 +11,15 @@ return new class extends Migration
     {
         Schema::create('student_profiles', function(Blueprint $table){
             $table->id();
-            $table->string('fullname');
+            $table->string('first_name')->nullable();
+            $table->string('surname')->nullable();
             $table->string('student_code')->unique();
             $table->string('mat_no')->nullable();
             $table->string('reg_no')->nullable();
             $table->foreignId('class_id')->constrained();
-            $table->foreignId('faculty_id')->constrained();
-            $table->foreignId('department_id')->constrained();
+            $table->foreignId('academic_session_id')->nullable()->constrained();
+            $table->foreignId('faculty_id')->nullable()->constrained();
+            $table->foreignId('department_id')->nullable()->constrained();
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });

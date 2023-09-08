@@ -9,6 +9,7 @@ use App\Modules\CBT\Features\GetAssessmentClassesFeature;
 use App\Modules\CBT\Features\GetAssessmentFeature;
 use App\Modules\CBT\Features\GetAssessmentQuestionsFeature;
 use App\Modules\CBT\Features\GetAssessmentSubjectsFeature;
+use App\Modules\CBT\Features\GetPublishedAssessmentFeature;
 use App\Modules\CBT\Features\UpdateAssessmentFeature;
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Requests\AssessmentListRequest;
@@ -68,6 +69,11 @@ class AssessmentController extends Controller
     public function getAssessmentQuestions(AssessmentModel $assessment)
     {
         return $this->serve( new GetAssessmentQuestionsFeature($assessment) );
+    }
+
+    public function getPublishedAssessments()
+    {
+        return $this->serve( new GetPublishedAssessmentFeature() );
     }
 
     

@@ -2,11 +2,15 @@
 
 use App\Modules\CBT\Controllers\AssessmentController;
 use App\Modules\CBT\Controllers\AssessmentTypeController;
+use App\Modules\CBT\Controllers\ExamController;
 use App\Modules\CBT\Controllers\QuestionController;
+use App\Modules\CBT\Controllers\TeacherController;
 use App\Modules\SchoolManager\Controllers\AcademicSessionController;
 use App\Modules\SchoolManager\Controllers\ClassController;
+use App\Modules\SchoolManager\Controllers\StudentController;
 use App\Modules\SchoolManager\Controllers\SubjectController;
 use App\Modules\SchoolManager\Controllers\TermController;
+use App\Modules\SchoolManager\Controllers\UserController;
 use App\Modules\UserManager\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +34,7 @@ Route::post('/assessment-type/update', [ AssessmentTypeController::class, 'updat
 
 //Ass
 Route::get('/assessments', [ AssessmentController::class, 'index' ]);
+Route::get('/published-assessments', [ AssessmentController::class, 'getPublishedAssessments' ]);
 Route::get('/assessment/{assessment:uuid}', [ AssessmentController::class, 'show' ]);
 
 Route::get('/assessment-classes/{assessment:uuid}', [ AssessmentController::class, 'getAssessmentClasses' ]);
@@ -49,6 +54,7 @@ Route::post('/question/create/{assessment:uuid}', [ QuestionController::class, '
 Route::post('/question/update/{assessment:uuid}', [ QuestionController::class, 'update']);
 Route::post('/question/assign/{assessment:uuid}', [ QuestionController::class, 'assignQuestionToAssessment']);
 Route::post('/question/unassign/{assessment:uuid}', [ QuestionController::class, 'unAssignQuestionFromAssessment']);
+Route::post('/question/import', [ QuestionController::class, 'import']);
 
 
 Route::get('/classes', [ ClassController::class, 'index']);
@@ -61,6 +67,19 @@ Route::get('/subjects', [ SubjectController::class, 'index']);
 Route::post('/subject/create', [ SubjectController::class, 'create']);
 Route::post('/subject/update', [ SubjectController::class, 'update']);
 
+Route::get('/students', [ StudentController::class, 'index']);
+Route::post('/student/create', [ StudentController::class, 'create']);
+Route::post('/student/assign-subjects', [ StudentController::class, 'assignStudentToSubject']);
+Route::get('/student/assigned-subjects/{student}', [ StudentController::class, 'getStudentAssignedSubjects']);
+
+Route::get('/teachers', [ UserController::class, 'teachers']);
+Route::post('/teacher/create', [ UserController::class, 'createTeacher']);
+Route::post('/teacher/update', [ UserController::class, 'updateTeacher']);
+Route::post('/teacher/assign-subjects', [ UserController::class, 'assignTeacherToSubject']);
+Route::post('/teacher/assign-classes', [ UserController::class, 'assignTeacherToClass']);
+Route::get('/teacher/assigned-subjects/{teacher}', [ UserController::class, 'getTeacherAssignedSubjects']);
+Route::get('/teacher/assigned-classes/{teacher}', [ UserController::class, 'getTeacherAssignedClasses']);
+
 Route::get('/terms', [ TermController::class, 'index']);
 Route::post('/term/create', [ TermController::class, 'create']);
 Route::post('/term/update', [ TermController::class, 'update']);
@@ -70,9 +89,15 @@ Route::post('/session/create', [ AcademicSessionController::class, 'create']);
 Route::post('/session/update', [ AcademicSessionController::class, 'update']);
 
 
-
+Route::get('/get-classes', [ TeacherController::class, 'getClasses' ]);
+Route::get('/get-subjects/{class:class_code}', [ TeacherController::class, 'getSubjects' ]);
+Route::get('/get-questions', [ TeacherController::class, 'getAssessmentQuestions' ]);
 
 
 
 //Student CBT
-Route::get('/cbt/session/{assessment:uuid}', [ AssessmentController::class, 'getAssessmentQuestions' ]);
+Route::get('/cbt/session/questions/{assessment:uuid}', [ ExamController::class, 'getAssessmentQuestions' ]);
+Route::get('/cbt/session/student/{assessment:uuid}', [ ExamController::class, 'getStudentStandaloneExamSession' ]);
+Route::get('/cbt/get-responses/student/{assessment:uuid}', [ ExamController::class, 'getStudentStandaloneExamSessionResponses' ]);
+Route::post('/cbt/start-session/student/{assessment:uuid}', [ ExamController::class, 'startStudentStandaloneExamSession' ]);
+Route::post('/cbt/save-answer/student/{assessment:uuid}', [ ExamController::class, 'saveStudentStandaloneExamSessionAnswer' ]);

@@ -8,7 +8,6 @@ class GetAssessmentSubjectsResource extends BaseResource
 {
     public function toArray($request)
     {
-        // dd($this->resource);
         return [
             'subjectId'     => $this->id,
             'subjectName'   => $this->subject_name,

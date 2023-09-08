@@ -3,6 +3,7 @@
 namespace App\Modules\CBT\Tasks;
 
 use App\Contracts\BaseTasks;
+use App\Modules\CBT\Models\QuestionModel;
 
 class UnAssignQuestionFromAssessmentTask extends BaseTasks{
 
@@ -10,7 +11,9 @@ class UnAssignQuestionFromAssessmentTask extends BaseTasks{
     {
         $this->item['assessment']->unAssignQuestion( $this->item['questionId'] );
 
-        return new static( $this->item );
+        $assessmentId = QuestionModel::firstWhere('uuid', $this->item['questionId'])->assessment->uuid;
+
+        return new static( [ ...$this->item, 'assessmentId' => $assessmentId ] );
     }
     
 }

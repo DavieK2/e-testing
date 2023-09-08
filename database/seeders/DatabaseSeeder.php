@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Modules\UserManager\Models\RoleModel;
 use App\Modules\UserManager\Models\UserModel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -22,10 +23,34 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        $role1 = RoleModel::create([
+            'role_name' => 'teacher'
+        ]);
+
+        $role2 = RoleModel::create([
+            'role_name' => 'student'
+        ]);
+
+        $role3 = RoleModel::create([
+            'role_name' => 'admin'
+        ]);
+
         UserModel::create([
             'fullname' => 'Test User',
             'email' => 'test@example.com',
-            'password' => Hash::make('password')
+            'password' => Hash::make('password'),
+            'phone_no' => '2345678900000',
+            'role_id' => $role3->id
         ]);
+
+        UserModel::create([
+            'fullname' => 'Test Teacher',
+            'email' => 'teacher@example.com',
+            'password' => Hash::make('password'),
+            'phone_no' => '2345678900100',
+            'role_id' => $role3->id
+        ]);
+
+       
     }
 }

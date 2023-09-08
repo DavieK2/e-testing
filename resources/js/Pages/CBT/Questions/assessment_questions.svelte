@@ -7,13 +7,34 @@
 
     const dispatch = createEventDispatcher();
 
+    const loadMore = (node) => {
+
+       setTimeout(() => {
+
+            const observer = new IntersectionObserver((entries) => {
+
+                if(entries[0].isIntersecting){
+                   dispatch('load-more-questions');
+                }
+            
+            }, 
+            {
+                rootMargin: "100px"
+            });
+
+            observer.observe(node);
+
+       }, 500);
+    }
+    
+
     
 </script>
 
 
 <div class="pb-52 question">
     { #each questions as question, index }
-        { #if ! hasBeenAssigned(question.questionId) }
+        { #if hasBeenAssigned && ! hasBeenAssigned(question.questionId) }
             <QuestionCard 
                 question={ question.question } 
                 questionOptions={ question.options }  
@@ -29,6 +50,7 @@
             </QuestionCard> 
         {/if}
     {/each}
+    <div use:loadMore class="h-5 w-full"></div>
 </div>
 
 <style>

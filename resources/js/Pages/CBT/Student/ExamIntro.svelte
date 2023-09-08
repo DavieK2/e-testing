@@ -1,13 +1,22 @@
 <script>
+    import { createEventDispatcher } from "svelte";
     import Button from "../../components/button.svelte";
+
+    export let assessmentTitle;
+    export let assessmentInstructions;
+    export let assessmentDuration;
+    export let assessmentTotalQuestions;
+    export let assessmentTotalMarks;
+
+    const dispatch = createEventDispatcher();
 
 </script>
 <div class="w-full mx-auto flex flex-col md:px-0">
     <div class="bg-white z-10 shadow">
         <div class="max-w-3xl mx-auto">
             <div class="py-4 w-full">
-                <h1 class="text-center">
-                    Exam Schedule Instructions
+                <h1 class="text-center text-lg font-semibold">
+                    Assessment Instructions
                 </h1>
             </div>
         </div>
@@ -17,7 +26,7 @@
             <div class="w-full lg:flex lg:ltr:flex-row lg:rtl:flex-row-reverse flex-wrap px-2 py-2">
                 <div class="py-4 w-full">
                     <h1 class="text-2xl font-semibold text-gray-800 leading-normal py-2">
-                        0101Aaaa
+                        { assessmentTitle }
                     </h1>
                     <div class="flex items-center mt-10">
                         <div>
@@ -25,7 +34,7 @@
                                 Total Duration
                             </p>
                             <p class="font-semibold leading-tight">
-                                3 Minutes
+                                { assessmentDuration / 60 } Minutes
                             </p>
                         </div>
                         <div class="ml-11">
@@ -33,7 +42,7 @@
                                 No. of Questions
                             </p>
                             <p class="font-semibold leading-tight">
-                                3 Questions
+                                { assessmentTotalQuestions } Questions
                             </p>
                         </div>
                         <div class="ml-11">
@@ -41,7 +50,7 @@
                                 Total Marks
                             </p>
                             <p class="font-semibold leading-tight">
-                                3 Marks
+                                { assessmentTotalMarks } Marks
                             </p>
                         </div>
                     </div>
@@ -52,20 +61,7 @@
                         Exam Instructions
                     </h4>
                     <div class="prose text-gray-800 mb-2">
-                        <ul>
-                            <li>
-                                Total duration of quiz
-                                is 3 minutes.
-                            </li>
-                            <li>
-                                The quiz contains 3
-                                questions.
-                            </li>
-                            <li>
-                                Minimum Pass Percentage
-                                is 60%.
-                            </li>
-                        </ul>
+                        { assessmentInstructions }
                     </div>
                 </div>
                 <div class="py-4 w-full" >
@@ -78,7 +74,7 @@
                                 </label>
                             </div>
                             <div class="w-full block mt-10">
-                               <Button buttonText="Start Assessment" />
+                               <Button on:click={ () => dispatch('start-assessment') } buttonText="Start Assessment" />
                             </div>
                         </div>
                     </div>

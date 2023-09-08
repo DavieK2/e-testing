@@ -49,6 +49,25 @@ export const router  = {
             
         }
     },
+    postForm : async (url, data, events = {}) => {
+
+        try {
+
+            let response = await axios.post(url, data, {
+                headers: {
+                    "Content-Type" : "multipart/form-data"
+                }
+            });  
+
+            return triggerSuccessEvent(response, events);
+
+        } catch (error) {
+
+            return triggerFailureEvent(error, events);
+            
+        }
+    },
+    
     getWithToken : async (url, events = {}) => {
 
         try {
@@ -85,6 +104,26 @@ export const router  = {
             
         }
         
+    },
+
+    postFormWithToken : async (url, data, events = {}) => {
+
+        try {
+            
+            let response = await axios.post(url, data, {
+                headers: {
+                    "Content-Type" : "multipart/form-data",
+                    "Authorization" : "Bearer " + localStorage.getItem("token")
+                }
+            });  
+
+            return triggerSuccessEvent(response, events);
+
+        } catch (error) {
+
+            return triggerFailureEvent(error, events);
+            
+        }
     },
 
     navigateTo : (url) => {

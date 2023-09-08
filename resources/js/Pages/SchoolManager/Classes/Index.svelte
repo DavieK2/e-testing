@@ -159,8 +159,8 @@
         <div class="container px-4 mx-auto">
             <div class="flex items-center justify-between">
                 <div class="flex space-x-3 items-center">
-                    <Icons icon="badge" className="h-8 w-8" />
-                    <span class="mx-2 text-2xl font-semibold text-gray-800">Classes</span>
+                    <Icons icon="badge" className="h-6 w-6" />
+                    <span class="mx-2 text-lg font-semibold text-gray-800">Classes</span>
                 </div>
                 <div>
                     <Button on:click={ showSheet } buttonText="Create New Class" className="text-sm" />

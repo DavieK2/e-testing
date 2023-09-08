@@ -143,3 +143,12 @@ Check assessment type
 
 
 rtCoYic.y@#2
+
+
+
+Display assessment questions
+
+- Check if student already has started assessment
+- If started display assessment questions else didsplay instructions
+
+- Check assessment_sessions table fetch assessment with assessment_id and student_id

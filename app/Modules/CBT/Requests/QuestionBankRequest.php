@@ -14,6 +14,7 @@ class QuestionBankRequest extends FormRequest
     public function rules()
     {
         return [
+            'assessmentId' =>  'exists:assessments,uuid',
             'filter'        =>  'json',
             'perPage'      =>  'required|int',
         ];

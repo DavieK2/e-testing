@@ -19,7 +19,7 @@ class UnAssignQuestionFromAssessmentFeature extends FeatureContract {
             
             $builder = $task->start([ ...$args, 'assessment' => $this->assessment ])->unAssignQuestionFromAssessment();
 
-            return $task::formatResponse( $builder->empty(), options:['message' => 'Question successfully assigned to assessment', 'status' => 200 ] );
+            return $task::formatResponse( $builder->only(['assessmentId']), options:['message' => 'Question successfully assigned to assessment', 'status' => 200 ] );
 
         } catch (\Throwable $th) {
             

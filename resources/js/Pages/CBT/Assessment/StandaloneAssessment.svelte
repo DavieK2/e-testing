@@ -126,64 +126,62 @@
             <span class="text-sm font-medium text-gray-700">Create</span>
         </div>
     </div>
-   <div class="w-full mx-auto h-full">
-       
-    <div class="container max-w-4xl my-12 space-x-10">
-        <div class="border bg-white p-8 rounded-lg max-w-8xl">
-            <div class="flex items-center justify-between my-2 border-b pb-8">
-                <div>
-                    <div class="text-2xl font-semibold min-w-max text-gray-700">Assessment Details</div>
-                    <div class="text-gray-400 text-sm">Enter assessment details below</div>
-                </div>
-                
-                <div class="ml-72 pt-4 max-w-3xl">
-                    { #if assessmentId }
-                        <Button on:click={ updateAssessment } buttonText="Update" />
-                    { :else }
-                        <Button on:click={ createAssessment } buttonText="Create" />
-                    { /if }
-                </div>
-            </div>
-    
-            <div class="mt-12 space-y-6 w-full">
-                <div class="flex w-full items-center text-sm max-w-4xl">
-                    <span class="flex-shrink-0 w-[18rem] text-gray-700">Enter Assessment Title</span>
-                    <div class="w-full">
-                        <Input value={ assessmentTitleValue } bind:this={ assessmentTitle }  />
+    <div class="w-full mx-auto h-full"> 
+        <div class="container max-w-4xl my-12 space-x-10">
+            <div class="border bg-white p-8 rounded-lg max-w-8xl">
+                <div class="flex items-center justify-between my-2 border-b pb-8">
+                    <div>
+                        <div class="text-2xl font-semibold min-w-max text-gray-700">Assessment Details</div>
+                        <div class="text-gray-400 text-sm">Enter assessment details below</div>
+                    </div>
+                    
+                    <div class="ml-72 pt-4 max-w-3xl">
+                        { #if assessmentId }
+                            <Button on:click={ updateAssessment } buttonText="Update" />
+                        { :else }
+                            <Button on:click={ createAssessment } buttonText="Create" />
+                        { /if }
                     </div>
                 </div>
-                <div class="flex w-full items-center text-sm max-w-4xl">
-                    <div class="flex-shrink-0 w-[18rem] text-gray-700">Enter Assessment Type</div>
-                    <div class="w-full">
-                        <Select value={ assessmentTypeValue.value } options={ assessmentTypes } isSelected={ assessmentTypeValue ? true : false } bind:this={ assessmentType } placeholder={ assessmentTypeValue.placeholder ? assessmentTypeValue.placeholder : "Select an Assessment Type"} className="text-sm py-2.5"  />
+        
+                <div class="mt-12 space-y-6 w-full">
+                    <div class="flex w-full items-center text-sm max-w-4xl">
+                        <span class="flex-shrink-0 w-[18rem] text-gray-700">Enter Assessment Title</span>
+                        <div class="w-full">
+                            <Input value={ assessmentTitleValue } bind:this={ assessmentTitle }  />
+                        </div>
                     </div>
-                </div>
-                <div class="flex w-full items-center text-sm max-w-3xl">
-                    <div class="w-[18rem] flex-shrink-0 text-gray-700">
-                        <p>Assessment Duration</p>
-                        <small class="text-gray-400">Assessment Duration should be in minutes</small>
+                    <div class="flex w-full items-center text-sm max-w-4xl">
+                        <div class="flex-shrink-0 w-[18rem] text-gray-700">Enter Assessment Type</div>
+                        <div class="w-full">
+                            <Select value={ assessmentTypeValue.value } options={ assessmentTypes } isSelected={ assessmentTypeValue ? true : false } bind:this={ assessmentType } placeholder={ assessmentTypeValue.placeholder ? assessmentTypeValue.placeholder : "Select an Assessment Type"} className="text-sm py-2.5"  />
+                        </div>
                     </div>
-                    <div class="w-40">
-                        <Input value={ durationValue } bind:this={ duration } type="number" pattern="[0-9]+"  />
+                    <div class="flex w-full items-center text-sm max-w-3xl">
+                        <div class="w-[18rem] flex-shrink-0 text-gray-700">
+                            <p>Assessment Duration</p>
+                            <small class="text-gray-400">Assessment Duration should be in minutes</small>
+                        </div>
+                        <div class="w-40">
+                            <Input value={ durationValue } bind:this={ duration } type="number" pattern="[0-9]+"  />
+                        </div>
                     </div>
-                </div>
-                <div class="flex w-full items-center text-sm max-w-3xl">
-                    <div class="w-[18rem] flex-shrink-0 text-gray-700">
-                        <p>Enter Assessment Dates</p>
-                        <small class="text-gray-400">Choose assessment start date and end date</small>
+                    <div class="flex w-full items-center text-sm max-w-3xl">
+                        <div class="w-[18rem] flex-shrink-0 text-gray-700">
+                            <p>Enter Assessment Dates</p>
+                            <small class="text-gray-400">Choose assessment start date and end date</small>
+                        </div>
+                        <div class="w-[17.5rem]">
+                            <Datetimepicker value={ startDateValue} bind:this={ startDate } placeholder="Enter Start Date"  />
+                            <Datetimepicker value={ endDateValue } bind:this={ endDate } placeholder="Enter End Date" />
+                        </div>
                     </div>
-                    <div class="w-[17.5rem]">
-                        <Datetimepicker value={ startDateValue} bind:this={ startDate } placeholder="Enter Start Date"  />
-                        <Datetimepicker value={ endDateValue } bind:this={ endDate } placeholder="Enter End Date" />
+                    <div class="flex w-full items-center text-sm max-w-4xl pt-4">
+                        <label class="w-[18rem] flex-shrink-0 text-gray-700" for="">Enter Assessment Instructions</label>
+                        <textarea bind:this={ assessmentDescription } class="border w-full rounded-lg resize-none p-4 border-gray-300" cols="30" rows="5">{ assessmentDescriptionValue ?? '' }</textarea>
                     </div>
-                </div>
-                <div class="flex w-full items-center text-sm max-w-4xl pt-4">
-                    <label class="w-[18rem] flex-shrink-0 text-gray-700" for="">Enter Assessment Instructions</label>
-                    <textarea bind:this={ assessmentDescription } class="border w-full rounded-lg resize-none p-4 border-gray-300" cols="30" rows="5">{ assessmentDescriptionValue ?? '' }</textarea>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    
 </Layout>

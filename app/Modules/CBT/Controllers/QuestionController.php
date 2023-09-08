@@ -5,6 +5,7 @@ namespace App\Modules\CBT\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\CBT\Features\AssignQuestionToAssessmentFeature;
 use App\Modules\CBT\Features\CreateQuestionFeature;
+use App\Modules\CBT\Features\ImportQuestionsFeature;
 use App\Modules\CBT\Features\QuestionBankFeature;
 use App\Modules\CBT\Features\QuestionListFeature;
 use App\Modules\CBT\Features\UnAssignQuestionFromAssessmentFeature;
@@ -12,6 +13,7 @@ use App\Modules\CBT\Features\UpdateQuestionFeature;
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Requests\AssignQuestionToAssessmentRequest;
 use App\Modules\CBT\Requests\CreateQuestionRequest;
+use App\Modules\CBT\Requests\ImportQuestionsRequest;
 use App\Modules\CBT\Requests\QuestionBankRequest;
 use App\Modules\CBT\Requests\QuestionListRequest;
 use App\Modules\CBT\Requests\UnAssignQuestionFromAssessmentRequest;
@@ -27,6 +29,11 @@ class QuestionController extends Controller
     public function update(AssessmentModel $assessment, UpdateQuestionRequest $request)
     {
         return $this->serve( new UpdateQuestionFeature( $assessment ), $request->validated() );
+    }
+
+    public function import(ImportQuestionsRequest $request)
+    {
+        return $this->serve( new ImportQuestionsFeature(), $request->validated() );
     }
 
     public function getQuestions(AssessmentModel $assessment, QuestionListRequest $request)
@@ -48,4 +55,5 @@ class QuestionController extends Controller
     {
         return $this->serve( new QuestionBankFeature(), $request->validated() );
     }
+
 }

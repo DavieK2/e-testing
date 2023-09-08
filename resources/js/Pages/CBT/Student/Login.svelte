@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="mt-6">
-                            <Input label="Enter Password" type="password" />
+                            <Input label="Enter Password" type="text" />
                         </div>
 
                         <div class="mt-6">

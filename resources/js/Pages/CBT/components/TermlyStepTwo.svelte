@@ -8,6 +8,7 @@
     let classes = [];
     let selectedClasses = []
     let assessmentId = $page.props.assessmentId;
+    let selectAll = false
 
     onMount(() => {
 
@@ -51,7 +52,20 @@
             },
         });
     }
+    
+    const selectAllClasses = () => {
 
+        if(selectAll){
+
+            selectAll = false;
+            selectedClasses = []
+
+        }else{
+
+            selectAll = true;
+            selectedClasses = classes
+        }
+    }
 
 </script>
 
@@ -73,6 +87,9 @@
                 <div class="flex w-full text-sm max-w-4xl">
                     <span class="flex-shrink-0 w-[18rem] text-gray-700">Select Assessment Class</span>
                     <div class="w-full space-y-6">
+                        <button  on:click={ selectAllClasses } class={`flex items-center shrink-0 justify-center h-11 w-11 border ${ selectAll ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
+                            <Icons icon="check" className={`${ selectAll ? "stroke-green-700" : "stroke-gray-300" }`} />
+                        </button>
                         { #each classes as grade }
                             <div class="flex space-x-2 items-center w-full">
                                 <button  on:click={ () => selectClass(grade) } class={`flex items-center shrink-0 justify-center h-11 w-11 border ${ isSelected(grade.class_code) ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>

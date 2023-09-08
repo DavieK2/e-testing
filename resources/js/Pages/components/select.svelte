@@ -40,9 +40,13 @@
     }
 
     const reset = () => {
+        
+        dispatch('deselected', { value, placeholder });
+
         placeholder = initialValues.placeholder
         isSelected = initialValues.isSelected
         value = initialValues.value
+
     }
   
     const show = () => showDropdown = true

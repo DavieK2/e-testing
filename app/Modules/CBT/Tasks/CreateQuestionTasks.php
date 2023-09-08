@@ -4,6 +4,7 @@ namespace App\Modules\CBT\Tasks;
 
 use App\Contracts\BaseTasks;
 use App\Modules\CBT\Models\QuestionModel;
+use App\Modules\SchoolManager\Models\ClassModel;
 use App\Modules\UserManager\Models\UserModel;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -16,14 +17,17 @@ class CreateQuestionTasks extends BaseTasks{
         //     throw ValidationException::withMessages(['message' => 'The correct answer provided is not part of the options list provided']);
         // }
 
+        // dd($this->item);
         $question = QuestionModel::create([
-                        'uuid' => Str::uuid(),
-                        'assessment_id' => $this->item['assessment']->id,
-                        'user_id' => UserModel::find(1)->id,
-                        'question' => $this->item['question'],
-                        'options' => $this->item['options'],
-                        'correct_answer' => $this->item['correctAnswer'],
-                        'question_score' => $this->item['questionScore']
+                        'uuid'              => Str::uuid(),
+                        'assessment_id'     => $this->item['assessment']->id,
+                        'user_id'           => UserModel::find(1)->id,
+                        'question'          => $this->item['question'],
+                        'options'           => $this->item['options'],
+                        'correct_answer'    => $this->item['correctAnswer'],
+                        'question_score'    => $this->item['questionScore'] ?? 2,
+                        'subject_id'        => $this->item['subjectId'] ?? null,
+                        'class_id'          => ClassModel::firstWhere('class_code', $this->item['classId'] ?? null)?->id,
                     ]);
 
         return new static( [...$this->item, 'questionId'=> $question->uuid ] );

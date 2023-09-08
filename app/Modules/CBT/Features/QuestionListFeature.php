@@ -17,15 +17,20 @@ class QuestionListFeature extends FeatureContract {
     public function handle(BaseTasks $task, array $args = [])
     {
         try {
-            
-            $builder = match(true){
-                ( isset($args['assigned']) && ($args['assigned']) )     => $task->start([ ...$args, 'assessment' => $this->assessment ])->getAssignedQuestions(),
-                default                                                 => $task->start([ ...$args, 'assessment' => $this->assessment ])->getQuestions()
-            };
-            
-            foreach($args as $key => $value){
-                $builder = $builder->$key();
+
+            if( isset($args['assigned']) && ($args['assigned']) ) {
+
+                $builder = $task->start([ ...$args, 'assessment' => $this->assessment ])->getAssignedQuestions()->all();
+
+            }else{
+
+                $builder = $task->start([ ...$args, 'assessment' => $this->assessment ])->getQuestions();
+
+                foreach($args as $key => $value){
+                    $builder = $builder->$key();
+                }
             }
+            
 
             return $task::formatResponse( $builder, formatter: QuestionListCollection::class );
 

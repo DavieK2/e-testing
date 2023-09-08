@@ -15,6 +15,7 @@
     let assessmentId = $page.props.assessmentId;
     let selectedClassId;
     let selectedClassName;
+    let selectAll = false
 
     onMount(() => {
 
@@ -28,8 +29,6 @@
             
             let data = sessionStorage.getItem('selectedSubjects')
             selectedSubjects = JSON.parse(data);
-
-            console.log(selectedSubjects);
             
             selectedClassId = sessionStorage.getItem('classId');
             selectedClassName = sessionStorage.getItem('className');
@@ -54,11 +53,20 @@
         sessionStorage.setItem('classId', selectedClassId);
         sessionStorage.setItem('className', selectedClassName);
 
-
         router.get('/api/class/subject/' + id, {
 
             onSuccess: (response) => {
-                classSubjects = response.data
+
+                classSubjects = response.data;
+                
+                let filteredSubjects = selectedSubjects.filter( (subject) => ( subject.classId  == selectedClassId  ) );
+
+                classSubjects.forEach((subject) => {
+                    filteredSubjects = filteredSubjects.filter((sub) => sub.subjectId != subject.subjectId)
+                })
+              
+                classSubjects = [ ...classSubjects, ...filteredSubjects ];
+
             },
             onError: (response) => {
                 console.log(response)
@@ -123,6 +131,20 @@
         })
     }
 
+    const selectAllSubjects = () => {
+
+        if(selectAll){
+
+            selectAll = false;
+            selectedSubjects = []
+
+        }else{
+
+            selectAll = true;
+            selectedSubjects = classSubjects
+        }
+    }
+
 
 
 </script>
@@ -140,7 +162,10 @@
                         { #if classSubjects.length == 0 }
                             <p class="text-gray-500 italic">No Subjects</p>
                         { :else }
-                          { #each classSubjects as subject }
+                            <button  on:click={ selectAllSubjects } class={`flex items-center shrink-0 justify-center h-11 w-11 border ${ selectAll ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
+                                <Icons icon="check" className={`${ selectAll ? "stroke-green-700" : "stroke-gray-300" }`} />
+                            </button>
+                          { #each classSubjects as subject, index(subject.subjectId) }
                                 <div class="flex space-x-2 items-center w-full">
                                     <button  on:click={ () => selectSubject(subject) } class={`flex items-center shrink-0 justify-center h-11 w-11 border ${ isSelected(subject.subjectId) ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
                                         <Icons icon="check" className={`${ isSelected(subject.subjectId) ? "stroke-green-700" : "stroke-gray-300" }`} />
@@ -162,7 +187,7 @@
                 <Button on:click={ complete } buttonText="Complete" className="w-40" />
             </div>
             <div class="question z-50 subjects px-8 w-full  h-full space-y-6 mt-10">
-                { #each getSelectedClassSubjects() as subject, index }
+                { #each getSelectedClassSubjects() as subject, index(subject.subjectId) }
                     { #if subject.isVisible }
                         <div>
                             <h4 class="text-gray-800 text-sm pb-4 font-semibold">{ subject.subjectName }</h4>

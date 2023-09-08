@@ -99,8 +99,8 @@
         <div class="container px-4 mx-auto">
             <div class="flex items-center justify-between">
                 <div class="flex space-x-3 items-center">
-                    <Icons icon="medal" className="h-8 w-8" />
-                    <span class="mx-2 text-2xl font-semibold text-gray-800">Assessment Types</span>
+                    <Icons icon="medal" className="h-6 w-6" />
+                    <span class="mx-2 text-lg font-semibold text-gray-800">Assessment Types</span>
                 </div>
                 <div>
                     <Button on:click={ showSheet } buttonText="Create New Assessment Type" className="text-sm" />

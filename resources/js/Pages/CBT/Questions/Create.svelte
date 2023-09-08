@@ -7,6 +7,8 @@
     import QuestionBank from "./question_bank.svelte";
     import AssessmentQuestions from "./assessment_questions.svelte";
     import AssignedQuestions from "./assigned_questions.svelte";
+    import CsvImportCard from "../components/CsvImportCard.svelte";
+    import ImportMappingCard from "../components/ImportMappingCard.svelte";
     import { onMount } from "svelte";
     import { router } from "../../../util";
     import { page } from "@inertiajs/svelte";
@@ -14,28 +16,40 @@
     let questionType = AssessmentQuestions;
 
     let showSlidePanel = false;
-    let slideTitle = "";
     let edit = false;
-    let pageNumber = 1;
+
+    let oldQuestions = [];
+    let newQuestions = [];
+    let pushedQuestions = [];
+    let questionCurrentPageNumber = 1;
+    let questionLastPageNumber;
+
+    let questionBank = [];
+    let newQuestionBank = [];
+    let pushedQuestionBank = [];
+    let questionBankCurrentPageNumber = 1;
+    let questionBankLastPageNumber;
+
+    let assignedQuestionCurrentPageNumber = 1;
+    let assignedQuestionLastPageNumber;
+
+    let importCard;
 
     let question = {
         question : "",
         options : ["",""],
         correctAnswer : "",
-        questionScore : "",
+        questionScore : 2,
         source : ""
     };
 
-    let initQuestion = {
-        question : "",
-        options : ["",""],
-        correctAnswer : "",
-        questionScore : "",
-        source : ""
-    };
+    let initQuestion = JSON.stringify(question);
 
-    let questions = [];
-    let questionBank = [];
+    let assessmentId = $page.props.assessmentId;
+    
+    
+
+    let assignedQuestions =  [];
 
     let assessmentTypes = [];
     let subjects = [];
@@ -43,9 +57,37 @@
     let sessions = [];
     let terms = [];
 
-    let assignedQuestions =  [];
 
-    onMount(() => {
+    let slidePanelState;
+
+    let slidePanelStates = {
+        openAddQuestionForm : "Add New Question",
+        uploadQuestions : "Upload File",
+        importQuestions : "Import Questions",
+        edit : "Edit Question",
+    }
+    
+    let headings = {}
+
+    let mappings = [
+        { placeholder : "Question", value: "question", isSelected: false },
+        { placeholder : "Option", value: "options", isSelected: false },
+        { placeholder : "Score", value: "questionScore", isSelected: false },
+        { placeholder : "Correct Answer", value: "correctAnswer", isSelected: false },
+    ];
+
+    let importKey;
+
+    let resetMappings = JSON.stringify(mappings);
+
+    let mappedFields = {}
+
+    $: getAvailableMappings = () => {
+
+        return mappings?.filter( (field) => field.isSelected == false );
+    }
+
+    onMount( async () => {
 
         getAssignedQuestions();
         getQuestions();
@@ -62,10 +104,12 @@
 
     const getQuestionBank = () => {
 
-        router.get('/api/question-bank?perPage=15&page='+pageNumber, {
+        router.get('/api/question-bank?perPage=20&page='+questionBankCurrentPageNumber+'&assessmentId='+assessmentId, {
             
             onSuccess : (response) => {
-                questionBank = [ ...questionBank, ...response.data ];
+
+                newQuestionBank = [ ...questionBank, ...arrayDiff(response.data, pushedQuestions) ]
+                questionBankLastPageNumber = response.meta.last_page;
             },
             onError : (response) => {
                 console.log(response)
@@ -75,10 +119,10 @@
 
     const getAssignedQuestions = () => {
 
-        router.get('/api/questions/' + $page.props.assessmentId + '?assigned=1&perPage=15&page=' + pageNumber, {
+        router.get('/api/questions/' + assessmentId + '?assigned=1&perPage=20&page=' + assignedQuestionCurrentPageNumber, {
             
             onSuccess : (response) => {
-                assignedQuestions = [ ...assignedQuestions, ...response.data ];
+                assignedQuestions =  response.data ;
             },
             onError : (response) => {
                 console.log(response)
@@ -88,10 +132,14 @@
 
     const getQuestions = () => {
 
-        router.get('/api/questions/' + $page.props.assessmentId + '?perPage=15&page=' + pageNumber, {
-            onSuccess : (response) => {
-                questions = [...questions, ...response.data]
+        return router.get('/api/questions/' + assessmentId + '?perPage=5&page=' + questionCurrentPageNumber, {
+
+            onSuccess : async (response) => {
+
+                newQuestions = [ ...oldQuestions, ...arrayDiff(response.data, pushedQuestions) ]
+                questionLastPageNumber = response.meta.last_page;
             },
+
             onError : (response) => {
                 console.log(response)
             }
@@ -148,13 +196,24 @@
     }
 
     const closeSheet = () => {
-        showSlidePanel = false
         reset();
+        showSlidePanel = false
     }
 
-    const reset = () => question = initQuestion
+    const reset = () => { 
 
-    const showSheet = () => showSlidePanel = true
+        question = JSON.parse(initQuestion);
+        mappings = JSON.parse(resetMappings);
+        mappedFields = {}
+
+    }
+
+    const showSheet = (state) => {
+
+        slidePanelState = state;
+        showSlidePanel = true;
+
+    }
     
     $: hasBeenAssigned = (questionId) => {
 
@@ -163,11 +222,17 @@
 
     const assignQuestion = (question) => {
 
-        router.post('/api/question/assign/'+$page.props.assessmentId, { questionId : question.questionId }, {
+        router.post('/api/question/assign/'+ assessmentId, { questionId : question.questionId }, {
 
             onSuccess : (response) => {
-                 assignedQuestions.push(question);
-                 assignedQuestions = assignedQuestions;
+                
+                assignedQuestions.push(question);
+                assignedQuestions = assignedQuestions;
+
+                oldQuestions =  oldQuestions.filter( (ques) => ques.questionId != question.questionId );
+                newQuestions =  newQuestions.filter( (ques) => ques.questionId != question.questionId );     
+                
+                getQuestions();
             },
             onError : (response) => {
                 console.log(response);
@@ -177,11 +242,13 @@
 
     const unAssignQuestion = (question) => {
         
-        router.post('/api/question/unassign/'+$page.props.assessmentId, { questionId : question.questionId }, {
+        router.post('/api/question/unassign/'+ assessmentId, { questionId : question.questionId }, {
 
             onSuccess : (response) => {
-               
+
                 assignedQuestions =  assignedQuestions.filter( (ques) => ques.questionId != question.questionId );
+
+                if( response.data.assessmentId === assessmentId ) addQuestion(question);
 
             },
             onError : (response) => {
@@ -190,41 +257,143 @@
         } )
     }
 
-    const editQuestion = (ques) => {
+    const openEditQuestionForm = (ques) => {
+
         question = ques;
-        slideTitle = "Edit Question"
         edit = true;
-        showSheet();
+        showSheet(slidePanelStates.edit);
+
     }
 
-    const addQuestion = () => {
+    const openAddQuestionForm = () => {
        
-        slideTitle = "Add New Question"
         edit = false;
-        showSheet();
+        showSheet(slidePanelStates.openAddQuestionForm);
+    }
+
+    const openQuestionUploadForm = () => {
+
+        showSheet(slidePanelStates.uploadQuestions);
     }
 
     const updateQuestion = (e) => {
 
         let questn = e.detail.question;
 
-        questions = questions.map((ques) => ques.questionId === question.questionId ? questn : ques);
+        oldQuestions = oldQuestions.map((ques) => ques.questionId === question.questionId ? questn : ques);
+
         assignedQuestions = assignedQuestions.map((ques) => ques.questionId === question.questionId ? questn : ques);
         
-
         closeSheet();
 
     }
 
     const saveQuestion = (e) => {
 
-        let questn = e.detail.question;
-
-        questions.push(questn);
-
-        questions = questions;
-        
+        addQuestion(e.detail.question);
         closeSheet();
+    }
+
+    const uploadQuestions = () => {
+
+        let data = new FormData();
+
+        data.append('file', importCard.uploadFile);
+        data.append('assessmentId', assessmentId);
+
+        
+        router.postForm('/api/question/import', data , {
+
+            onSuccess : (res) => {
+
+                importKey = res.data.key;
+                headings = res.data.headings;
+
+                slidePanelState = slidePanelStates.importQuestions
+            }
+        })
+    }
+
+    const importQuestion = () => {
+        
+        router.post('/api/question/import' , { mappings: mappedFields, assessmentId, key: importKey }, {
+            
+            onSuccess : (res) => {
+
+                getQuestions();
+
+                closeSheet();
+            }
+        })
+    }
+
+    const mapFields = (selected) => {
+
+        let field = mappings.filter( (field) => (selected.value === field.value) && ( selected.value != "options" ) )[0];
+        
+        if( field ){
+            field.isSelected = ! field.isSelected ;
+        }
+
+        if( (selected.selected) && ( selected.value != "options" ) ){
+            mappedFields[selected.value] = Object.keys(headings)[selected.index]
+        }
+        
+        if( (selected.selected) && ( selected.value == "options" ) ){
+            mappedFields[selected.value] = mappedFields[selected.value] ? [ ...mappedFields[selected.value], Object.keys(headings)[selected.index] ] : [ Object.keys(headings)[selected.index] ];
+        }
+
+        if( (selected.deselected) && ( selected.value != "options" ) ){
+            delete mappedFields[selected.value];
+        }
+        
+        if( (selected.deselected) && ( selected.value == "options" ) ){
+            mappedFields[selected.value] = mappedFields[selected.value]?.filter((mapped) => mapped != Object.keys(headings)[selected.index]);
+        }
+
+        mappings = mappings;
+    }
+
+    const loadMoreQuestions = () => {
+
+        if(questionCurrentPageNumber === questionLastPageNumber ) return;
+
+        oldQuestions = [ ...newQuestions ];
+
+        questionCurrentPageNumber ++
+
+        getQuestions();
+    }
+
+    const loadMoreQuestionBank = () => {
+
+        if(questionBankCurrentPageNumber === questionBankLastPageNumber ) return;
+
+        questionBank = [ ...newQuestionBank ];
+
+        questionBankCurrentPageNumber ++
+
+        getQuestionBank();
+    }
+
+    const reloadQuestions = () => {
+
+        oldQuestions = [];
+        newQuestions = [];
+        questionCurrentPageNumber = 1;
+
+        getQuestions();
+    }
+
+    const arrayDiff = (array1, array2) => {
+        return array1.filter((arr) => ! array2.some( (arr2) => arr2.questionId === arr.questionId ));
+    }
+
+    const addQuestion = (ques) => {
+
+        newQuestions.push(ques);
+        newQuestions = newQuestions;
+        pushedQuestions.push(ques);
 
     }
 
@@ -250,8 +419,9 @@
             </div>
             <div class="px-8 py-4 min-w-[32rem] flex items-center justify-between w-full">
                 <h3 class="text-gray-800 text-sm font-bold min-w-max">Assigned Questions</h3>
-                <div>
-                    <Button on:click={ addQuestion } buttonText="Add New Question" className="min-w-max text-sm" />
+                <div class="flex items-center space-x-2">
+                    <Button on:click={ openQuestionUploadForm } buttonText="Import Questions" className="min-w-max text-sm bg-green-600 hover:bg-green-500 focus:bg-green-600 focus:ring-green-300" />
+                    <Button on:click={ openAddQuestionForm } buttonText="Add New Question" className="min-w-max text-sm" />
                 </div>
             </div>
         </div>
@@ -274,21 +444,37 @@
                     </div>
                 </div>
                 <div class="absolute z-50 bg-white w-full">
-                    <svelte:component on:edit={ (e) => editQuestion(e.detail) } on:assign={ (e) => assignQuestion(e.detail) } this={ questionType } { hasBeenAssigned } { questions } { questionBank } { classes } { sessions } { assessmentTypes } { subjects }  />
+                    <svelte:component on:load-more-question-bank={ loadMoreQuestionBank } on:load-more-questions={ loadMoreQuestions } on:edit={ (e) => openEditQuestionForm(e.detail) } on:assign={ (e) => assignQuestion(e.detail) } this={ questionType } { hasBeenAssigned } questions={ newQuestions } questionBank={ newQuestionBank } { classes } { sessions } { assessmentTypes } { subjects }  />
                 </div>
             </div>
         </div>
         <div class="ml-[46rem] fixed mt-52 min-w-[32rem] shrink-0 inset-0 bg-white min-h-screen overflow-auto">
             <div class="relative flex flex-col h-full">
                 <div class="pb-52 max-w-lg">
-                    <AssignedQuestions on:edit={ (e) => editQuestion(e.detail) } on:unassign={ (e) => unAssignQuestion(e.detail) } { assignedQuestions } />   
+                    <AssignedQuestions on:edit={ (e) => openEditQuestionForm(e.detail) } on:unassign={ (e) => unAssignQuestion(e.detail) } { assignedQuestions } />   
                 </div>
             </div>
         </div>
    </div>
 </Layout>
 
-<SlidePanel title={ slideTitle } showSheet={ showSlidePanel } on:close-button={ closeSheet } >
-   <EditableQuestionCard questionId={ question.questionId } question={ question.question } correctAnswer={ question.correctAnswer } options={ question.options } questionScore={ question.questionScore } { edit } source={ question.source }  on:cancel={ closeSheet } on:updated={ (e) => updateQuestion(e) } on:saved={ (e) => saveQuestion(e) } />
+<SlidePanel title={ slidePanelState } showSheet={ showSlidePanel } on:close-button={ closeSheet } >
+    { #if (slidePanelState === slidePanelStates.openAddQuestionForm) || (slidePanelState === slidePanelStates.edit) }
+        
+        <EditableQuestionCard questionId={ question.questionId } question={ question.question } correctAnswer={ question.correctAnswer } options={ question.options } questionScore={ question.questionScore } { edit } source={ question.source }  on:cancel={ closeSheet } on:updated={ (e) => updateQuestion(e) } on:saved={ (e) => saveQuestion(e) } />
+
+    { /if }
+
+    { #if (slidePanelState === slidePanelStates.uploadQuestions) }
+
+       <CsvImportCard bind:this={ importCard } on:on-upload={ uploadQuestions } />
+
+    { /if }
+
+    { #if (slidePanelState === slidePanelStates.importQuestions) }
+
+       <ImportMappingCard on:deselected={ (e) => mapFields(e.detail) }  on:selected={ (e) => mapFields(e.detail) } { headings } options={ getAvailableMappings() } on:import={ importQuestion } on:back-button={ () => slidePanelState = slidePanelStates.uploadQuestions } />
+
+    { /if }
 </SlidePanel>
 

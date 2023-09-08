@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\SchoolManager\Features;
+namespace App\Modules\CBT\Features;
 
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
 
-class GetStudentListFeature extends FeatureContract {
+class GetAssessmentDataFeature extends FeatureContract {
 
     public function __construct(){
         //

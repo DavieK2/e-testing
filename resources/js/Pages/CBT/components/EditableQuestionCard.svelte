@@ -14,6 +14,8 @@
     export let question = "";
     export let questionId;
     export let source;
+    export let classId;
+    export let subjectId;
 
     let questionInput;
     let assessmentId = $page.props.assessmentId
@@ -64,7 +66,7 @@
             questionScore,
         }
 
-        router.post('/api/question/create/'+ assessmentId, data, {
+        router.post('/api/question/create/'+ assessmentId, { ...data, subjectId, classId }, {
             onSuccess : (response) => {
                 data.questionId = response.data.questionId;
                 dispatch('saved', { question : data });
@@ -95,7 +97,7 @@
                         <Icons icon="check" className={ isCorrectAnswer(option)  ? 'stroke-green-500' : 'stroke-gray-400'} />
                     </button>
                     <div class="w-full">
-                        <Input on:input={ (e) => setOptionValue(e.detail.input, index) }  value={ option } className={ isCorrectAnswer(option)  ? "ring-green-400" : "ring-gray-300" } />
+                        <Input on:input={ (e) => setOptionValue(e.detail.input, index) }  value={ option } className={ isCorrectAnswer(option)  ? "ring-green-400 text-green-500" : "ring-gray-300" } />
                     </div>
                     { #if (index + 1) == options.length }
                         <button on:click={ addOption } class={`flex items-center shrink-0 justify-center h-11 w-11 border ${ isCorrectAnswer(option) ? 'border-green-500' : 'border-gray-300' } rounded-lg`}>

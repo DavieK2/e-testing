@@ -66,8 +66,8 @@ class AssessmentModel extends Model
                     ->withPivot(['class_id', 'start_date', 'end_date', 'assessment_duration']);
     }
 
-    public function addSubject($subject_id, $class_id, $start_date, $end_date, $duration)
+    public function addSubject($data)
     {
-        return $this->subjects()->syncWithoutDetaching([$subject_id => ['class_id' => $class_id, 'start_date' => $start_date, 'end_date' => $end_date, 'assessment_duration' => $duration ]]);
+        return $this->subjects()->sync($data);
     }
 }

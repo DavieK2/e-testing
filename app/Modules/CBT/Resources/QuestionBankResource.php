@@ -15,6 +15,7 @@ class QuestionBankResource extends BaseResource
             'options'       => ! is_array($this->options) ? json_decode($this->options) : $this->options,
             'source'        => 'questionBank',
             'questionScore' => $this->question_score,
+            'assessmentId'  => $this->assessmentId,
         ];
     }
 }

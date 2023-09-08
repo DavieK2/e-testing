@@ -2,9 +2,10 @@
 
 namespace App\Modules\CBT\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
+use Illuminate\Validation\Rule;
 
-class CreateQuestionRequest extends FormRequest
+class CreateQuestionRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -21,7 +22,9 @@ class CreateQuestionRequest extends FormRequest
                     return $fail('The correct answer provided is not part of the options list provided');
                 }
             }],
-            'questionScore' => 'required|integer'
+            'questionScore' => 'required|integer',
+            'subjectId'     => [ Rule::requiredIf( fn() => ! $this->route('assessment')->is_standalone )],
+            'classId'       => [ Rule::requiredIf( fn() => ! $this->route('assessment')->is_standalone )]
         ];
     }
 }

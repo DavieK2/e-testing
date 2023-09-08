@@ -16,6 +16,7 @@ class QuestionListResource extends JsonResource
             'options'       => ! is_array($this->options) ? json_decode($this->options) : $this->options,
             'source'        => $request->assigned ? 'assigned' : 'assessment',
             'questionScore' => $this->question_score,
+            'assessmentId'  => $this->assessmentId,
         ];
     }
 }

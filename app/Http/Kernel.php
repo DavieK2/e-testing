@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\AuthTokenGuard;
+use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
@@ -39,6 +40,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            HandleInertiaRequests::class
         ],
 
         'api' => [

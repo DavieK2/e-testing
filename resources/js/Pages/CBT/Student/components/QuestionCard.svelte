@@ -5,6 +5,17 @@
     export let questionNumber;
     export let question = {};
 
+    const getAlphabetsOptions = () => {
+
+        let alphabet = [];
+
+        for( let i = 65 ; i <= 90 ; i++){
+            alphabet.push(String.fromCharCode(i));
+        }
+
+        return alphabet;
+    }
+
     const dispatch = createEventDispatcher();
 
 </script>
@@ -13,19 +24,19 @@
     <div class="pb-6">
         <div class="space-y-4 pb-3">
            <div class="flex items-center justify-between">
-                <p class="text-gray-400 font-semibold text-lg">Question { questionNumber }</p>
+                <p class="text-gray-800 font-bold text-lg">Question { questionNumber }</p>
            </div>
-            <p class="text-gray-800 text-sm font-base">{ question.prompt }</p>
+            <p class="text-gray-800 text-base font-base pt-6">{ question.prompt }</p>
         </div>
         <ul class="flex flex-col w-full space-y-2 text-sm text-gray-600 pt-8">
-            { #each question.choices ?? [] as option }
-                <div class="flex space-x-2 items-center w-full">
-                    <button  on:click={ () => dispatch('selected', { questionId : question.questionId }) } class={`flex items-center shrink-0 justify-center h-11 w-11 border ${ option == question.selected ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
-                        <Icons icon="check" className={`${ option == question.selected ? "stroke-green-700" : "stroke-gray-300" }`} />
+            { #each question.choices ?? [] as option, index }
+                <div class="flex space-x-2 items-center w-full text-base">
+                    <button  on:click={ () => dispatch('selected', { questionId : question.questionId, option }) } class={`flex items-center shrink-0 justify-center h-12 w-12 border ${ option == question.selectedAnswer ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
+                        <span class={`${ option == question.selectedAnswer ? "text-green-700" : "text-gray-500" }`} > { getAlphabetsOptions()[index] }</span>
                     </button>
                     <div class="w-full">
-                        <button type="button" class={`flex p-3 border ${ option == question.selected ? 'border-green-700' : 'border-gray-300' }  w-full rounded-lg items-center justify-between space-x-2`}>
-                            <span class={`${ option == question.selected ? "text-green-700" : "text-gray-400" }`} >{ "Test" }</span>
+                        <button type="button" class={`flex p-3 border ${ option == question.selectedAnswer ? 'border-green-700' : 'border-gray-300' }  w-full rounded-lg items-center justify-between space-x-2`}>
+                            <span class={`${ option == question.selectedAnswer ? "text-green-700" : "text-gray-500" }`} > { option }</span>
                         </button>
                     </div>
                 </div>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('fullname');
             $table->string('email')->unique();
+            $table->string('phone_no')->unique();
             $table->string('password');
             $table->boolean('has_two_factor_auth')->default(false);
             $table->string('two_factor_secret')->nullable();

@@ -95,8 +95,8 @@
         <div class="container px-4 mx-auto">
             <div class="flex items-center justify-between">
                 <div class="flex space-x-3 items-center">
-                    <Icons icon="book" className="h-8 w-8" />
-                    <span class="mx-2 text-xl font-medium text-gray-800">Subjects</span>
+                    <Icons icon="book" className="h-6 w-6" />
+                    <span class="mx-2 text-lg font-medium text-gray-800">Subjects</span>
                 </div>
                 <div>
                     <Button on:click={ showSheet } buttonText="Create New Subject" className="text-sm" />
