@@ -69,12 +69,15 @@ Route::post('/subject/update', [ SubjectController::class, 'update']);
 
 Route::get('/students', [ StudentController::class, 'index']);
 Route::post('/student/create', [ StudentController::class, 'create']);
+
+Route::post('/student-profile/create', [ StudentController::class, 'createStudentProfile']);
+
 Route::post('/student/assign-subjects', [ StudentController::class, 'assignStudentToSubject']);
 Route::get('/student/assigned-subjects/{student}', [ StudentController::class, 'getStudentAssignedSubjects']);
 
 Route::get('/teachers', [ UserController::class, 'teachers']);
 Route::post('/teacher/create', [ UserController::class, 'createTeacher']);
-Route::post('/teacher/update', [ UserController::class, 'updateTeacher']);
+Route::post('/teacher/update/{teacher}', [ UserController::class, 'updateTeacher']);
 Route::post('/teacher/assign-subjects', [ UserController::class, 'assignTeacherToSubject']);
 Route::post('/teacher/assign-classes', [ UserController::class, 'assignTeacherToClass']);
 Route::get('/teacher/assigned-subjects/{teacher}', [ UserController::class, 'getTeacherAssignedSubjects']);
@@ -89,15 +92,29 @@ Route::post('/session/create', [ AcademicSessionController::class, 'create']);
 Route::post('/session/update', [ AcademicSessionController::class, 'update']);
 
 
-Route::get('/get-classes', [ TeacherController::class, 'getClasses' ]);
-Route::get('/get-subjects/{class:class_code}', [ TeacherController::class, 'getSubjects' ]);
-Route::get('/get-questions', [ TeacherController::class, 'getAssessmentQuestions' ]);
+Route::middleware(['auth:sanctum'])->group(function(){
+    Route::get('/get-classes', [ TeacherController::class, 'getClasses' ]);
+    Route::get('/get-subjects/{class:class_code}', [ TeacherController::class, 'getSubjects' ]);
+    Route::get('/get-questions', [ TeacherController::class, 'getAssessmentQuestions' ]);
+});
+
 
 
 
 //Student CBT
-Route::get('/cbt/session/questions/{assessment:uuid}', [ ExamController::class, 'getAssessmentQuestions' ]);
-Route::get('/cbt/session/student/{assessment:uuid}', [ ExamController::class, 'getStudentStandaloneExamSession' ]);
-Route::get('/cbt/get-responses/student/{assessment:uuid}', [ ExamController::class, 'getStudentStandaloneExamSessionResponses' ]);
-Route::post('/cbt/start-session/student/{assessment:uuid}', [ ExamController::class, 'startStudentStandaloneExamSession' ]);
-Route::post('/cbt/save-answer/student/{assessment:uuid}', [ ExamController::class, 'saveStudentStandaloneExamSessionAnswer' ]);
+
+Route::middleware(['auth:sanctum', 'cbt', 'cbt.session'])->group(function(){
+    //Standalone
+    Route::get('/cbt/session/questions/{assessment:uuid}', [ ExamController::class, 'getAssessmentQuestions' ]);
+    Route::get('/cbt/session/student/{assessment:uuid}', [ ExamController::class, 'getStudentStandaloneExamSession' ]);
+    Route::post('/cbt/start-session/student/{assessment:uuid}', [ ExamController::class, 'startStudentStandaloneExamSession' ]);
+    
+    Route::post('/cbt/save-answer/student/{assessment:uuid}', [ ExamController::class, 'saveStudentExamSessionAnswer' ]);
+    Route::get('/cbt/get-responses/student/{assessment:uuid}', [ ExamController::class, 'getStudentExamSessionResponses' ]);
+    Route::post('/cbt/complete/student/{assessment:uuid}', [ ExamController::class, 'submitExam' ]);
+
+    //Termly
+    Route::get('/cbt/t/session/student/{assessment:uuid}', [ ExamController::class, 'getStudentTermlyExamAssessments' ]);
+    Route::get('/cbt/t/session/student/{assessment:uuid}/{subject:subject_code}', [ ExamController::class, 'getStudentTermlyExamAssessmentSession' ]);
+    Route::post('/cbt/t/start-session/student/{assessment:uuid}/{subject:subject_code}', [ ExamController::class, 'startStudentTermlyExamSession' ]);
+});

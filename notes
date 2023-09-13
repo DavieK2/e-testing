@@ -146,9 +146,17 @@ rtCoYic.y@#2
 
 
 
-Display assessment questions
+check custom error pages for laravel
 
-- Check if student already has started assessment
-- If started display assessment questions else didsplay instructions
+- Teachers login
 
-- Check assessment_sessions table fetch assessment with assessment_id and student_id
+- Display assessment based on student subjects fofr Termly
+
+- Result Manager
+
+- Collating assessment Results 
+
+- Uploading assessment results  
+
+- Check-IN system
+

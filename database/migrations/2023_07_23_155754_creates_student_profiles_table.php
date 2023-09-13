@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('student_code')->unique();
             $table->string('mat_no')->nullable();
             $table->string('reg_no')->nullable();
-            $table->foreignId('class_id')->constrained();
+            $table->string('profile_pic')->nullable();
+            $table->foreignId('class_id')->nullable()->constrained();
             $table->foreignId('academic_session_id')->nullable()->constrained();
             $table->foreignId('faculty_id')->nullable()->constrained();
             $table->foreignId('department_id')->nullable()->constrained();

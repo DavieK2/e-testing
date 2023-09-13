@@ -15,7 +15,7 @@
     let subjectId = $page.props.subjectId
 
     onMount(() => {
-         router.get('/api/published-assessments', {
+         router.getWithToken('/api/published-assessments', {
             onSuccess: (res) => {
                 assessments = res.data.flatMap((assessment) => [ { placeholder :  assessment.title , value: assessment.assessmentId }]);
             }

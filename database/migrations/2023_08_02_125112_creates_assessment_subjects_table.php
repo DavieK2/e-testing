@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('assessment_subjects', function(Blueprint $table){
             $table->string('assessment_id');
-            $table->string('subject_id');
-            $table->string('class_id');
+            $table->foreignId('subject_id')->constrained();
+            $table->foreignId('class_id')->constrained();
             $table->integer('assessment_duration');
             $table->integer('start_date');
             $table->integer('end_date');

@@ -7,12 +7,12 @@
 
     const login = async () => {
 
-        await router.post("/login", { email, password }, {
+        await router.post("/adminer/login", { email, password }, {
 
             onSuccess : (response) => {
                 
-                localStorage.setItem("token", response.token);
-                return router.navigateTo("/2fa");
+                localStorage.setItem("token", response.data.token);
+                return router.navigateTo(response.data.url);
             },
             onError : (error) => {
                 console.log(error);
@@ -48,7 +48,6 @@
                 </div>
 
                 <div class="mt-8">
-                    <form>
                         <div>
                             <label for="email" class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Email Address</label>
                             <input bind:value={ email } type="email" name="email" id="email" placeholder="example@example.com" class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
@@ -57,19 +56,14 @@
                         <div class="mt-6">
                             <div class="flex justify-between mb-2">
                                 <label for="password" class="text-sm text-gray-600 dark:text-gray-200">Password</label>
-                                <!-- <a href="#" class="text-sm text-gray-400 focus:text-blue-500 hover:text-blue-500 hover:underline">Forgot password?</a> -->
                             </div>
 
                             <input bind:value={ password } type="password" name="password" id="password" placeholder="Your Password" class="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                         </div>
 
                         <div class="mt-6">
-                           <Button buttonText={ 'Sign In' } />
+                           <Button on:click={ login } buttonText={ 'Sign In' } />
                         </div>
-
-                    </form>
-
-                    <p class="mt-6 text-sm text-center text-gray-400">Don&#x27;t have an account yet? <a href="#" class="text-blue-500 focus:outline-none focus:underline hover:underline">Sign up</a>.</p>
                 </div>
             </div>
         </div>

@@ -70,7 +70,7 @@
 
     const getQuestions = () => {
 
-        router.get(`/api/get-questions?classId=${classId}&assessmentId=${assessmentId}&subjectId=${subjectId}`, {
+        router.getWithToken(`/api/get-questions?classId=${classId}&assessmentId=${assessmentId}&subjectId=${subjectId}`, {
             onSuccess: (res) => {
                 questions = res.data
             }
@@ -101,7 +101,7 @@
         data.append('assessmentId', assessmentId);
 
         
-        router.postForm('/api/question/import', data , {
+        router.postFormWithToken('/api/question/import', data , {
 
             onSuccess : (res) => {
 
@@ -114,7 +114,7 @@
 
     const importQuestion = () => {
         
-        router.post('/api/question/import' , { mappings: mappedFields, assessmentId, key: importKey, classId, subjectId }, {
+        router.postWithToken('/api/question/import' , { mappings: mappedFields, assessmentId, key: importKey, classId, subjectId }, {
             onSuccess : (res) => {
                 getQuestions();
                 closeSheet();
@@ -129,6 +129,7 @@
 
     const showSheet = (state) => {
 
+        reset();
         slidePanelState = state;
         showSlidePanel = true;
 

@@ -22,7 +22,7 @@ class LoginFeature extends FeatureContract {
 
             $builder = $task->start($args)->checkIfUserExists()->login();
 
-            return $task::formatResponse($builder->only(['token']), ResponseType::JSON, ['message' => "Login Successful"] );
+            return $task::formatResponse($builder->only(['token', 'url']), ResponseType::JSON, ['message' => "Login Successful"] );
 
         } catch (ValidationException $exception) {
 

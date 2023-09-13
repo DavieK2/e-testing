@@ -8,18 +8,17 @@ use App\Modules\CBT\Features\GetTeacherClassSubjectsFeature;
 use App\Modules\CBT\Requests\GetTeacherAssessmentQuestionRequest;
 use App\Modules\SchoolManager\Features\GetTeacherAssignedClassFeature;
 use App\Modules\SchoolManager\Models\ClassModel;
-use App\Modules\UserManager\Models\UserModel;
 
 class TeacherController extends Controller
 {
     public function getClasses()
     {
-        return $this->serve( new GetTeacherAssignedClassFeature( UserModel::find(3) ));
+        return $this->serve( new GetTeacherAssignedClassFeature( request()->user() ));
     }
 
     public function getSubjects(ClassModel $class)
     {
-        return $this->serve( new GetTeacherClassSubjectsFeature( UserModel::find(3), $class ) );
+        return $this->serve( new GetTeacherClassSubjectsFeature( request()->user(), $class ) );
     }
 
     public function getAssessmentQuestions(GetTeacherAssessmentQuestionRequest $request)

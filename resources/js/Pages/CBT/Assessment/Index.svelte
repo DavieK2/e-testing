@@ -99,14 +99,19 @@
         showSheet();
     }
 
-    const viewAssessmentQuestions = (assessmentId) => {
-        router.navigateTo('/questions/create/'+ assessmentId);
+    const viewAssessmentQuestions = (assessment) => {
+
+        if( assessment.isStandalone === "Standalone"){
+            router.navigateTo('/questions/create/s/'+ assessment.assessmentId);
+            return;
+        }
+
+        router.navigateTo('/assessments/termly/view/' + assessment.assessmentId)
     }
 
     const editAssessment = (assessmentId, isStandalone) => {
 
         if(isStandalone == 'Standalone'){
-            
             router.navigateTo('/assessments/standalone?assessmentId=' + assessmentId);
             return;
         }
@@ -122,18 +127,19 @@
 </script>
 
 <Layout>
-    <div class="my-28 px-4">
-        <div class="container px-4 mx-auto">
+   <div class="container">
+        <div class="my-28">
+          
             <div class="flex items-center justify-between">
                 <div class="flex space-x-3 items-center">
                     <Icons icon="chart" className="h-6 w-6" />
                     <span class="mx-2 text-lg font-medium text-gray-800">Assessments</span>
                 </div>
                 <Dropdown className="text-sm text-left" placeholder="New Assessment" >
-                   <div class="flex flex-col w-full">
+                <div class="flex flex-col w-full">
                         <a use:inertia href="/assessments/standalone" class="hover:bg-gray-100 p-3 text-sm rounded transition w-full">Standalone</a>
                         <a  use:inertia href="/assessments/termly"  class="hover:bg-gray-100 p-3 text-sm rounded transition w-full">Termly</a>
-                   </div>
+                </div>
                 </Dropdown>
             </div>
             <div class="flex flex-col border border-gray-300 rounded-lg w-full h-full bg-white mt-8 pt-4 pb-8 px-4">
@@ -146,44 +152,45 @@
                     <Button on:click={ resetFilter }  buttonText="Reset" className="w-40 text-sm py-3" />
                 </div>
             </div>
+         
+            <DataTable { headings }>
+                { #each assessments as assessment, index(assessment.assessmentId) }
+                    <tr>
+                        <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ index + 1  }</td>
+                        <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ assessment.title }</td>
+                        <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ assessment.isStandalone }</td>
+                        <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ assessment.assessmentType }</td>
+                        <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ assessment.term }</td>
+                        <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ assessment.session }</td>
+                        <td class="px-4 py-4 text-xs text-gray-600 dark:text-gray-300 whitespace-nowrap ">
+                            <div class={`px-4 py-2 text-center rounded ${ assessment.status == 'Published' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800' }`}>
+                                { assessment.status }
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 text-sm text-gray-800 dark:text-gray-300 whitespace-nowrap">
+                            <div class="flex space-x-3">
+                                <Dropdown arrowColor="fill-gray-600" placeholder="Actions" className="bg-white border  border-gray-300 text-gray-600">
+                                    <div class="flex flex-col">
+                                        <button on:click={ () => viewAssessment(assessment) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">View Assessment</button>
+                                        <button on:click={ () => editAssessment(assessment.assessmentId, assessment.isStandalone) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Edit Assessment</button>
+                                        { #if assessment.isStandalone === 'Termly' }
+                                            <button on:click={ () => editSchedule(assessment.assessmentId) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Edit Schedule</button>
+                                        {/if}
+                                        <button on:click={ () => viewAssessmentQuestions(assessment) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">View Questions</button>
+                                        { #if assessment.status == 'Published'}
+                                            <button on:click={ () => publish(assessment.assessmentId, false) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Unpublish</button>
+                                        { :else }
+                                            <button on:click={ () => publish(assessment.assessmentId, true) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Publish</button>
+                                        {/if}
+                                </div>
+                                </Dropdown>
+                            </div>
+                        </td>
+                    </tr>
+                {/each}
+            </DataTable>
         </div>
-        <DataTable { headings }>
-            { #each assessments as assessment, index(assessment.assessmentId) }
-                <tr>
-                    <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ index + 1  }</td>
-                    <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ assessment.title }</td>
-                    <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ assessment.isStandalone }</td>
-                    <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ assessment.assessmentType }</td>
-                    <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ assessment.term }</td>
-                    <td class="px-4 py-4 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">{ assessment.session }</td>
-                    <td class="px-4 py-4 text-xs text-gray-600 dark:text-gray-300 whitespace-nowrap ">
-                        <div class={`px-4 py-2 text-center rounded ${ assessment.status == 'Published' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800' }`}>
-                            { assessment.status }
-                        </div>
-                    </td>
-                    <td class="px-4 py-4 text-sm text-gray-800 dark:text-gray-300 whitespace-nowrap">
-                        <div class="flex space-x-3">
-                            <Dropdown arrowColor="fill-gray-600" placeholder="Actions" className="bg-white border  border-gray-300 text-gray-600">
-                                <div class="flex flex-col">
-                                    <button on:click={ () => viewAssessment(assessment) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">View Assessment</button>
-                                    <button on:click={ () => editAssessment(assessment.assessmentId, assessment.isStandalone) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Edit Assessment</button>
-                                    { #if assessment.isStandalone === 'Termly' }
-                                        <button on:click={ () => editSchedule(assessment.assessmentId) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Edit Schedule</button>
-                                    {/if}
-                                    <button on:click={ () => viewAssessmentQuestions(assessment.assessmentId) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">View Questions</button>
-                                    { #if assessment.status == 'Published'}
-                                        <button on:click={ () => publish(assessment.assessmentId, false) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Unpublish</button>
-                                    { :else }
-                                        <button on:click={ () => publish(assessment.assessmentId, true) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Publish</button>
-                                    {/if}
-                               </div>
-                            </Dropdown>
-                        </div>
-                    </td>
-                </tr>
-            {/each}
-        </DataTable>
-    </div>
+   </div>
 </Layout>
 
 <SlidePanel title="Viewing Assessment" showSheet={ showSlidePanel } on:close-button={ closeSheet }>

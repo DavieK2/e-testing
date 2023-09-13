@@ -1,9 +1,9 @@
 <script>
     import { onMount } from "svelte";
-    import Icons from "../../components/icons.svelte";
-    import Layout from "../../layouts/Layout.svelte";
-    import Assessment from "../components/Assessment.svelte";
-    import TermlyStepThree from "../components/TermlyStepThree.svelte";
+    import Icons from "../../../components/icons.svelte";
+    import Layout from "../../../layouts/Layout.svelte";
+    import Assessment from "../../components/Assessment.svelte";
+    import TermlyStepThree from "../../components/TermlyStepThree.svelte";
     import { page } from '@inertiajs/svelte';
 
     let step = {

@@ -8,6 +8,7 @@ use App\Modules\SchoolManager\Models\SubjectModel;
 use App\Modules\SchoolManager\Models\TermModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class AssessmentModel extends Model
 {
@@ -19,20 +20,31 @@ class AssessmentModel extends Model
 
     public function questions()
     {
-        return $this->belongsToMany(QuestionModel::class, 'assessment_questions', 'assessment_id', 'question_id')->withPivot(['subject_id']);
+        return $this->belongsToMany(QuestionModel::class, 'assessment_questions', 'assessment_id', 'question_id')->withPivot(['subject_id', 'class_id']);
     }
 
-    public function assignQuestion($question_id, $subject_id = null)
+    public function assignQuestion($question_id, $subject_id = null, $class_id = null)
     {
         $question_id = QuestionModel::firstWhere('uuid', $question_id)->id;
+        $class_id = ClassModel::firstWhere('class_code', $class_id)?->id;
         
-        return $this->questions()->syncWithoutDetaching([ $question_id => [ 'subject_id' => $subject_id ]]);
+        return $this->questions()->syncWithoutDetaching([ $question_id => [ 'subject_id' => $subject_id, 'class_id' => $class_id ]]);
     }
 
-    public function unAssignQuestion($question_id, $subject_id = null)
+    public function unAssignQuestion($question_id, $class_id = null, $subject_id = null)
     {
         $question_id = QuestionModel::firstWhere('uuid', $question_id)->id;
-        return $this->questions()->detach($question_id);
+       
+        if($this->is_standalone){
+
+            return $this->questions()->detach($question_id);
+
+        }else{
+
+            $class_id = ClassModel::firstWhere('class_code', $class_id)->id;
+
+            return DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id', $question_id)->where('assessment_questions.subject_id', $subject_id)->where('assessment_questions.class_id', $class_id) )->limit(1)->delete();
+        }
     }
 
     public function classes()

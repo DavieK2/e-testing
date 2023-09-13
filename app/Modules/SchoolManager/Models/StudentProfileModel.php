@@ -4,11 +4,13 @@ namespace App\Modules\SchoolManager\Models;
 
 use App\Modules\CBT\Models\AssessmentModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class StudentProfileModel extends Model
+class StudentProfileModel extends Authenticatable
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'student_profiles';
 
@@ -36,6 +38,8 @@ class StudentProfileModel extends Model
 
     public function saveStudentResponse(AssessmentModel $assessment, $questionId, $studentAnswer, $markedForReview, $score, $subjectId = null )
     {
+        $subjectId = SubjectModel::firstWhere('subject_code', $subjectId)?->id;
+        
         return $this->assessmentSession()->syncWithoutDetaching([ $questionId => [ 'assessment_id' => $assessment->id, 'student_answer' => $studentAnswer, 'marked_for_review' => $markedForReview, 'score' => $score, 'subject_id' => $subjectId ] ]);
     }
 }

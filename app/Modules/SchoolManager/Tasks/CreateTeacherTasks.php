@@ -15,7 +15,7 @@ class CreateTeacherTasks extends BaseTasks{
             'fullname'  => $this->item['name'],
             'email'     => $this->item['email'],
             'phone_no'  => $this->item['phoneNumber'],
-            'password'  => Hash::make('password'),
+            'password'  => Hash::make($this->item['password'] ?? 'password'),
             'role_id'   => RoleModel::firstWhere('role_name','teacher')->id
         ]);
 

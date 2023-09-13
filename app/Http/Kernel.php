@@ -3,6 +3,8 @@
 namespace App\Http;
 
 use App\Http\Middleware\AuthTokenGuard;
+use App\Http\Middleware\CBTExamSessionMiddleware;
+use App\Http\Middleware\CBTExamsMiddleware;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
@@ -70,6 +72,8 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'abilities' =>  CheckAbilities::class,
         'ability'   => CheckForAnyAbility::class,
-        'auth.token' => AuthTokenGuard::class
+        'auth.token' => AuthTokenGuard::class,
+        'cbt' => CBTExamsMiddleware::class,
+        'cbt.session' => CBTExamSessionMiddleware::class
     ];
 }

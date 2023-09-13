@@ -1,9 +1,9 @@
 <script>
     import { onMount } from "svelte";
-    import Icons from "../../components/icons.svelte";
-    import Layout from "../../layouts/Layout.svelte";
-    import Assessment from "../components/Assessment.svelte";
-    import TermlyStepTwo from "../components/TermlyStepTwo.svelte";
+    import Icons from "../../../components/icons.svelte";
+    import Layout from "../../../layouts/Layout.svelte";
+    import Assessment from "../../components/Assessment.svelte";
+    import TermlyStepTwo from "../../components/TermlyStepTwo.svelte";
     import { page } from '@inertiajs/svelte';
     
     let assessmentId = $page.props.assessmentId;

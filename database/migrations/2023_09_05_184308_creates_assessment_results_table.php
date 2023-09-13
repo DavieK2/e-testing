@@ -16,7 +16,9 @@ return new class extends Migration
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
             $table->integer('time_remaining')->nullable();
-            $table->boolean('has_started')->default(false);
+            $table->boolean('has_started')->default(false);     
+            $table->boolean('has_submitted')->default(false);     
+            $table->integer('tries')->default(5);     
             $table->integer('total_score')->nullable();
             $table->boolean('is_synced')->default(false);
             $table->timestamps();

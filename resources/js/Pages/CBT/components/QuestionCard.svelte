@@ -6,7 +6,7 @@
     export let questionScore
 </script>
 
-<div class="flex flex-col px-8 pt-8 pb-4">
+<div class="flex flex-col px-8 pt-8 pb-4 w-full">
     <div class="border-b pb-6">
         <div class="space-y-4 pb-3">
            <div class="flex items-center justify-between">

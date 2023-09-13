@@ -12,7 +12,7 @@
     let classes = [];
 
     onMount(() => {
-        router.get('/api/get-classes', {
+        router.getWithToken('/api/get-classes', {
             onSuccess : (res) => {
                 classes = res.data
             }

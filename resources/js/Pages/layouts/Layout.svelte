@@ -20,7 +20,7 @@
     
                 <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/classes" use:inertia>   
                     <Icons icon="badge" />
-                    <span class="mx-2 text-sm">Classes</span>
+                    <span class="mx-2 text-sm">Levels</span>
                 </a>
 
                 <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/students" use:inertia>
@@ -30,12 +30,12 @@
 
                 <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/teachers" use:inertia>
                     <Icons icon="user" />
-                    <span class="mx-2 text-sm">Teachers</span>
+                    <span class="mx-2 text-sm">Lecturers</span>
                 </a>
     
                 <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/subjects" use:inertia>
                     <Icons icon="book" />
-                    <span class="mx-2 text-sm">Subjects</span>
+                    <span class="mx-2 text-sm">Courses</span>
                 </a>
 
                 <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/assessment-types" use:inertia>
@@ -48,19 +48,19 @@
                     <span class="mx-2 text-sm">Assessments</span>
                 </a>
 
+                <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="#">
+                    <Icons icon="clipboard" />
+                    <span class="mx-2 text-sm">Results</span>
+                </a>
+
                 <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/terms" use:inertia>
                     <Icons icon="schedule" />
-                    <span class="mx-2 text-sm">Terms</span>
+                    <span class="mx-2 text-sm">Semesters</span>
                 </a>
     
                 <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/academic-sessions" use:inertia>
                     <Icons icon="update" />
                     <span class="mx-2 text-sm">Academic Sessions</span>
-                </a>
-
-                <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="#">
-                    <Icons icon="clipboard" />
-                    <span class="mx-2 text-sm">Results</span>
                 </a>
 
                 <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="#">

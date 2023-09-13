@@ -65,7 +65,7 @@
             correctAnswer,
             questionScore,
         }
-
+        
         router.post('/api/question/create/'+ assessmentId, { ...data, subjectId, classId }, {
             onSuccess : (response) => {
                 data.questionId = response.data.questionId;

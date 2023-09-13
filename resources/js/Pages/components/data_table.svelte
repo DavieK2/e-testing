@@ -2,7 +2,7 @@
     export let headings = [];
 </script>
 
-<section class="container px-4 mx-auto mt-8">
+<section class="mx-auto mt-8">
     <div class="flex flex-col">
         <div class="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
             <div class="min-w-full py-2 align-middle md:px-6 lg:px-8">

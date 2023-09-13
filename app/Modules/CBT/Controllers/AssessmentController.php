@@ -16,6 +16,7 @@ use App\Modules\CBT\Requests\AssessmentListRequest;
 use App\Modules\CBT\Requests\AssignClassesToAssessmentRequest;
 use App\Modules\CBT\Requests\CompleteAssessmentRequest;
 use App\Modules\CBT\Requests\CreateAssessmentRequest;
+use App\Modules\CBT\Requests\GetAssessmentSubjectRequest;
 use App\Modules\CBT\Requests\PublishAssessmentRequest;
 use App\Modules\CBT\Requests\UpdateAssessmentRequest;
 
@@ -61,9 +62,9 @@ class AssessmentController extends Controller
         return $this->serve( new GetAssessmentClassesFeature($assessment) );
     }
 
-    public function getAssessmentSubjects(AssessmentModel $assessment)
+    public function getAssessmentSubjects(AssessmentModel $assessment, GetAssessmentSubjectRequest $request)
     {
-        return $this->serve( new GetAssessmentSubjectsFeature($assessment) );
+        return $this->serve( new GetAssessmentSubjectsFeature($assessment), $request->validated() );
     }
 
     public function getAssessmentQuestions(AssessmentModel $assessment)

@@ -1,8 +1,8 @@
 <script>
-    import Icons from "../../components/icons.svelte";
-    import Layout from "../../layouts/Layout.svelte";
-    import Assessment from "../components/Assessment.svelte";
-    import TermlyStepOne from "../components/TermlyStepOne.svelte";
+    import Icons from "../../../components/icons.svelte";
+    import Layout from "../../../layouts/Layout.svelte";
+    import Assessment from "../../components/Assessment.svelte";
+    import TermlyStepOne from "../../components/TermlyStepOne.svelte";
 
     let step = {
         step : 1,

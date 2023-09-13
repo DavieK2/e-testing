@@ -17,7 +17,6 @@ class CreateQuestionTasks extends BaseTasks{
         //     throw ValidationException::withMessages(['message' => 'The correct answer provided is not part of the options list provided']);
         // }
 
-        // dd($this->item);
         $question = QuestionModel::create([
                         'uuid'              => Str::uuid(),
                         'assessment_id'     => $this->item['assessment']->id,
@@ -30,7 +29,7 @@ class CreateQuestionTasks extends BaseTasks{
                         'class_id'          => ClassModel::firstWhere('class_code', $this->item['classId'] ?? null)?->id,
                     ]);
 
-        return new static( [...$this->item, 'questionId'=> $question->uuid ] );
+        return new static( [ ...$this->item, 'questionId'=> $question->uuid ] );
     }
     
 }

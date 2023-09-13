@@ -80,6 +80,8 @@
 
     const selectSubject = (subject) => {
 
+        console.log(selectedSubjects);
+
         if(isSelected(subject.subjectId)){
             selectedSubjects = selectedSubjects.filter((selected) => selected.subjectId != subject.subjectId);
             return ;
@@ -153,7 +155,7 @@
     <div class="flex bg-white h-full w-full rounded-lg shadow">
         <div class="w-[24rem] shrink-0 h-full py-8 border-r">
             <div class="flex items-center w-full px-6 text-sm text-gray-600">
-                <Select value={ selectedClassId } isSelected={ selectedClassId ? true : false } on:selected={ (e) => getClassSubjects(e.detail.value, e.detail.placeholder) } options={ assessmentClasses } placeholder={ selectedClassId ? selectedClassName : "Select a Class" } className="text-sm py-2.5"/>
+                <Select on:deselected={ () => selectedSubjects = [] } value={ selectedClassId } isSelected={ selectedClassId ? true : false } on:selected={ (e) => getClassSubjects(e.detail.value, e.detail.placeholder) } options={ assessmentClasses } placeholder={ selectedClassId ? selectedClassName : "Select a Class" } className="text-sm py-2.5"/>
             </div>
             <div class="p-6 w-full">
                <div class="w-full mt-4">
@@ -165,7 +167,7 @@
                             <button  on:click={ selectAllSubjects } class={`flex items-center shrink-0 justify-center h-11 w-11 border ${ selectAll ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
                                 <Icons icon="check" className={`${ selectAll ? "stroke-green-700" : "stroke-gray-300" }`} />
                             </button>
-                          { #each classSubjects as subject, index(subject.subjectId) }
+                          { #each classSubjects as subject, index }
                                 <div class="flex space-x-2 items-center w-full">
                                     <button  on:click={ () => selectSubject(subject) } class={`flex items-center shrink-0 justify-center h-11 w-11 border ${ isSelected(subject.subjectId) ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
                                         <Icons icon="check" className={`${ isSelected(subject.subjectId) ? "stroke-green-700" : "stroke-gray-300" }`} />
@@ -187,7 +189,7 @@
                 <Button on:click={ complete } buttonText="Complete" className="w-40" />
             </div>
             <div class="question z-50 subjects px-8 w-full  h-full space-y-6 mt-10">
-                { #each getSelectedClassSubjects() as subject, index(subject.subjectId) }
+                { #each getSelectedClassSubjects() as subject, index }
                     { #if subject.isVisible }
                         <div>
                             <h4 class="text-gray-800 text-sm pb-4 font-semibold">{ subject.subjectName }</h4>

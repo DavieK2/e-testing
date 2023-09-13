@@ -30,6 +30,7 @@
         "preline": "^1.8.0",
         "svelte": "^3.59.1",
         "tailwind-merge": "^1.13.1",
-        "tailwindcss-animate": "^1.0.6"
+        "tailwindcss-animate": "^1.0.6",
+        "webcam-easy": "^1.1.1"
     }
 }

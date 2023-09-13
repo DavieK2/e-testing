@@ -9,15 +9,18 @@
     let hasExamSession = false;
     let assessmentId = $page.props.assessmentId
 
+    let submitModal = false;
+
     let assessmentTitle;
     let assessmentInstructions;
     let assessmentDuration;
     let assessmentTotalQuestions;
     let assessmentTotalMarks;
     let timeLeft;
+    let studentName;
 
     onMount( () => {
-        router.get('/api/cbt/session/student/' + assessmentId, {
+        router.getWithToken('/api/cbt/session/student/' + assessmentId, {
             onSuccess: (res) => {
                 hasExamSession = res.data.hasStarted;
                 assessmentTitle = res.data.assessmentTitle;
@@ -26,24 +29,37 @@
                 assessmentDuration = res.data.assessmentDuration
                 assessmentTotalMarks = res.data.totalScore
                 timeLeft = res.data.remainingTime
+                studentName = res.data.studentName;
             }
         })
     });
 
     const startAssessment = () => {
 
-        router.post('/api/cbt/start-session/student/'+assessmentId, {}, {
+        router.postWithToken('/api/cbt/start-session/student/'+assessmentId, {}, {
             onSuccess : (res) => {
                 hasExamSession = true
             }
         }); 
     }
 
+    const beforeUnload = (e) => {
+
+        console.log(e);
+            submitModal = true;
+            e.preventDefault();
+            e.returnValue = '';
+
+    }
 </script>
 
+<svelte:document on:contextmenu|preventDefault />
+
 { #if hasExamSession }
-    <Exam { assessmentTitle } { assessmentId } { timeLeft } />
+    <Exam { studentName } { assessmentTitle } { assessmentId } { timeLeft } />
 { :else }
     <ExamIntro { assessmentTitle } { assessmentDuration } { assessmentInstructions } { assessmentTotalMarks } { assessmentTotalQuestions } on:start-assessment={ startAssessment }/>
 {/if}
+
+
 

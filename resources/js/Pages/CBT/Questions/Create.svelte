@@ -46,8 +46,10 @@
     let initQuestion = JSON.stringify(question);
 
     let assessmentId = $page.props.assessmentId;
+    let subjectId = $page.props.subjectId;
+    let classId = $page.props.classId;
     
-    
+    let refreshQuestions = false;
 
     let assignedQuestions =  [];
 
@@ -104,7 +106,11 @@
 
     const getQuestionBank = () => {
 
-        router.get('/api/question-bank?perPage=20&page='+questionBankCurrentPageNumber+'&assessmentId='+assessmentId, {
+        let url = '/api/question-bank?perPage=20&page='+questionBankCurrentPageNumber+'&assessmentId='+assessmentId
+
+        if(subjectId) url += '&subjectId='+subjectId+'&classId='+classId;
+
+        router.get(url, {
             
             onSuccess : (response) => {
 
@@ -119,7 +125,11 @@
 
     const getAssignedQuestions = () => {
 
-        router.get('/api/questions/' + assessmentId + '?assigned=1&perPage=20&page=' + assignedQuestionCurrentPageNumber, {
+        let url = '/api/questions/' + assessmentId + '?assigned=1&perPage=20&page=' + assignedQuestionCurrentPageNumber;
+        
+        if(subjectId) url += '&subjectId='+subjectId+'&classId='+classId;
+
+        router.get(url, {
             
             onSuccess : (response) => {
                 assignedQuestions =  response.data ;
@@ -132,12 +142,18 @@
 
     const getQuestions = () => {
 
-        return router.get('/api/questions/' + assessmentId + '?perPage=5&page=' + questionCurrentPageNumber, {
+        let url = '/api/questions/' + assessmentId + '?perPage=2&page=' + questionCurrentPageNumber;
+
+        if(subjectId) url += '&subjectId='+subjectId+'&classId='+classId;
+
+        return router.get(url, {
 
             onSuccess : async (response) => {
 
-                newQuestions = [ ...oldQuestions, ...arrayDiff(response.data, pushedQuestions) ]
+                newQuestions = [ ...oldQuestions, ...arrayDiff(response.data, pushedQuestions) ];
                 questionLastPageNumber = response.meta.last_page;
+
+                refreshQuestions = false
             },
 
             onError : (response) => {
@@ -215,24 +231,21 @@
 
     }
     
-    $: hasBeenAssigned = (questionId) => {
-
-        return assignedQuestions.some( (question) => question.questionId == questionId ) ;
-    }
+    $: hasBeenAssigned = (questionId) =>  assignedQuestions.some( (question) => question.questionId == questionId ) ;
 
     const assignQuestion = (question) => {
 
-        router.post('/api/question/assign/'+ assessmentId, { questionId : question.questionId }, {
+        router.post('/api/question/assign/'+ assessmentId, { questionId : question.questionId, subjectId, classId }, {
 
             onSuccess : (response) => {
+
+                reloadQuestions();                
                 
                 assignedQuestions.push(question);
                 assignedQuestions = assignedQuestions;
-
-                oldQuestions =  oldQuestions.filter( (ques) => ques.questionId != question.questionId );
-                newQuestions =  newQuestions.filter( (ques) => ques.questionId != question.questionId );     
-                
-                getQuestions();
+                                
+                pushedQuestions =  pushedQuestions.filter( (ques) => ques.questionId === question.questionId );
+               
             },
             onError : (response) => {
                 console.log(response);
@@ -242,7 +255,7 @@
 
     const unAssignQuestion = (question) => {
         
-        router.post('/api/question/unassign/'+ assessmentId, { questionId : question.questionId }, {
+        router.post('/api/question/unassign/'+ assessmentId, { questionId : question.questionId, subjectId, classId }, {
 
             onSuccess : (response) => {
 
@@ -259,6 +272,7 @@
 
     const openEditQuestionForm = (ques) => {
 
+        console.log(ques);
         question = ques;
         edit = true;
         showSheet(slidePanelStates.edit);
@@ -316,12 +330,11 @@
 
     const importQuestion = () => {
         
-        router.post('/api/question/import' , { mappings: mappedFields, assessmentId, key: importKey }, {
+        router.post('/api/question/import' , { mappings: mappedFields, assessmentId, key: importKey, subjectId, classId }, {
             
             onSuccess : (res) => {
 
                 getQuestions();
-
                 closeSheet();
             }
         })
@@ -356,6 +369,8 @@
 
     const loadMoreQuestions = () => {
 
+        if(refreshQuestions) return;
+
         if(questionCurrentPageNumber === questionLastPageNumber ) return;
 
         oldQuestions = [ ...newQuestions ];
@@ -372,15 +387,18 @@
         questionBank = [ ...newQuestionBank ];
 
         questionBankCurrentPageNumber ++
-
+        
         getQuestionBank();
     }
 
     const reloadQuestions = () => {
 
+        refreshQuestions = true;
+
+        questionCurrentPageNumber = 1;
+        
         oldQuestions = [];
         newQuestions = [];
-        questionCurrentPageNumber = 1;
 
         getQuestions();
     }
@@ -444,7 +462,7 @@
                     </div>
                 </div>
                 <div class="absolute z-50 bg-white w-full">
-                    <svelte:component on:load-more-question-bank={ loadMoreQuestionBank } on:load-more-questions={ loadMoreQuestions } on:edit={ (e) => openEditQuestionForm(e.detail) } on:assign={ (e) => assignQuestion(e.detail) } this={ questionType } { hasBeenAssigned } questions={ newQuestions } questionBank={ newQuestionBank } { classes } { sessions } { assessmentTypes } { subjects }  />
+                    <svelte:component on:load-more-question-bank={ loadMoreQuestionBank } on:load-more-questions={ loadMoreQuestions } on:edit={ (e) => openEditQuestionForm(e.detail) } on:assign={ (e) => assignQuestion(e.detail) } this={ questionType } { hasBeenAssigned } questions={ newQuestions } questionBank={ newQuestionBank } { questionCurrentPageNumber} { questionLastPageNumber } { classes } { sessions } { assessmentTypes } { subjects }  />
                 </div>
             </div>
         </div>
@@ -461,7 +479,7 @@
 <SlidePanel title={ slidePanelState } showSheet={ showSlidePanel } on:close-button={ closeSheet } >
     { #if (slidePanelState === slidePanelStates.openAddQuestionForm) || (slidePanelState === slidePanelStates.edit) }
         
-        <EditableQuestionCard questionId={ question.questionId } question={ question.question } correctAnswer={ question.correctAnswer } options={ question.options } questionScore={ question.questionScore } { edit } source={ question.source }  on:cancel={ closeSheet } on:updated={ (e) => updateQuestion(e) } on:saved={ (e) => saveQuestion(e) } />
+        <EditableQuestionCard questionId={ question.questionId } { subjectId } { classId } question={ question.question } correctAnswer={ question.correctAnswer } options={ question.options } questionScore={ question.questionScore } { edit } source={ question.source }  on:cancel={ closeSheet } on:updated={ (e) => updateQuestion(e) } on:saved={ (e) => saveQuestion(e) } />
 
     { /if }
 

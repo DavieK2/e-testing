@@ -1,0 +1,25 @@
+services:
+    app:
+        build:
+            dockerfile: Dockerfile
+        command: 'php artisan serve --host=0.0.0.0'
+        volumes:
+          - /var/www/html/vendor
+          - .:/var/www/html
+        ports:
+          - 8000:8000
+    
+    db:
+        image: mysql:8.0
+        volumes: 
+          - mysqldata:/var/lib/mysql
+        ports:
+          - "3308:3306"
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: 12345678
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+            MYSQL_DATABASE: cbt
+volumes:
+    mysqldata:

@@ -14,6 +14,7 @@ use App\Modules\SchoolManager\Requests\AssignTeacherToSubjectRequest;
 use App\Modules\SchoolManager\Requests\CreateTeacherRequest;
 use App\Modules\SchoolManager\Requests\GetTeacherListRequest;
 use App\Modules\UserManager\Models\UserModel;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -25,6 +26,23 @@ class UserController extends Controller
     public function createTeacher(CreateTeacherRequest $request)
     {
         return $this->serve( new CreateTeacherFeature(), $request->validated() );
+    }
+
+    public function updateTeacher( CreateTeacherRequest $request, UserModel $teacher  )
+    { 
+
+        $data =  $request->validated();
+
+        $teacher->update( [
+            'fullname'  => $data['name'],
+            'email'     => $data['email'],
+            'phone_no'  => $data['phoneNumber'],
+        ] );
+
+        if( $data['password'] ) $teacher->update( ['password' => Hash::make( $data['password'] ) ] );
+
+        return response()->json(['message' => 'Teacher info successfully updated'] );
+
     }
 
     public function assignTeacherToSubject(AssignTeacherToSubjectRequest $request)

@@ -1,12 +1,12 @@
 <script>
     import { onMount } from "svelte";
-    import Button from "../../components/button.svelte";
-    import DataTable from "../../components/data_table.svelte";
-    import Icons from "../../components/icons.svelte";
-    import Input from "../../components/input.svelte";
-    import SlidePanel from "../../components/slide_panel.svelte";
-    import Layout from "../../layouts/Layout.svelte";
-    import { router } from "../../../util";
+    import Button from "../../../components/button.svelte";
+    import DataTable from "../../../components/data_table.svelte";
+    import Icons from "../../../components/icons.svelte";
+    import Input from "../../../components/input.svelte";
+    import SlidePanel from "../../../components/slide_panel.svelte";
+    import Layout from "../../../layouts/Layout.svelte";
+    import { router } from "../../../../util";
 
 
     let headings = ['SN', 'Title','Max Score','Actions']

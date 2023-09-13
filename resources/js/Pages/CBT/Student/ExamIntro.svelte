@@ -8,6 +8,10 @@
     export let assessmentTotalQuestions;
     export let assessmentTotalMarks;
 
+    let agree;
+
+    $: disabled = ! agree;
+
     const dispatch = createEventDispatcher();
 
 </script>
@@ -63,18 +67,21 @@
                     <div class="prose text-gray-800 mb-2">
                         { assessmentInstructions }
                     </div>
+                    <div class="prose text-gray-800 my-2 ">
+                        Please do not refresh page or your assessment will be marked as submitted
+                    </div>
                 </div>
                 <div class="py-4 w-full" >
                     <div>
                         <div class="w-full flex flex-col">
                             <div class="pt-2">
-                                <input type="checkbox" id="agree_1"/>
+                                <input bind:checked={ agree } type="checkbox" id="agree_1"/>
                                 <label for="agree_1" class="ltr:ml-2 rtl:mr-2 text-sm leading-normal font-normal text-gray-800 cursor-pointer">
                                     I've read all the instructions carefully and have understood them.
                                 </label>
                             </div>
                             <div class="w-full block mt-10">
-                               <Button on:click={ () => dispatch('start-assessment') } buttonText="Start Assessment" />
+                               <Button { disabled } on:click={ () => dispatch('start-assessment') } buttonText="Start Assessment" />
                             </div>
                         </div>
                     </div>

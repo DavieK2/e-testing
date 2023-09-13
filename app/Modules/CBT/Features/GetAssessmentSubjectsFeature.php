@@ -18,7 +18,7 @@ class GetAssessmentSubjectsFeature extends FeatureContract {
     {
         try {
             
-            $builder = $task->start($this->assessment)->getSubjects()->all();
+            $builder = $task->start([ 'assessment' => $this->assessment, ...$args ])->getSubjects()->all();
 
             return $task::formatResponse( $builder, formatter: GetAssessmentSubjectsCollection::class );
 

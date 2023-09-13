@@ -14,7 +14,7 @@
     let classCode = $page.props.classCode;
 
     onMount(() => {
-        router.get('/api/get-subjects/' + classCode, {
+        router.getWithToken('/api/get-subjects/' + classCode, {
             onSuccess : (res) => {
                 subjects = res.data
             }

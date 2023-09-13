@@ -12,7 +12,7 @@ class GetAssessmentSubjectsResource extends BaseResource
             'subjectId'     => $this->id,
             'subjectName'   => $this->subject_name,
             'classId'       => $this->pivot->class_id,
-            'duration'      => $this->pivot->assessment_duration,
+            'duration'      => ( $this->pivot->assessment_duration ) / 60,
             'startDate'     => $this->pivot->start_date,
             'endDate'       => $this->pivot->end_date,
         ];

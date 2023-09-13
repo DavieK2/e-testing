@@ -46,7 +46,17 @@ class LoginTasks extends BaseTasks{
 
         Cookie::queue('token', $token);
 
-        return new static([ ...$this->item, 'token' =>   $token]);
+        $url = url()->current();
+
+        if( $user->is_teacher ){
+            $url = url('/teacher/dashboard');
+        }
+
+        if( $user->admin ){
+            $url = url('/dashboard');
+        }
+
+        return new static([ ...$this->item, 'token' =>   $token, 'url' => $url ]);
     }
     
 }

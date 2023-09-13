@@ -1,38 +1,21 @@
 <script>
     import { createEventDispatcher, onMount } from "svelte";
     import QuestionCard from "../components/QuestionCard.svelte";
+    import Button from "../../components/button.svelte";
 
     export let hasBeenAssigned;
     export let questions = [];
 
+    export let questionCurrentPageNumber
+    export let questionLastPageNumber;
+
     const dispatch = createEventDispatcher();
-
-    const loadMore = (node) => {
-
-       setTimeout(() => {
-
-            const observer = new IntersectionObserver((entries) => {
-
-                if(entries[0].isIntersecting){
-                   dispatch('load-more-questions');
-                }
-            
-            }, 
-            {
-                rootMargin: "100px"
-            });
-
-            observer.observe(node);
-
-       }, 500);
-    }
-    
-
     
 </script>
 
+<svelte:body on:scroll={ () => console.log('scrolling') } />
 
-<div class="pb-52 question">
+<div class="flex flex-col items-center w-full pb-52 question">
     { #each questions as question, index }
         { #if hasBeenAssigned && ! hasBeenAssigned(question.questionId) }
             <QuestionCard 
@@ -50,7 +33,13 @@
             </QuestionCard> 
         {/if}
     {/each}
-    <div use:loadMore class="h-5 w-full"></div>
+
+    { #if questionCurrentPageNumber != questionLastPageNumber }
+        <div class="my-10 max-w-fit">
+            <Button on:click={ () => dispatch('load-more-questions') } buttonText="Load More" className="text-sm bg-green-500 focus:ring-green-300 hover:bg-green-600 focus:bg-green-500" />
+        </div>
+    {/if}
+   
 </div>
 
 <style>

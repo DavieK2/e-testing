@@ -1,12 +1,12 @@
 <script>
     import { onMount } from "svelte";
-    import { router } from "../../../util";
-    import Button from "../../components/button.svelte";
-    import Datetimepicker from "../../components/datetimepicker.svelte";
-    import Input from "../../components/input.svelte";
-    import Select from "../../components/select.svelte";
-    import Layout from "../../layouts/Layout.svelte";
-    import Icons from "../../components/icons.svelte";
+    import { router } from "../../../../util";
+    import Button from "../../../components/button.svelte";
+    import Datetimepicker from "../../../components/datetimepicker.svelte";
+    import Input from "../../../components/input.svelte";
+    import Select from "../../../components/select.svelte";
+    import Layout from "../../../layouts/Layout.svelte";
+    import Icons from "../../../components/icons.svelte";
 
     let assessmentTitle;
     let assessmentType;
@@ -80,7 +80,7 @@
         router.post('/api/assessment/create', data, {
             onSuccess : (response) => {
 
-                router.navigateTo('/questions/create/'+response.data.assessmentId);
+                router.navigateTo('/questions/create/s/'+response.data.assessmentId);
             },
             onError : (response) => {
 

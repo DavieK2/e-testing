@@ -4,7 +4,7 @@ namespace App\Modules\CBT\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveStudentStandaloneExamSessionResponsesRequest extends FormRequest
+class GetAssessmentSubjectRequest extends FormRequest
 {
     public function authorize()
     {
@@ -14,9 +14,7 @@ class SaveStudentStandaloneExamSessionResponsesRequest extends FormRequest
     public function rules()
     {
         return [
-            'questionId' => 'required|exists:questions,uuid',
-            'studentAnswer' => 'nullable',
-            'markedForReview' => 'required',
+            'classId' => 'exists:classes,id'
         ];
     }
 }

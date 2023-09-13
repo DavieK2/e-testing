@@ -22,6 +22,11 @@ class UserModel extends User
         return $this->belongsTo(RoleModel::class, 'role_id');
     }
 
+    public function getIsTeacherAttribute()
+    {
+        return $this->role->role_name === 'teacher';
+    }
+
     public function subjects()
     {
         return $this->belongsToMany(SubjectModel::class, 'user_subjects', 'user_id', 'subject_id');

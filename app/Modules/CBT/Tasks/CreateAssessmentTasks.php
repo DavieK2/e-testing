@@ -51,7 +51,7 @@ class CreateAssessmentTasks extends BaseTasks {
 
         $assessment = $this->getAssessment();
 
-        $data = collect($this->item['subjects'])->mapWithKeys( fn($subject) => [ $subject['subjectId'] => ['class_id' => $subject['classId'], 'start_date' => $subject['startDate'], 'end_date' => $subject['endDate'], 'assessment_duration' => $subject['duration'] ] ]);
+        $data = collect($this->item['subjects'])->mapWithKeys( fn($subject) => [ $subject['subjectId'] => ['class_id' => $subject['classId'], 'start_date' => $subject['startDate'], 'end_date' => $subject['endDate'], 'assessment_duration' => $subject['duration'] * 60 ] ]);
 
         $assessment->addSubject( $data->toArray() );
 

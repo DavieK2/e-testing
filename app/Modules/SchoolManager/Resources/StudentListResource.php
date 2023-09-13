@@ -12,8 +12,10 @@ class StudentListResource extends BaseResource
             'studentId'     => $this->id,
             'studentCode'   => $this->student_code,
             'name'          => $this->first_name. " ". $this->surname,
+            'firstName'      => $this->first_name,
+            'surname'       => $this->surname,
             'classId'       => $this->class_id,
-            'class'         => $this->class->class_name
+            'class'         => $this->class?->class_name
         ];
     }
 }

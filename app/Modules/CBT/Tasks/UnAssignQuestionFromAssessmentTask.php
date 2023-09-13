@@ -9,7 +9,7 @@ class UnAssignQuestionFromAssessmentTask extends BaseTasks{
 
     public function unAssignQuestionFromAssessment()
     {
-        $this->item['assessment']->unAssignQuestion( $this->item['questionId'] );
+        $this->item['assessment']->unAssignQuestion( $this->item['questionId'], $this->item['classId'] ?? null, $this->item['subjectId'] ?? null );
 
         $assessmentId = QuestionModel::firstWhere('uuid', $this->item['questionId'])->assessment->uuid;
 

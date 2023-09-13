@@ -36,7 +36,10 @@
     let studentData = {
         id : "",
         name : "",
+        firstName : "",
+        surname : "",
         class : "",
+        classId : "",
         studentCode : ""
     }
 
@@ -45,7 +48,10 @@
         studentData = {
             id : "",
             name : "",
+            firstName : "",
+            surname : "",
             class : "",
+            classId : "",
             studentCode : ""
         }
     }
@@ -102,6 +108,20 @@
         closeSheet();
     }
 
+    const editStudent = (student) => {
+
+        studentData.id = student.studentId;
+        studentData.firstName = student.firstName;
+        studentData.surname = student.surname;
+        studentData.classId = student.classId;
+        studentData.class = student.class;
+
+        showSheet(panelState.edit);
+    }
+
+    const updateStudent = () => {
+
+    }
 
     const showSheet = (state) => {
 
@@ -196,6 +216,7 @@
                     <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
                         <div class="w-40">
                             <Dropdown arrowColor="fill-gray-600" placeholder="Actions" className="bg-white border  border-gray-300 text-gray-600">
+                                <button on:click={ () => editStudent(student) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Edit Student</button>
                                 <button on:click={ () => assignSubjects(index) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Add Subjects</button>
                             </Dropdown>
                         </div>
@@ -210,19 +231,24 @@
     { #if ( slideFormState === panelState.addNewStudent ) || ( slideFormState === panelState.edit )  }
         <div class="flex flex-col space-y-6 p-3">
             <div>
-                <Input bind:this={ firstName } value={ studentData.name } label="Enter Student First Name" />
+                <Input bind:this={ firstName } value={ studentData.firstName } label="Enter Student First Name" />
             </div>
 
             <div>
-                <Input bind:this={ surname } value={ studentData.name } label="Enter Student Surname" />
+                <Input bind:this={ surname } value={ studentData.surname } label="Enter Student Surname" />
             </div>
 
             <div>
-                <Select bind:this={ classId } value={ studentData.class } options={ classes } placeholder="Select Class" label="Select Student Class" className="text-sm"  />
+                <Select bind:this={ classId } isSelected={ studentData.class ? true : false } value={ studentData.classId } options={ classes } placeholder={ studentData.class ? studentData.class : "Select Class" } label="Select Student Class" className="text-sm"  />
             </div>
 
             <div class="w-20">
-                <Button on:click={ createStudent } buttonText="Save" className=""/>
+                { #if slideFormState == panelState.edit }
+                    <Button on:click={ updateStudent } buttonText="Update" className=""/>
+                { :else }
+                    <Button on:click={ createStudent } buttonText="Save" className=""/>
+                {/if}
+               
             </div>
         </div>
     { /if }

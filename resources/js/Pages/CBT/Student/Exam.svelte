@@ -10,6 +10,8 @@
     export let assessmentTitle;
     export let subjectId;
     export let timeLeft;
+    export let studentName
+    // export let studentTries;
 
     let isLoading = true;
 
@@ -27,32 +29,53 @@
     let markedForReviewAndAnsweredColor = "rgb(250 204 21)";
     let notVisitedColor = "rgb(156 163 175)";
    
+    let submitModal = false;
+
 
 
     onMount( async () => {
 
         let studentResponses;
 
-        await router.get(`/api/cbt/get-responses/student/${assessmentId}`, {
+        let studentResponsesUrl = `/api/cbt/get-responses/student/${assessmentId}`
+
+        if( subjectId ) studentResponsesUrl += `?subjectId=${subjectId}`
+
+        await router.getWithToken(studentResponsesUrl, {
             onSuccess: (res) => {
                 studentResponses = res.data;
             }
         })
 
-        startTimer();
+        let questionsUrl = `/api/cbt/session/questions/${assessmentId}`
 
-        await router.get(`/api/cbt/session/questions/${assessmentId}?subjectId=${subjectId}`, {
+        if( subjectId ) questionsUrl += `?subjectId=${subjectId}`
+
+        await router.getWithToken(questionsUrl, {
+
             onSuccess : (response) => {
                 questions  = response.data.flatMap((question) => {
+
+                    studentResponses.forEach((ques) => {
+
+                        if( ques.questionId === question.questionId ){
+                            question.selectedAnswer = ques.selectedAnswer
+                            question.notAnswered = ques.notAnswered
+                            question.markedForReview = ques.markedForReview
+                            question.submitted = true
+                        }
+                    });
+
                     return [
                         {
                             prompt : question.prompt,
                             choices : question.choices,
                             questionId : question.questionId,
-                            selectedAnswer: "",
-                            notAnswered : false,
-                            markedForReview : false,
-                            notVisited: true
+                            selectedAnswer: question.selectedAnswer ?? "",
+                            notAnswered : question.notAnswered ?? false,
+                            markedForReview :  question.markedForReview ?? false,
+                            notVisited: true,
+                            submitted : question.submitted ?? false
                         }
                     ];
                 });
@@ -65,13 +88,17 @@
             }
         });
 
-        
+        startTimer();
     });
 
 
     const startTimer = () => {
 
-        const evtSource = new EventSource("/cbt/save-session/student/" + assessmentId, { withCredentials: true});
+        let timerUrl = `/cbt/save-session/student/${assessmentId}`
+
+        if( subjectId ) timerUrl += `?subjectId=${subjectId}`;
+
+        const evtSource = new EventSource(timerUrl, { withCredentials: true});
 
         evtSource.addEventListener("message", (event) => {
 
@@ -80,6 +107,7 @@
             if(timeLeft == 0){
                 evtSource.close();
                 clearInterval(timer);
+                completeExam();
             }
         });
 
@@ -107,27 +135,29 @@
         let color = "";
         let status = "";
 
-        if(question.selectedAnswer.length > 0){
+        let submitted = ! question.notAnswered && question.submitted;
+
+        if( submitted ){
             color = selectedColor ;
             status = "answered"
         }
 
-        if( ! (question.selectedAnswer.length > 0) && question.notAnswered && ! question.markedForReview ){
+        if( ! (submitted) && question.notAnswered && ! question.markedForReview ){
             color = notAnsweredColor
             status = "notAnswered"
         }
 
-        if(question.markedForReview && ! question.selectedAnswer){
+        if( question.markedForReview && ! submitted ){
             color = markedForReviewColor
             status = "markedForReview"
         }
 
-        if(question.markedForReview && question.selectedAnswer){
+        if( question.markedForReview && submitted ){
             color = markedForReviewAndAnsweredColor
             status = "markedForReviewAndAnswered"
         }
 
-        if( ! (question.selectedAnswer.length > 0) && question.notVisited && ! question.markedForReview && ! question.notAnswered ){
+        if( ! (submitted)  && question.notVisited && ! question.markedForReview && ! question.notAnswered ){
             color = notVisitedColor
             status = "notVisited"
         }
@@ -135,49 +165,95 @@
         return { color, status };
     }
 
-    $: getQuestionStats = (param) => {
+    $: getQuestionStats = ( param ) => {
 
         return questions.filter((question) => getQuestionChipStatus(question).status === param ).length.toString();
     }
 
     const markForReview = () => {
-        questions[ currentQuestionNumber - 1 ].markedForReview =  !  questions[ currentQuestionNumber - 1 ].markedForReview;
-        // questions = questions
+        questions[ currentQuestionNumber - 1 ].markedForReview =  ! ( questions[ currentQuestionNumber - 1 ].markedForReview ) ;
     }
 
-    const setCurrentQuestionNumber = (index) => {
-        currentQuestionNumber = index + 1;
+    const setCurrentQuestionNumber = ( index ) => { 
+        
+        let notSubmitted = questions[ currentQuestionNumber - 1 ].selectedAnswer.length > 0 && ! questions[ currentQuestionNumber - 1 ].submitted;
+        
+        if( currentQuestionNumber === index + 1 ) return ;
+
+        if( notSubmitted ) return ;
+
+        if( questions[ currentQuestionNumber - 1 ].updated ) return ;
+
+        questions[ currentQuestionNumber - 1 ].notVisited = false
+        
+        currentQuestionNumber = index + 1 ;
     }
 
-    const selectAnswer = (answer) => {
+    const checkIfQuestionHasBeenAnswered = () => {
+
+       if( questions[ currentQuestionNumber - 1 ].selectedAnswer.length > 0 ){
+            questions[ currentQuestionNumber - 1 ].notAnswered = false;        
+       }else {
+            questions[ currentQuestionNumber - 1 ].notAnswered = true
+       }
+    }
+
+    const selectAnswer = ( answer ) => {
         questions[ currentQuestionNumber - 1 ].selectedAnswer = answer
+        questions[ currentQuestionNumber - 1 ].submitted = false;
+        questions[ currentQuestionNumber - 1 ].notAnswered = true;
     }
 
     const clearAnswer = () => {
         questions[ currentQuestionNumber - 1 ].selectedAnswer = "";
+        questions[ currentQuestionNumber - 1 ].updated = true;
     }
 
     const submitAnswer = () => {
 
         let question =  questions[ currentQuestionNumber - 1 ];
 
-        router.post('/api/cbt/save-answer/student/'+assessmentId, { questionId: question.questionId, studentAnswer : question.selectedAnswer, markedForReview : question.markedForReview }, {
+        router.postWithToken('/api/cbt/save-answer/student/' + assessmentId, { questionId: question.questionId, studentAnswer : question.selectedAnswer, markedForReview : question.markedForReview, subjectId }, {
             onSuccess : (res) => {
 
-                if(currentQuestionNumber < questions.length){
+                questions[ currentQuestionNumber - 1 ].submitted = true;
+                questions[ currentQuestionNumber - 1 ].notVisited = false;
+                questions[ currentQuestionNumber - 1 ].updated = false;
 
+                if( questions[ currentQuestionNumber - 1 ].selectedAnswer.length > 0 ){
+                    questions[ currentQuestionNumber - 1 ].notAnswered = false
+                }else{
+                    questions[ currentQuestionNumber - 1 ].notAnswered = true
+                }
+
+                if(currentQuestionNumber < questions.length){
                     currentQuestionNumber ++ ;
                 }
             }
         } );
     }
 
+    const completeExam = () => {
+        router.postWithToken('/api/cbt/complete/student/' + assessmentId, { subjectId }, {
+            onSuccess : () => {
+                router.post(`/cbt/${assessmentId}/logout`, {}, {
+                    onSuccess : (res) => {
+                        window.location.replace('/cbt/' + assessmentId );
+                    }
+                });
+            }
+        });
+    }
+
+    const showSubmitModal = () => submitModal = true;
+    const closeSubmitModal = () => submitModal = false;
+
 </script>
 
 { #if ! isLoading }
     <div class="bg-yellow-400 relative min-h-screen w-full">
         <div class="fixed inset-0 flex items-center justify-between h-16 w-full z-50 bg-gray-800 px-8">
-            <p class="text-white text-lg font-medium">{ assessmentTitle }</p>
+            <p class="text-white text-lg font-medium font-mono">{ assessmentTitle }</p>
             <div class="flex space-x-2">
                 <div class="h-9 w-9 bg-gray-700 rounded flex items-center justify-center">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-white"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
@@ -186,22 +262,43 @@
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-white">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <p class="text-white">{ `${hours} : ${minutes} : ${seconds}`}</p>
+                    <p class="text-white font-mono">{ `${hours} : ${minutes} : ${seconds}`}</p>
                 </div>
             </div>
         </div>
 
+        
         <div class="fixed inset-0 pt-16 flex w-full min-h-screen ">
 
-            <!-- Right Side -->
-
-            <div class="relative flex flex-col flex-1 bg-white border-r">
-                <div class="w-full shrink-0  border-b h-16 border-gray-300">
-                    Something here
+            <div class="relative flex flex-col w-64 shrink-0 bg-gray-50">
+                <div class="flex items-center shrink-0 w-full border-b border-r border-gray-300 h-16 bg-white px-8 font-semibold">
+                    Student Data
                 </div>
 
+                <div class="flex flex-col h-full w-full bg-gray-50 px-8 py-6 border-r">
+                    <div class="flex flex-col w-full overflow-y-auto">
+                        <div class="h-40 w-40 bg-gray-400 rounded-lg"></div>
+                        <div class="flex flex-col space-y-5 mt-10">
+                            <div class="space-y-1 text-sm">
+                                <p class="font-semibold">Student Name:</p>
+                                <p>{ studentName }</p>
+                            </div>
+                            <!-- <div class="space-y-1 text-sm">
+                                <p class="font-semibold">Student Name:</p>
+                                <p>{ studentName }</p>
+                            </div> -->
+                        </div>
+                    </div>                
+                </div> 
+            </div>
+
+
+            <div class="relative flex flex-col flex-1 bg-white border-r">
+
+                <div class="flex items-center w-full shrink-0 border-b h-16 border-gray-300 px-8"></div>
+
                 <div class="flex flex-col w-full h-[calc(100vh-13rem)] px-8 py-6">
-                <div class="w-full h-full overflow-y-auto">
+                    <div class="w-full h-full overflow-y-auto">
                         <div class="max-w-lg">
                             { #each questions as question, index(question.questionId) }
                                 { #if currentQuestionNumber === ( index + 1)}    
@@ -209,14 +306,13 @@
                                 { /if }
                             { /each }
                         </div>
+                    </div>
                 </div>
-                </div>
-
 
                 <div class="flex items-center justify-between absolute bottom-0 inset-x-0 bg-white border-t border-b h-20 border-gray-300 px-6">
                     <div class="flex space-x-2">
                         <Button on:click={ clearAnswer } buttonText="Clear Answer" className="bg-white text-sm border border-red-500 text-red-500 px-6 hover:bg-red-500 hover:text-white focus:bg-transparent focus:ring-transparent focus:text-red-500" />
-                        <Button on:click={ markForReview } buttonText={questions[ currentQuestionNumber - 1 ].markedForReview ? "Unmark For Review" : "Mark For Review"} className="bg-white text-sm border border-yellow-600 text-yellow-600 px-6 hover:bg-yellow-600 hover:text-white min-w-max focus:bg-transparent focus:text-yellow-600 focus:ring-transparent" />
+                        <Button on:click={ markForReview } buttonText={questions[ currentQuestionNumber - 1 ]?.markedForReview ? "Unmark For Review" : "Mark For Review"} className="bg-white text-sm border border-yellow-600 text-yellow-600 px-6 hover:bg-yellow-600 hover:text-white min-w-max focus:bg-transparent focus:text-yellow-600 focus:ring-transparent" />
                     </div>
                     <div>
                         <Button on:click={ submitAnswer } buttonText="Save & Next" className="" />
@@ -224,13 +320,11 @@
                 </div>
             </div>
         
-
-
             <!-- Left Side -->
         
             <div class="relative flex flex-col w-96 shrink-0 bg-gray-50">
                 <div class="shrink-0 w-full border-b border-gray-300 h-16 bg-white">
-                Something
+                
                 </div>
 
                 <div class="flex flex-col h-[calc(100vh-26rem)] w-full bg-gray-50 px-8 py-6">
@@ -274,14 +368,26 @@
                         </div>
 
                         <div class="flex items-center justify-between absolute bottom-0 inset-x-0 bg-white border-t h-20 border-gray-300 px-6">
-                            <Button buttonText="Submit & Finish" className="bg-red-500 text-white hover:bg-red-400 focus:bg-red-500 focus:ring-red-300" />
+                            <Button on:click={ showSubmitModal } buttonText="Submit & Finish" className="bg-red-500 text-white hover:bg-red-400 focus:bg-red-500 focus:ring-red-300" />
                         </div>
                 </div>
                 </div>
-
             </div>
+        </div>
+    </div>
+{/if}
 
-            
+{ #if submitModal }
+    <div class="fixed justify-center items-center flex flex-col inset-0 bg-gray-800/70">
+        <div class="flex flex-col justify-center items-center h-96 w-[28rem] bg-white rounded-lg p-16">
+            <div class="flex flex-col justify-center items-center space-y-12">
+                <h1 class="text-2xl font-medium text-gray-800 text-center">Are you sure you want to submit?</h1>
+
+                <div class="flex space-x-4 w-full">
+                    <Button on:click={ closeSubmitModal } buttonText="No" className="bg-gray-400 hover:bg-gray-500 focus:ring-gray-300 focus:bg-gray-400" />
+                    <Button on:click={ completeExam } buttonText="Yes" className="bg-green-500 text-white hover:bg-green-600 focus:bg-green-500 focus:ring-green-300" />
+                </div>
+            </div>
         </div>
     </div>
 {/if}

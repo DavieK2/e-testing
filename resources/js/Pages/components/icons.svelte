@@ -7,12 +7,11 @@
 </script>
 
 { #if icon === 'chart' }
-    <svg  class={ cn("h-5 w-5", className) } viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M3 2C3.55228 2 4 2.44772 4 3V19C4 19.5523 4.44772 20 5 20H21C21.5523 20 22 20.4477 22 21C22 21.5523 21.5523 22 21 22H5C3.34315 22 2 20.6569 2 19V3C2 2.44772 2.44772 2 3 2Z" fill="#9F9F9F"/>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M7 8C7.55228 8 8 8.44772 8 9V17C8 17.5523 7.55228 18 7 18C6.44772 18 6 17.5523 6 17V9C6 8.44772 6.44772 8 7 8Z" fill="#1F1D1F"/>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M11 14C11.5523 14 12 14.4477 12 15V17C12 17.5523 11.5523 18 11 18C10.4477 18 10 17.5523 10 17V15C10 14.4477 10.4477 14 11 14Z" fill="#1F1D1D"/>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M15 4C15.5523 4 16 4.44772 16 5V17C16 17.5523 15.5523 18 15 18C14.4477 18 14 17.5523 14 17V5C14 4.44772 14.4477 4 15 4Z" fill="#1F1D1D"/>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M19 10C19.5523 10 20 10.4477 20 11V17C20 17.5523 19.5523 18 19 18C18.4477 18 18 17.5523 18 17V11C18 10.4477 18.4477 10 19 10Z" fill="#1F1D1D"/>
+    <svg class={ cn("h-5 w-5", className) } viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="18" height="19" rx="3" fill="#1F1D1D"/>
+        <path d="M14 3C14 1.89543 13.1046 1 12 1C10.8954 1 10 1.89543 10 3H8V5C8 5.55228 8.44772 6 9 6H15C15.5523 6 16 5.55228 16 5V3H14Z" fill="#9F9F9F"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M7 11C7 10.4477 7.44772 10 8 10L16 10C16.5523 10 17 10.4477 17 11C17 11.5523 16.5523 12 16 12L8 12C7.44772 12 7 11.5523 7 11Z" fill="#9F9F9F"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M7 15C7 14.4477 7.44772 14 8 14L12 14C12.5523 14 13 14.4477 13 15C13 15.5523 12.5523 16 12 16L8 16C7.44772 16 7 15.5523 7 15Z" fill="#9F9F9F"/>
     </svg>
 {/if}
 
@@ -42,10 +41,10 @@
 
 { #if icon === 'clipboard' }
     <svg class={ cn("h-5 w-5", className) } viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="3" width="18" height="19" rx="3" fill="#1F1D1D"/>
-        <path d="M14 3C14 1.89543 13.1046 1 12 1C10.8954 1 10 1.89543 10 3H8V5C8 5.55228 8.44772 6 9 6H15C15.5523 6 16 5.55228 16 5V3H14Z" fill="#9F9F9F"/>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M7 11C7 10.4477 7.44772 10 8 10L16 10C16.5523 10 17 10.4477 17 11C17 11.5523 16.5523 12 16 12L8 12C7.44772 12 7 11.5523 7 11Z" fill="#9F9F9F"/>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M7 15C7 14.4477 7.44772 14 8 14L12 14C12.5523 14 13 14.4477 13 15C13 15.5523 12.5523 16 12 16L8 16C7.44772 16 7 15.5523 7 15Z" fill="#9F9F9F"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M13 20H16C16.5523 20 17 20.4477 17 21C17 21.5523 16.5523 22 16 22H8C7.44772 22 7 21.5523 7 21C7 20.4477 7.44772 20 8 20H11V15H13V20Z" fill="#9F9F9F"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M5 6H3V8C3 9.10457 3.89543 10 5 10V6ZM3 4C1.89543 4 1 4.89543 1 6V8C1 10.2091 2.79086 12 5 12H7V4H3Z" fill="#9F9F9F"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M19 6H21V8C21 9.10457 20.1046 10 19 10V6ZM21 4C22.1046 4 23 4.89543 23 6V8C23 10.2091 21.2091 12 19 12H17V4H21Z" fill="#9F9F9F"/>
+        <path d="M5 4C5 2.89543 5.89543 2 7 2H17C18.1046 2 19 2.89543 19 4V10C19 13.866 15.866 17 12 17C8.13401 17 5 13.866 5 10V4Z" fill="#1F1D1D"/>
     </svg>
 {/if}
 

@@ -21,6 +21,7 @@
     let name;
     let email;
     let phoneNumber;
+    let password;
 
     let slidePanelTitle;
     let slideFormState;
@@ -29,6 +30,7 @@
         id : "",
         name : "",
         email : "",
+        password : "",
         phoneNumber : ""
     }
 
@@ -47,6 +49,7 @@
             id : "",
             name : "",
             email : "",
+            password: "",
             phoneNumber : ""
         }
     }
@@ -93,7 +96,7 @@
 
     const addNewTeacher = () => {
         
-        router.post('/api/teacher/create', { name : name.value, phoneNumber : phoneNumber.value, email : email.value }, {
+        router.post('/api/teacher/create', { name : name.value, phoneNumber : phoneNumber.value, email : email.value, password: password.value }, {
 
             onSuccess : (res) => {
 
@@ -143,7 +146,14 @@
 
     const updateTeacherInfo = () => {
         
+       router.post(`/api/teacher/update/${teacherData.id}`, { name : name.value, phoneNumber : phoneNumber.value, email : email.value, password: password.value }, {
 
+            onSuccess : (res) => {
+
+                getTeachers();
+                closeSheet();
+            }
+        });
         
     }
 
@@ -194,8 +204,8 @@
 
     const closeSheet = () => {
 
-        showTeacherForm = false
         reset()
+        showTeacherForm = false
 
     };
 
@@ -237,8 +247,8 @@
 </script>
 
 <Layout>
-    <div class="mt-28 px-3">
-        <div class="container px-4 mx-auto">
+    <div class="my-28 container">
+        <div class="mx-auto">
             <div class="flex items-center justify-between">
                 <div class="flex space-x-3 items-center">
                     <Icons icon="user" className="h-6 w-6" />
@@ -281,11 +291,14 @@
                 <Input value={ teacherData.email } bind:this={ email }  label="Enter Teacher's Email" />
             </div>
             <div>
+                <Input value={ teacherData.password } bind:this={ password }  label="Enter Teacher's Password" />
+            </div>
+            <div>
                 <Input value={ teacherData.phoneNumber } bind:this={ phoneNumber }  label="Enter Teacher's Phone Number" />
             </div>
             <div class="w-20">
                 { #if teacherData.id }
-                    <Button on:click={ updateTeacherInfo } buttonText="Update" className="text-sm"/>
+                    <Button on:click={  updateTeacherInfo } buttonText="Update" className="text-sm"/>
                 { :else }
                     <Button on:click={ addNewTeacher } buttonText="Save" className="text-sm"/>
                 { /if }

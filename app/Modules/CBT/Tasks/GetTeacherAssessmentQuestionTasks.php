@@ -16,6 +16,7 @@ class GetTeacherAssessmentQuestionTasks extends BaseTasks{
         $subjectId = SubjectModel::find($this->item['subjectId'])->id;
         $classId = ClassModel::firstWhere('class_code', $this->item['classId'])->id;
 
+        // dd($subjectId);
         $questions = QuestionModel::where(fn($query) => $query->where('assessment_id', $assessmentId)->where('class_id', $classId)->where('subject_id', $subjectId));
 
         return new static( [ ...$this->item, 'query' => $questions ]);

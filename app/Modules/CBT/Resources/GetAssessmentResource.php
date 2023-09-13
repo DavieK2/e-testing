@@ -19,7 +19,7 @@ class GetAssessmentResource extends BaseResource
                 'termId'            => $this->school_term_id,
                 'term'              => $this->term?->term,
                 'isStandalone'      => $this->is_standalone,
-                'duration'          => $this->assessment_duration,
+                'duration'          => $this->assessment_duration / 60,
                 'startDate'         => $this->start_date,
                 'endDate'           => $this->end_date,
             ]
