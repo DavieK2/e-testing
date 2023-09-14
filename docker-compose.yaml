@@ -8,7 +8,6 @@ services:
           - .:/var/www/html
         ports:
           - 8000:8000
-    
     db:
         image: mysql:8.0
         volumes: 
