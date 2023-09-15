@@ -18,7 +18,10 @@ RUN apt-get update && apt-get install -y \
      php8.1-mbstring \
      php8.1-curl \
      php8.1-xml \
-     php8.1-bcmath 
+     php8.1-bcmath \
+     php-sqlite
+
+
 
 RUN pip install pypsexec --no-cache-dir 
 
