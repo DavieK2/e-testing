@@ -35,10 +35,10 @@
     }
 
     let panelState = {
-        addNewTeacher : "Add New Teacher",
+        addNewTeacher : "Add New Lecturer",
         edit : "Edit Teacher Info",
-        assignSubjects : "Assign Subjects",
-        assignClasses : "Assign Classes",
+        assignSubjects : "Assign Courses",
+        assignClasses : "Assign Levels",
     }
 
     let showTeacherForm = false;
@@ -252,10 +252,10 @@
             <div class="flex items-center justify-between">
                 <div class="flex space-x-3 items-center">
                     <Icons icon="user" className="h-6 w-6" />
-                    <span class="mx-2 text-lg font-medium text-gray-800">Teachers</span>
+                    <span class="mx-2 text-lg font-medium text-gray-800">Lecturers</span>
                 </div>
                 <div>
-                    <Button on:click={ () => showSheet(panelState.addNewTeacher) } buttonText="Add New Teacher" className="text-sm" />
+                    <Button on:click={ () => showSheet(panelState.addNewTeacher) } buttonText="Add New Lecturer" className="text-sm" />
                 </div>
             </div>
         </div>
@@ -269,8 +269,8 @@
                         <div class="w-40">
                             <Dropdown arrowColor="fill-gray-600" placeholder="Actions" className="bg-white border  border-gray-300 text-gray-600">
                                 <button on:click={ () => editTeacherInfo(index) }  class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Edit</button>
-                                <button on:click={ () => assignSubjects(index) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Assign Subjects</button>
-                                <button on:click={ () => assignClasses(index) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Assign Classes</button>
+                                <button on:click={ () => assignSubjects(index) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Assign Courses</button>
+                                <button on:click={ () => assignClasses(index) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Assign Levels</button>
                             </Dropdown>
                         </div>
                     </td>

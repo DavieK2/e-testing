@@ -9,7 +9,7 @@
     import { router } from "../../../util";
 
 
-    let headings = ['SN', 'Subject Name', 'Actions'];
+    let headings = ['SN', 'Course Name', 'Actions'];
 
     let subjects = []
 
@@ -96,10 +96,10 @@
             <div class="flex items-center justify-between">
                 <div class="flex space-x-3 items-center">
                     <Icons icon="book" className="h-6 w-6" />
-                    <span class="mx-2 text-lg font-medium text-gray-800">Subjects</span>
+                    <span class="mx-2 text-lg font-medium text-gray-800">Courses</span>
                 </div>
                 <div>
-                    <Button on:click={ showSheet } buttonText="Create New Subject" className="text-sm" />
+                    <Button on:click={ showSheet } buttonText="Create New Course" className="text-sm" />
                 </div>
             </div>
         </div>
@@ -120,10 +120,10 @@
     </div>
 </Layout>
 
-<SlidePanel title="Create New Subject" showSheet={ showCreateSubjectSheet } on:close-button={ closeSheet }>
+<SlidePanel title="Create New Course" showSheet={ showCreateSubjectSheet } on:close-button={ closeSheet }>
     <div class="flex flex-col space-y-6 p-3">
         <div>
-            <Input value={ subjectName } bind:this={ subjectInput }  label="Enter Subject Name" />
+            <Input value={ subjectName } bind:this={ subjectInput }  label="Enter Course Name" />
         </div>
         <div class="w-20">
             { #if subjectId }

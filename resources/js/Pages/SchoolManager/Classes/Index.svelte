@@ -10,7 +10,7 @@
     import Dropdown from "../../components/dropdown.svelte";
 
 
-    let headings = ['SN', 'Class Name', 'Total Students', 'Actions']
+    let headings = ['SN', 'Level', 'Total Students', 'Actions']
 
     let classes = [];
     let subjects = [];
@@ -23,7 +23,7 @@
 
     let assignSubjects = false
 
-    let slideTitle = "Create New Class";
+    let slideTitle = "Create New Level";
 
     onMount( () => {
 
@@ -163,7 +163,7 @@
                     <span class="mx-2 text-lg font-semibold text-gray-800">Classes</span>
                 </div>
                 <div>
-                    <Button on:click={ showSheet } buttonText="Create New Class" className="text-sm" />
+                    <Button on:click={ showSheet } buttonText="Create New Level" className="text-sm" />
                 </div>
             </div>
         </div>
@@ -190,7 +190,7 @@
 <SlidePanel title={ slideTitle } showSheet={ isSlidePanelOpen } on:close-button={ closeSlidePanel } >
     { #if assignSubjects }
         <div class="flex flex-col space-y-3 p-3">
-            <p class="text-gray-800 font-semibold pb-6">Assign Subjects</p>
+            <p class="text-gray-800 font-semibold pb-6">Assign Courses</p>
 
             <div class="space-y-3">
                 { #each subjects as subject}
@@ -208,13 +208,13 @@
             </div>
 
             <div class="pt-10">
-                <Button on:click={ assignSubjectsToClass } buttonText="Assign Subjects" />
+                <Button on:click={ assignSubjectsToClass } buttonText="Assign Courses" />
             </div>
         </div>
     { :else }
         <div class="flex flex-col space-y-6 p-3">
             <div>
-                <Input value={ className } bind:this={ classInput }  label="Enter Class Name" />
+                <Input value={ className } bind:this={ classInput }  label="Enter Level" />
             </div>
             <div class="w-20">
                 { #if classId }

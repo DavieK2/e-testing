@@ -74,8 +74,8 @@
         <div class="mx-auto max-w-4xl">
             <div class="flex items-center justify-between my-2 border-b border-gray-50 pb-8">
                 <div>
-                    <div class="text-xl font-medium min-w-max text-gray-700">Assessment Classes</div>
-                    <div class="text-gray-400 text-sm">Select the classes to be assessed below</div>
+                    <div class="text-xl font-medium min-w-max text-gray-700">Assessment Levels</div>
+                    <div class="text-gray-400 text-sm">Select the levels to be assessed below</div>
                 </div>
                 
                 <div class="ml-72 pt-4 max-w-3xl">
@@ -85,7 +85,7 @@
     
             <div class="my-12 space-y-6 w-full">
                 <div class="flex w-full text-sm max-w-4xl">
-                    <span class="flex-shrink-0 w-[18rem] text-gray-700">Select Assessment Class</span>
+                    <span class="flex-shrink-0 w-[18rem] text-gray-700">Select Assessment Level</span>
                     <div class="w-full space-y-6">
                         <button  on:click={ selectAllClasses } class={`flex items-center shrink-0 justify-center h-11 w-11 border ${ selectAll ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
                             <Icons icon="check" className={`${ selectAll ? "stroke-green-700" : "stroke-gray-300" }`} />

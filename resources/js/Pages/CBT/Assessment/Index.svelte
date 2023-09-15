@@ -30,7 +30,7 @@
 
     let showSlidePanel = false;
 
-    let headings = ['SN', 'Title', 'Assessment Category', 'Assessment Type', 'Term', 'Session', 'Status', 'Actions']
+    let headings = ['SN', 'Title', 'Assessment Category', 'Assessment Type', 'Semester', 'Session', 'Status', 'Actions']
 
 
     onMount(() => {
@@ -64,10 +64,7 @@
     })
 
     const resetFilter = () => {
-        console.log(assessmentCategoriesFilter.value)
-        console.log(assessmentTypesFilter.value)
-        console.log(termsFilter.value)
-        console.log(sessionFilter.value)
+     
     }
 
     const showSheet = () => showSlidePanel = true;

@@ -184,7 +184,7 @@
 
                 <div class="flex w-full items-center text-sm max-w-4xl">
                     <div class="flex-shrink-0 w-[18rem] text-gray-800 font-semibold">
-                        Select Term
+                        Select Semester
                     </div>
                     <div class="w-full">
                         <Select bind:this={ termId  }

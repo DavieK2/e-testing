@@ -159,10 +159,10 @@
             </div>
             <div class="p-6 w-full">
                <div class="w-full mt-4">
-                    <h3 class="text-gray-800 font-bold pb-4">Subjects</h3>
+                    <h3 class="text-gray-800 font-bold pb-4">Courses</h3>
                     <div class="space-y-2">
                         { #if classSubjects.length == 0 }
-                            <p class="text-gray-500 italic">No Subjects</p>
+                            <p class="text-gray-500 italic">No Courses</p>
                         { :else }
                             <button  on:click={ selectAllSubjects } class={`flex items-center shrink-0 justify-center h-11 w-11 border ${ selectAll ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
                                 <Icons icon="check" className={`${ selectAll ? "stroke-green-700" : "stroke-gray-300" }`} />
