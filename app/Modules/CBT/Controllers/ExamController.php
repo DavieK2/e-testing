@@ -18,7 +18,8 @@ use App\Modules\SchoolManager\Models\SubjectModel;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Question\Question;
 
-class ExamController extends Controller
+class 
+ExamController extends Controller
 {
     
     public function getAssessmentQuestions(AssessmentModel $assessment, GetAssessmentQuestionsRequest $request)
