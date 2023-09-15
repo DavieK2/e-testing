@@ -19,8 +19,9 @@ RUN apt-get update && apt-get install -y \
      php8.1-curl \
      php8.1-xml \
      php8.1-bcmath \
-     php-sqlite \
-     nano
+     php8.1-sqlite \
+     nano \
+     git-all
 
 
 
