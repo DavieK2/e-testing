@@ -79,6 +79,7 @@ ExamController extends Controller
         return response()->json([
             'studentName'           => $student->first_name." ".$student->surname,
             'studentCode'           => $student->student_code,
+            'studentPhoto'          => $student->profile_pic,
             'hasStarted'            => $student_result->has_started,
             'instructions'          => $instructions,
             'totalQuestions'        => $total_questions,

@@ -1,6 +1,6 @@
 {
-  "_preline-8efc455b.js": {
-    "file": "assets/preline-8efc455b.js",
+  "_preline-c6440402.js": {
+    "file": "assets/preline-c6440402.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -20,9 +20,9 @@
       "assets/app-d2cac579.css"
     ],
     "dynamicImports": [
-      "_preline-8efc455b.js"
+      "_preline-c6440402.js"
     ],
-    "file": "assets/app-f5b5c134.js",
+    "file": "assets/app-9304ea74.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

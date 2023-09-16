@@ -11,6 +11,8 @@
     export let subjectId;
     export let timeLeft;
     export let studentName
+    export let studentPhoto
+    export let studentCode
     // export let studentTries;
 
     let isLoading = true;
@@ -277,16 +279,16 @@
 
                 <div class="flex flex-col h-full w-full bg-gray-50 px-8 py-6 border-r">
                     <div class="flex flex-col w-full overflow-y-auto">
-                        <div class="h-40 w-40 bg-gray-400 rounded-lg"></div>
+                        <img src={ studentPhoto } alt="" class="rounded-lg" height="160" width="160" />
                         <div class="flex flex-col space-y-5 mt-10">
                             <div class="space-y-1 text-sm">
                                 <p class="font-semibold">Student Name:</p>
                                 <p>{ studentName }</p>
                             </div>
-                            <!-- <div class="space-y-1 text-sm">
-                                <p class="font-semibold">Student Name:</p>
-                                <p>{ studentName }</p>
-                            </div> -->
+                            <div class="space-y-1 text-sm">
+                                <p class="font-semibold">Student Code:</p>
+                                <p>{ studentCode }</p>
+                            </div>
                         </div>
                     </div>                
                 </div> 
