@@ -1,0 +1,29 @@
+{
+  "_preline-fdf350b4.js": {
+    "file": "assets/preline-fdf350b4.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-dc98b5fa.css",
+    "isEntry": true,
+    "src": "resources/css/app.css"
+  },
+  "resources/js/app.css": {
+    "file": "assets/app-d2cac579.css",
+    "src": "resources/js/app.css"
+  },
+  "resources/js/app.js": {
+    "css": [
+      "assets/app-d2cac579.css"
+    ],
+    "dynamicImports": [
+      "_preline-fdf350b4.js"
+    ],
+    "file": "assets/app-f966454b.js",
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  }
+}
