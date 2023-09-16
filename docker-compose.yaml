@@ -1,13 +1,19 @@
 services:
+    web:
+        image: nginx:latest
+        ports: 
+          - "80:80"
+        volumes: 
+          - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+        
     app:
         build:
             dockerfile: Dockerfile
-        command: 'php artisan serve --host=0.0.0.0'
+        # command: 'php artisan serve --host=0.0.0.0'
         volumes:
-          - /var/www/html/vendor
-        ports:
-          - 8000:8000
+          - ./:/var/www/html
         network_mode: "host"
+       
     db:
         image: mysql:8.0
         volumes: 
