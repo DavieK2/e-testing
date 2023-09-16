@@ -18,6 +18,16 @@
 
     const dispatch = createEventDispatcher();
 
+    const shuffle = (array) => {
+
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+
+        return array;
+    }
+
 </script>
 
 <div class="flex flex-col px-8 pt-8 pb-4">
@@ -29,7 +39,7 @@
             <p class="text-gray-800 text-base font-base pt-6">{ question.prompt }</p>
         </div>
         <ul class="flex flex-col w-full space-y-2 text-sm text-gray-600 pt-8">
-            { #each question.choices ?? [] as option, index }
+            { #each shuffle(question.choices) ?? [] as option, index }
                 <div class="flex space-x-2 items-center w-full text-base">
                     <button  on:click={ () => dispatch('selected', { questionId : question.questionId, option }) } class={`flex items-center shrink-0 justify-center h-12 w-12 border ${ option == question.selectedAnswer ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
                         <span class={`${ option == question.selectedAnswer ? "text-green-700" : "text-gray-500" }`} > { getAlphabetsOptions()[index] }</span>

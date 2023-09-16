@@ -217,7 +217,7 @@
                         <div class="w-40">
                             <Dropdown arrowColor="fill-gray-600" placeholder="Actions" className="bg-white border  border-gray-300 text-gray-600">
                                 <button on:click={ () => editStudent(student) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Edit Student</button>
-                                <button on:click={ () => assignSubjects(index) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Add Subjects</button>
+                                <button on:click={ () => assignSubjects(index) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Add Courses</button>
                             </Dropdown>
                         </div>
                     </td>

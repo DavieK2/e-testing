@@ -49,6 +49,8 @@ Route::get('setup', function(){
     StudentProfileModel::where('class_id', 2)->get()->each(fn($student) => $student->subjects()->sync($subjects));
 });
 
+Route::get('/students/check-in/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/CheckIn/Index', ['assessmentId' => $assessment->uuid]) );
+
 Route::get('/dashboard', fn() => Inertia::render('Dashboard/Index') );
 
 //Assessments

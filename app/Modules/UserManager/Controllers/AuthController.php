@@ -4,12 +4,14 @@ namespace App\Modules\UserManager\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\CheckInModel;
 use App\Modules\CBT\Requests\StudentLoginRequest;
 use App\Modules\SchoolManager\Models\StudentProfileModel;
 use App\Modules\UserManager\Features\LoginFeature;
 use App\Modules\UserManager\Features\TwoFactorAuthenticationFeature;
 use App\Modules\UserManager\Requests\LoginRequest;
 use App\Modules\UserManager\Requests\TwoFactorAuthenticationOTPRequest;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -39,6 +41,20 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Invalid Student ID'
             ], 404);
+        }
+
+        $checkIn = CheckInModel::where('student_profile_id', $student->id)->where('assessment_id', $assessment->id)->first();
+
+        if( ! $checkIn ){
+            return response()->json([
+                'message' => 'Have not Checked In'
+            ], 403);
+        }
+
+        if( Carbon::parse( $checkIn->checked_in_expires_at )->lt( now() ) ){
+            return response()->json([
+                'message' => 'Have not Checked In'
+            ], 403);
         }
 
         Auth::guard('student')->login($student);

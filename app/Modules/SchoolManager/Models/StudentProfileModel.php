@@ -3,6 +3,7 @@
 namespace App\Modules\SchoolManager\Models;
 
 use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\CheckInModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -41,5 +42,10 @@ class StudentProfileModel extends Authenticatable
         $subjectId = SubjectModel::firstWhere('subject_code', $subjectId)?->id;
         
         return $this->assessmentSession()->syncWithoutDetaching([ $questionId => [ 'assessment_id' => $assessment->id, 'student_answer' => $studentAnswer, 'marked_for_review' => $markedForReview, 'score' => $score, 'subject_id' => $subjectId ] ]);
+    }
+
+    public function checkIns()
+    {
+        return $this->hasOne(CheckInModel::class, 'student_checkins', 'student_profile_id');
     }
 }

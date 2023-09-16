@@ -5,6 +5,7 @@ namespace App\Modules\CBT\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\CBT\Features\GetAssessmentQuestionsFeature;
 use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\CheckInModel;
 use App\Modules\CBT\Models\ExamResultsModel;
 use App\Modules\CBT\Models\QuestionModel;
 use App\Modules\CBT\Requests\ExamSessionTimerRequest;
@@ -239,10 +240,7 @@ ExamController extends Controller
 
         $assessment_subject = $assessment->subjects()->where('assessment_subjects.subject_id', $subject->id)->where('assessment_subjects.class_id', $student->class_id)->first();
 
-        $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id, 'subject_id' => $subject->id ],[
-                            'student_profile_id'    => $student->id,
-                            'assessment_id'        => $assessment->id,
-                            'subject_id'           => $subject->id,
+        $student_result = ExamResultsModel::updateOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id, 'subject_id' => $subject->id ],[
                             'time_remaining'       => $assessment_subject->pivot->assessment_duration
                         ]);
 
@@ -320,6 +318,45 @@ ExamController extends Controller
         $student_session->update(['has_submitted' => true ]);
 
         return response()->json(['message' => 'Success']);
+
+    }
+
+
+    public function checkInStudentData()
+    {        
+        $data = request()->validate([
+            'studentId' => 'required|exists:student_profiles,student_code',
+        ]);
+
+        $student = StudentProfileModel::firstWhere('student_code', $data['studentId']);
+
+        return response()->json([
+            'studentName'       =>     $student->first_name. " ". $student->surname,
+            'studentCode'       =>     $student->student_code,
+            'studentClass'      =>     $student->class->class_name,
+            'studentPhoto'      =>     $student->profile_pic,
+        ]);
+
+    }
+
+    public function checkInStudent(AssessmentModel $assessment)
+    {
+        date_default_timezone_set('Africa/Lagos');
+
+        $data = request()->validate([
+            'studentId' => 'required|exists:student_profiles,student_code',
+        ]);
+
+        $student = StudentProfileModel::firstWhere('student_code', $data['studentId'])->id;
+        
+        CheckInModel::updateOrCreate([ 'assessment_id' => $assessment->id, 'student_profile_id' => $student ], [
+            'assessment_id' => $assessment->id,
+            'student_profile_id' => $student,
+            'checked_in_at' => now(),
+            'checked_in_expires_at' => now()->endOfDay()
+        ]);
+
+        return response()->json(['Message' => 'Checked In']);
 
     }
 }
