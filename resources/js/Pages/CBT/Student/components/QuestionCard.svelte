@@ -1,9 +1,15 @@
 <script>
     import Icons from "../../../components/icons.svelte";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
 
     export let questionNumber;
     export let question = {};
+
+    let options = [];
+
+    onMount(() => {
+        options = shuffle(question.choices ?? []);
+    });
 
     const getAlphabetsOptions = () => {
 
@@ -39,7 +45,7 @@
             <p class="text-gray-800 text-base font-base pt-6">{ question.prompt }</p>
         </div>
         <ul class="flex flex-col w-full space-y-2 text-sm text-gray-600 pt-8">
-            { #each shuffle(question.choices) ?? [] as option, index }
+            { #each options as option, index }
                 <div class="flex space-x-2 items-center w-full text-base">
                     <button  on:click={ () => dispatch('selected', { questionId : question.questionId, option }) } class={`flex items-center shrink-0 justify-center h-12 w-12 border ${ option == question.selectedAnswer ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
                         <span class={`${ option == question.selectedAnswer ? "text-green-700" : "text-gray-500" }`} > { getAlphabetsOptions()[index] }</span>

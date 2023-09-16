@@ -51,11 +51,11 @@ ExamController extends Controller
 
         $student = request()->user();
 
-        $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id ],[
-                            'student_profile_id'    => $student->id,
-                            'assessment_id'        => $assessment->id,
-                            'time_remaining'       => $assessment->assessment_duration
-                        ]);
+        $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id, 'subject_id' => $subject->id ],[
+            'student_profile_id'    => $student->id,
+            'assessment_id'        => $assessment->id,
+            'time_remaining'       => $assessment->assessment_duration
+        ]);
 
         $instructions = $assessment->description;
         $total_questions = $assessment->questions()->count();
@@ -241,9 +241,12 @@ ExamController extends Controller
 
         $assessment_subject = $assessment->subjects()->where('assessment_subjects.subject_id', $subject->id)->where('assessment_subjects.class_id', $student->class_id)->first();
 
-        $student_result = ExamResultsModel::updateOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id, 'subject_id' => $subject->id ],[
+        $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id, 'subject_id' => $subject->id ],[
+                            'student_profile_id'    => $student->id,
+                            'assessment_id'        => $assessment->id,
+                            'subject_id'           => $subject->id,
                             'time_remaining'       => $assessment_subject->pivot->assessment_duration
-                        ]);
+        ]);
 
         $instructions = $assessment->description;
         $total_questions = $assessment->questions()->where(fn($query) => $query->where('assessment_questions.subject_id', $subject->id )->where('assessment_questions.class_id', $student->class_id))->count();
