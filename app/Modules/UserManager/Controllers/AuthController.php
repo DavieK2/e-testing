@@ -43,19 +43,19 @@ class AuthController extends Controller
             ], 404);
         }
 
-        $checkIn = CheckInModel::where('student_profile_id', $student->id)->where('assessment_id', $assessment->id)->first();
+        // $checkIn = CheckInModel::where('student_profile_id', $student->id)->where('assessment_id', $assessment->id)->first();
 
-        if( ! $checkIn ){
-            return response()->json([
-                'message' => 'Have not Checked In'
-            ], 403);
-        }
+        // if( ! $checkIn ){
+        //     return response()->json([
+        //         'message' => 'Have not Checked In'
+        //     ], 403);
+        // }
 
-        if( Carbon::parse( $checkIn->checked_in_expires_at )->lt( now() ) ){
-            return response()->json([
-                'message' => 'Have not Checked In'
-            ], 403);
-        }
+        // if( Carbon::parse( $checkIn->checked_in_expires_at )->lt( now() ) ){
+        //     return response()->json([
+        //         'message' => 'Have not Checked In'
+        //     ], 403);
+        // }
 
         Auth::guard('student')->login($student);
 
