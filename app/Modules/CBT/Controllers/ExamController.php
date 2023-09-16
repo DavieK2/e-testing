@@ -51,7 +51,7 @@ ExamController extends Controller
 
         $student = request()->user();
 
-        $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id, 'subject_id' => $subject->id ],[
+        $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id ],[
             'student_profile_id'    => $student->id,
             'assessment_id'        => $assessment->id,
             'time_remaining'       => $assessment->assessment_duration
@@ -192,7 +192,7 @@ ExamController extends Controller
 
         $score = $data['studentAnswer'] == $question->correct_answer ? $question->question_score : 0;
 
-        $student->saveStudentResponse($assessment, $question->id, $data['studentAnswer'], $data['markedForReview'], $score, $data['subjectId'] );
+        $student->saveStudentResponse($assessment, $question->id, $data['studentAnswer'], $data['markedForReview'], $score, $data['subjectId'] ?? null );
 
         return response()->json(['message' => 'Answer Saved']);
 
@@ -319,9 +319,11 @@ ExamController extends Controller
             $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->id)->where('subject_id', $subjectId)->first();
         }
 
+        $url = $assessment->is_standalone ? url("/completed/cbt/$assessment->uuid") : url("/cbt/$assessment->uuid/t");
+
         $student_session->update(['has_submitted' => true ]);
 
-        return response()->json(['message' => 'Success']);
+        return response()->json(['message' => 'Success', 'url' => $url ]);
 
     }
 
