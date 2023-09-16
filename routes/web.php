@@ -29,26 +29,6 @@ use PragmaRX\Google2FAQRCode\QRCode\Bacon;
 require __DIR__ . '/auth.php';
 
 
-Route::get('setup', function(){
-
-    SubjectModel::create(['subject_name' => 'APPLIED ANATOMY AND PHYSIOLOGY', 'subject_code' => 'BMP 210']);
-    SubjectModel::create(['subject_name' => 'FUNDAMENTALS OF MIDWIFERY PRACTICE', 'subject_code' => 'BMP 211']);
-    SubjectModel::create(['subject_name' => 'NORMAL MIDWIFERY', 'subject_code' => 'BMP 212']);
-    SubjectModel::create(['subject_name' => 'PHARMACOLOGY II', 'subject_code' => 'BMP 213']);
-    SubjectModel::create(['subject_name' => 'FAMILY PLANNING I', 'subject_code' => 'BMP 214']);
-    SubjectModel::create(['subject_name' => 'MEDICAL SURGICAL NURSING II', 'subject_code' => 'BMP 215']);
-    SubjectModel::create(['subject_name' => 'COMMUNITY MIDWIFERY', 'subject_code' => 'BMP 216']);
-    SubjectModel::create(['subject_name' => 'SEMINAR IN MIDWIFERY PRACTICE II', 'subject_code' => 'BMP 217']);
-    SubjectModel::create(['subject_name' => 'HOSPITAL BASED MIDWIFERY PRACTICE II', 'subject_code' => 'BMP 218']);
-    SubjectModel::create(['subject_name' => 'INFANT I', 'subject_code' => 'BMP 219']);
-
-    $subjects = SubjectModel::get()->pluck('id');
-
-
-
-    StudentProfileModel::where('class_id', 2)->get()->each(fn($student) => $student->subjects()->sync($subjects));
-});
-
 Route::get('/students/check-in/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/CheckIn/Index', ['assessmentId' => $assessment->uuid]) );
 
 Route::get('/dashboard', fn() => Inertia::render('Dashboard/Index') );
@@ -111,9 +91,13 @@ Route::middleware(['auth'])->group(function(){
 
 
 //CBT
+
 Route::middleware(['auth:student', 'cbt', 'cbt.session'])->group(function() {
 
+    Route::get('/completed/cbt/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Exams/Complete', [ 'assessmentId' => $assessment->uuid ] ) );
+
     Route::get('/cbt/{assessment:uuid}/s', fn(AssessmentModel $assessment) => Inertia::render('CBT/Exams/Standalone', [ 'assessmentId' => $assessment->uuid ]) ) ;
+   
     Route::get('/cbt/save-session/student/{assessment:uuid}', [ ExamController::class, 'examSessionTimer' ]);
     
     Route::get('/cbt/{assessment:uuid}/t', fn(AssessmentModel $assessment) => Inertia::render('CBT/Exams/Termly/Index', [ 'assessmentId' => $assessment->uuid ]) ) ;
