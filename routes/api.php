@@ -99,7 +99,8 @@ Route::middleware(['auth:sanctum'])->group(function(){
 });
 
 
-
+Route::post('/student/check-in/get', [ ExamController::class, 'checkInStudentData'] );
+Route::post('/student/check-in/{assessment:uuid}', [ ExamController::class, 'checkInStudent'] );
 
 //Student CBT
 

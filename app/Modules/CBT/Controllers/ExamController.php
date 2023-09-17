@@ -5,6 +5,7 @@ namespace App\Modules\CBT\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\CBT\Features\GetAssessmentQuestionsFeature;
 use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\CheckInModel;
 use App\Modules\CBT\Models\ExamResultsModel;
 use App\Modules\CBT\Models\QuestionModel;
 use App\Modules\CBT\Requests\ExamSessionTimerRequest;
@@ -51,10 +52,10 @@ ExamController extends Controller
         $student = request()->user();
 
         $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id ],[
-                            'student_profile_id'    => $student->id,
-                            'assessment_id'        => $assessment->id,
-                            'time_remaining'       => $assessment->assessment_duration
-                        ]);
+            'student_profile_id'    => $student->id,
+            'assessment_id'        => $assessment->id,
+            'time_remaining'       => $assessment->assessment_duration
+        ]);
 
         $instructions = $assessment->description;
         $total_questions = $assessment->questions()->count();
@@ -78,6 +79,7 @@ ExamController extends Controller
         return response()->json([
             'studentName'           => $student->first_name." ".$student->surname,
             'studentCode'           => $student->student_code,
+            'studentPhoto'          => $student->profile_pic,
             'hasStarted'            => $student_result->has_started,
             'instructions'          => $instructions,
             'totalQuestions'        => $total_questions,
@@ -190,7 +192,7 @@ ExamController extends Controller
 
         $score = $data['studentAnswer'] == $question->correct_answer ? $question->question_score : 0;
 
-        $student->saveStudentResponse($assessment, $question->id, $data['studentAnswer'], $data['markedForReview'], $score, $data['subjectId'] );
+        $student->saveStudentResponse($assessment, $question->id, $data['studentAnswer'], $data['markedForReview'], $score, $data['subjectId'] ?? null );
 
         return response()->json(['message' => 'Answer Saved']);
 
@@ -244,7 +246,7 @@ ExamController extends Controller
                             'assessment_id'        => $assessment->id,
                             'subject_id'           => $subject->id,
                             'time_remaining'       => $assessment_subject->pivot->assessment_duration
-                        ]);
+        ]);
 
         $instructions = $assessment->description;
         $total_questions = $assessment->questions()->where(fn($query) => $query->where('assessment_questions.subject_id', $subject->id )->where('assessment_questions.class_id', $student->class_id))->count();
@@ -317,9 +319,50 @@ ExamController extends Controller
             $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->id)->where('subject_id', $subjectId)->first();
         }
 
+        $url = $assessment->is_standalone ? url("/completed/cbt/$assessment->uuid") : url("/cbt/$assessment->uuid/t");
+
         $student_session->update(['has_submitted' => true ]);
 
-        return response()->json(['message' => 'Success']);
+        return response()->json(['message' => 'Success', 'url' => $url ]);
+
+    }
+
+
+    public function checkInStudentData()
+    {        
+        $data = request()->validate([
+            'studentId' => 'required|exists:student_profiles,student_code',
+        ]);
+
+        $student = StudentProfileModel::firstWhere('student_code', $data['studentId']);
+
+        return response()->json([
+            'studentName'       =>     $student->first_name. " ". $student->surname,
+            'studentCode'       =>     $student->student_code,
+            'studentClass'      =>     $student->class->class_name,
+            'studentPhoto'      =>     $student->profile_pic,
+        ]);
+
+    }
+
+    public function checkInStudent(AssessmentModel $assessment)
+    {
+        date_default_timezone_set('Africa/Lagos');
+
+        $data = request()->validate([
+            'studentId' => 'required|exists:student_profiles,student_code',
+        ]);
+
+        $student = StudentProfileModel::firstWhere('student_code', $data['studentId'])->id;
+        
+        CheckInModel::updateOrCreate([ 'assessment_id' => $assessment->id, 'student_profile_id' => $student ], [
+            'assessment_id' => $assessment->id,
+            'student_profile_id' => $student,
+            'checked_in_at' => now(),
+            'checked_in_expires_at' => now()->endOfDay()
+        ]);
+
+        return response()->json(['Message' => 'Checked In']);
 
     }
 }
