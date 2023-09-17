@@ -20,17 +20,11 @@ services:
         # command: 'php artisan serve --host=0.0.0.0'
         volumes:
           - ./:/var/www/html
-<<<<<<< HEAD
         networks:
           - example-net
         restart: unless-stopped
         tty: true
        
-=======
-        ports:
-          - 8000:8000
-        network_mode: "host"
->>>>>>> main
     db:
         image: mysql:8.0
         volumes: 
