@@ -7,8 +7,7 @@ services:
         tty: true
         volumes: 
           - ./:/var/www/html
-          - ./nginx/sites-available/conscal.site.conf:/etc/nginx/sites-available/conscal.site.conf
-          - ./nginx/sites-enabled/conscal.site.conf:/etc/nginx/sites-available/conscal.site.conf
+          - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
         networks:
           - example-net
         depends_on:
