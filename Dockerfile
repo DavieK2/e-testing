@@ -1,12 +1,4 @@
-FROM ubuntu:latest
-
 FROM php:8.1.23-fpm
-
-ARG DEBIAN_FRONTEND=noninteractive
-
-RUN  apt-get update -y && apt-get install -y \ 
-     software-properties-common 
-
 
 RUN apt-get update && apt-get install -y \
      curl \
