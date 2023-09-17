@@ -1,5 +1,7 @@
 FROM ubuntu:latest
 
+FROM php:8.1.23-fpm
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN  apt-get update -y && apt-get install -y \ 
@@ -7,26 +9,18 @@ RUN  apt-get update -y && apt-get install -y \
 
 
 RUN apt-get update && apt-get install -y \
-     php8.1 \
-     python3.4 \
-     python3-pip \ 
-     php8.1-cli \
-     php8.1-common \
-     php8.1-mysql \
-     php8.1-zip \
-     php8.1-gd \
-     php8.1-mbstring \
-     php8.1-curl \
-     php8.1-xml \
-     php8.1-bcmath \
-     php8.1-sqlite3 \
-     php8.1-fpm \
-     php8.1-gd \
+     curl \
+     libpng-dev \
+     libonig-dev \
+     libxml2-dev \
+     zip \
+     unzip \
      nano \
      git-all
 
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pip install pypsexec --no-cache-dir 
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
