@@ -27,6 +27,8 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html
 
+RUN chown -R www-data:www-data *
+
 RUN composer install --ignore-platform-reqs --no-interaction
 
 RUN php artisan optimize:clear && \

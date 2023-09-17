@@ -2,8 +2,7 @@ services:
     web:
         image: nginx:latest
         ports: 
-          - "80:80"
-          - "443:443"
+          - "8000:80"
         restart: unless-stopped
         tty: true
         volumes: 
@@ -17,23 +16,25 @@ services:
     app:
         build:
             dockerfile: Dockerfile
-        # command: 'php artisan serve --host=0.0.0.0'
         volumes:
           - ./:/var/www/html
         networks:
           - example-net
         restart: unless-stopped
         tty: true
+        depends_on:
+          - db
        
     db:
         image: mysql:8.0
         volumes: 
           - mysqldata:/var/lib/mysql
         ports:
-          - "3308:3306"
+          - "3306:3306"
         networks:
           - example-net
         restart: unless-stopped
+        container_name: db
         environment:
             MYSQL_ROOT_PASSWORD: 12345678
             MYSQL_USER: user
