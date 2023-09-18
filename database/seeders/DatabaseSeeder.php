@@ -37,8 +37,8 @@ class DatabaseSeeder extends Seeder
 
         UserModel::create([
             'fullname' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => Hash::make('password'),
+            'email' => 'admin@soncal.com',
+            'password' => Hash::make('SONCALadmin1234!'),
             'phone_no' => '2345678900000',
             'role_id' => $role3->id
         ]);
@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'teacher@example.com',
             'password' => Hash::make('password'),
             'phone_no' => '2345678900100',
-            'role_id' => $role3->id
+            'role_id' => $role1->id
         ]);
 
        

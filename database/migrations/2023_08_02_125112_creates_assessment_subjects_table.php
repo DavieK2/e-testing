@@ -13,8 +13,8 @@ return new class extends Migration
             $table->foreignId('subject_id')->constrained();
             $table->foreignId('class_id')->constrained();
             $table->integer('assessment_duration');
-            $table->integer('start_date');
-            $table->integer('end_date');
+            $table->timestamp('start_date');
+            $table->timestamp('end_date');
             $table->boolean('is_published')->default(false);
             $table->boolean('is_synced')->default(false);
         });

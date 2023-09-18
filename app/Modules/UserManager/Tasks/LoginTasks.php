@@ -52,8 +52,8 @@ class LoginTasks extends BaseTasks{
             $url = url('/teacher/dashboard');
         }
 
-        if( $user->admin ){
-            $url = url('/dashboard');
+        if( $user->is_question_manager ){
+            $url = url('/assessments');
         }
 
         return new static([ ...$this->item, 'token' =>   $token, 'url' => $url ]);

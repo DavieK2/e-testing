@@ -14,6 +14,7 @@ class CompleteAssessmentRequest extends BaseRequest
 
     public function rules()
     {
+        // dd(request('subjects'));
         return [
             'step'                      => 'required|in:create_assessment,add_classes,complete_assessment',
             'assessmentId'              => 'required|exists:assessments,uuid',
