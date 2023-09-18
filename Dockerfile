@@ -8,11 +8,12 @@ RUN apt-get update && apt-get install -y \
      zip \
      unzip \
      nano \
-     git-all
+     git-all \
+     libzip-dev
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
