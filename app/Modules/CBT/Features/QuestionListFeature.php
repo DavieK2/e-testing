@@ -24,11 +24,11 @@ class QuestionListFeature extends FeatureContract {
 
             }else{
 
-                $builder = $task->start([ ...$args, 'assessment' => $this->assessment ])->getQuestions();
+                $builder = $task->start([ ...$args, 'assessment' => $this->assessment ])->getQuestions()->all();
 
-                foreach($args as $key => $value){
-                    $builder = $builder->$key();
-                }
+                // foreach($args as $key => $value){
+                //     $builder = $builder->$key();
+                // }
             }
             
 
