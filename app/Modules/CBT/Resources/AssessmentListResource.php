@@ -11,7 +11,7 @@ class AssessmentListResource extends BaseResource
     {
         return [
             'assessmentId' => $this->uuid,
-            'isStandalone' => $this->is_standalone ? 'Standalone' : 'Termly',
+            'isStandalone' => $this->is_standalone ? 'Standalone' : 'Semester',
             'title' => $this->title,
             'assessmentType' => $this->type,
             'session' => $this->session ? $this->session : '',

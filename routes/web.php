@@ -28,7 +28,43 @@ use PragmaRX\Google2FAQRCode\QRCode\Bacon;
 
 require __DIR__ . '/auth.php';
 
+Route::get('/setup', function(){
 
+    SubjectModel::create([
+        'subject_name' => 'MED-SURG NSG II',
+        'subject_code' => 'BMP 215',
+    ]);
+    SubjectModel::create([
+        'subject_name' => 'INFANT I',
+        'subject_code' => 'BMP 219',
+    ]);
+    SubjectModel::create([
+        'subject_name' => 'NORMAL MIDWIFERY',
+        'subject_code' => 'BMP 212',
+    ]);
+    SubjectModel::create([
+        'subject_name' => 'COMMUNITY MIDWIFERY',
+        'subject_code' => 'BMP 216',
+    ]);
+    SubjectModel::create([
+        'subject_name' => 'PHARMACOLOGY II',
+        'subject_code' => 'BMP 213',
+    ]);
+    SubjectModel::create([
+        'subject_name' => 'FAMILY PLANNING I',
+        'subject_code' => '214',
+    ]);
+    SubjectModel::create([
+        'subject_name' => 'ANATOMY AND PHIO II',
+        'subject_code' => 'BMP 210',
+    ]);
+    SubjectModel::create([
+        'subject_name' => 'FUNDAMENTALS OF MIDWIFERY',
+        'subject_code' => 'BMP 211',
+    ]);
+    
+
+});
 
 Route::middleware(['auth'])->group(function(){
 
