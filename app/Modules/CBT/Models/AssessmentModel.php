@@ -8,6 +8,7 @@ use App\Modules\SchoolManager\Models\SubjectModel;
 use App\Modules\SchoolManager\Models\TermModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class AssessmentModel extends Model
@@ -78,8 +79,23 @@ class AssessmentModel extends Model
                     ->withPivot(['class_id', 'start_date', 'end_date', 'assessment_duration']);
     }
 
-    public function addSubject($data)
+    public function addSubject(Collection $data)
     {
-        return $this->subjects()->sync($data);
+        $data->each(function($subject, $key) {
+
+            DB::table('assessment_subjects')
+                ->updateOrInsert(
+                    [ 'assessment_id' => $this->id, 'subject_id' => $key, 'class_id' => $subject['class_id'] ], 
+                    [
+                        'assessment_id' => $this->id, 
+                        'subject_id' => $key, 
+                        'class_id' => $subject['class_id'],
+                        'assessment_duration' => $subject['assessment_duration'],
+                        'start_date' => $subject['start_date'],
+                        'end_date' => $subject['end_date'],
+                    ]);
+        });
+
+        return ;
     }
 }

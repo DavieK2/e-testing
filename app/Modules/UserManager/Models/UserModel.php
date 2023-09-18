@@ -27,6 +27,11 @@ class UserModel extends User
         return $this->role->role_name === 'teacher';
     }
 
+    public function getIsQuestionManagerAttribute()
+    {
+        return $this->role->role_name === 'admin';
+    }
+
     public function subjects()
     {
         return $this->belongsToMany(SubjectModel::class, 'user_subjects', 'user_id', 'subject_id');
