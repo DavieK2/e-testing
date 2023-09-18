@@ -12,7 +12,10 @@ class ImportDatabaseCommand extends Command
 
     public function handle()
     {
+        set_time_limit(0);
+        ini_set('memory_limit', '-1');
+        
         DB::unprepared(file_get_contents(base_path('student_profiles.sql')));
-        // DB::unprepared(file_get_contents(base_path('student_subjects.sql')));
+        DB::unprepared(file_get_contents(base_path('student_subjects.sql')));
     }
 }
