@@ -59,7 +59,7 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/questions/create/t/{assessment:uuid}/{subject}/{class}', function(AssessmentModel $assessment, SubjectModel $subject, $class){
         if( $assessment->is_standalone ) abort(404);
-        return Inertia::render('CBT/Questions/Create', ['assessmentId' => $assessment->uuid, 'title' => $assessment->title, 'subjectId' => $subject->id, 'classId' => $class ] );
+        return Inertia::render('CBT/Questions/Create', ['assessmentId' => $assessment->uuid, 'title' => $assessment->title, 'subjectId' => $subject->id, 'subjectTitle' => $subject->subject_name, 'classId' => $class ] );
     } );
 
     //Classes
