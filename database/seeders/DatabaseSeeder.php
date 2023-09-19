@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Modules\UserManager\Models\RoleModel;
 use App\Modules\UserManager\Models\UserModel;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -50,7 +51,5 @@ class DatabaseSeeder extends Seeder
             'phone_no' => '2345678900100',
             'role_id' => $role1->id
         ]);
-
-       
     }
 }
