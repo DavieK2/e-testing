@@ -18,7 +18,7 @@ services:
             dockerfile: Dockerfile
         volumes:
           - ./:/var/www/html
-          - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+          - ./php/php.ini:/usr/local/etc/php/php.ini
         networks:
           - example-net
         restart: unless-stopped

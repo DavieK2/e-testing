@@ -101,6 +101,8 @@ ExamController extends Controller
         header("Content-Type: text/event-stream");
 
 
+        ob_end_flush();
+        
         $studentId = auth()->guard('student')->user()->id;
 
         $data = $request->validated();
@@ -129,7 +131,8 @@ ExamController extends Controller
             $time_remaining -- ;
 
             $student_session->update(['time_remaining' => $time_remaining]);
-            // flush();
+            
+            flush();
 
             if (connection_aborted()) break;
 
