@@ -170,15 +170,17 @@ ExamController extends Controller
 
             return [
                 'questionId'        => $response->questionId,
-                'selectedAnswer'    => $response->studentAnswer,
+                'selectedAnswer'    => trim($response->studentAnswer),
                 'markedForReview'   => $response->markedForReview,
                 'notAnswered'       => $not_answered
             ];
         });
 
-       return response()->json([
-            'data' => $student_responses->toArray()
-       ]);
+
+        
+        return response()->json([
+                'data' => $student_responses->toArray()
+        ]);
     }
 
     public function saveStudentExamSessionAnswer(AssessmentModel $assessment, SaveStudentExamSessionResponsesRequest $request)
