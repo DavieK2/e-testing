@@ -76,7 +76,7 @@ class AssessmentModel extends Model
     public function subjects()
     {
         return $this->belongsToMany(SubjectModel::class, 'assessment_subjects', 'assessment_id', 'subject_id')
-                    ->withPivot(['class_id', 'start_date', 'end_date', 'assessment_duration']);
+                    ->withPivot(['class_id', 'start_date', 'end_date', 'assessment_duration', 'is_published']);
     }
 
     public function addSubject(Collection $data)
