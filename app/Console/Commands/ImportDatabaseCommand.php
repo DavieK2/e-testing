@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ImportDatabaseCommand extends Command
 {
-    protected $signature = 'app:import-database';
+    protected $signature = 'app:import';
     protected $description = 'Command description';
 
     public function handle()

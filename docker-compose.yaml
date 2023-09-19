@@ -35,6 +35,7 @@ services:
         networks:
           - example-net
         restart: unless-stopped
+        command: --max_allowed_packet=325058560
         container_name: db
         environment:
             MYSQL_ROOT_PASSWORD: 12345678
@@ -50,6 +51,7 @@ services:
         environment:
             PMA_HOST: db
             MYSQL_ROOT_PASSWORD: 12345678
+            UPLOAD_LIMIT: 100000000
         depends_on:
           - db
         networks:
