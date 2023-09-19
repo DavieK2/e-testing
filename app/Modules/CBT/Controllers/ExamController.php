@@ -99,8 +99,9 @@ ExamController extends Controller
 
         header("Cache-Control: no-store");
         header("Content-Type: text/event-stream");
+        header("X-Accel-Buffering: no");
 
-
+        
         $studentId = auth()->guard('student')->user()->id;
 
         $data = $request->validated();
@@ -130,7 +131,7 @@ ExamController extends Controller
 
             $student_session->update(['time_remaining' => $time_remaining]);
             
-            ob_end_clean();
+            flush();
 
             if (connection_aborted()) break;
 
@@ -139,8 +140,7 @@ ExamController extends Controller
 
         echo 'data: '. 0 . "\n\n";
 
-        ob_end_clean();
-        // ob_end_flush();
+        ob_end_flush();
 
     }
 
