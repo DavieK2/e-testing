@@ -28,7 +28,17 @@ use PragmaRX\Google2FAQRCode\QRCode\Bacon;
 
 require __DIR__ . '/auth.php';
 
+
+
 Route::middleware(['auth'])->group(function(){
+
+    Route::get('setup', function(){
+
+       $sID =  SubjectModel::get()->pluck('id')->toArray();
+
+       StudentProfileModel::where('class_id', 2)->get()->each(fn($student) => $student->subjects()->sync($sID));
+
+    });
 
     Route::get('/students/check-in/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/CheckIn/Index', ['assessmentId' => $assessment->uuid]) );
 
