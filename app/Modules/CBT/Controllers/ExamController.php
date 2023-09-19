@@ -131,7 +131,7 @@ ExamController extends Controller
 
             $student_session->update(['time_remaining' => $time_remaining]);
             
-            flush();
+            ob_end_clean();
 
             if (connection_aborted()) break;
 
