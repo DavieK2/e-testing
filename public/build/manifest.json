@@ -1,13 +1,13 @@
 {
-  "_preline-d485e17e.js": {
-    "file": "assets/preline-d485e17e.js",
+  "_preline-a2e302e0.js": {
+    "file": "assets/preline-a2e302e0.js",
     "imports": [
       "resources/js/app.js"
     ],
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-bf15657e.css",
+    "file": "assets/app-5a425ad8.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -20,9 +20,9 @@
       "assets/app-d2cac579.css"
     ],
     "dynamicImports": [
-      "_preline-d485e17e.js"
+      "_preline-a2e302e0.js"
     ],
-    "file": "assets/app-59c9dfe3.js",
+    "file": "assets/app-7bf130f8.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
