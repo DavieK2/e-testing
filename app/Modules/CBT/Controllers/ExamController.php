@@ -190,17 +190,18 @@ ExamController extends Controller
 
         $question = QuestionModel::firstWhere('uuid', $data['questionId']);
 
-        $score = $data['studentAnswer'] == $question->correct_answer ? $question->question_score : 0;
+        $score = trim(strtolower($data['studentAnswer'])) == trim(strtolower($question->correct_answer)) ? $question->question_score : 0;
 
         $student->saveStudentResponse($assessment, $question->id, $data['studentAnswer'], $data['markedForReview'], $score, $data['subjectId'] ?? null );
 
         return response()->json(['message' => 'Answer Saved']);
-
     }
 
 
     public function getStudentTermlyExamAssessments(AssessmentModel $assessment)
     {
+        date_default_timezone_set('Africa/Lagos');
+        
         $student = request()->user();
 
         $student_class = $student->class_id;
@@ -220,7 +221,7 @@ ExamController extends Controller
         }
 
         $available_subjects = DB::table('assessment_subjects')
-                                ->where( fn($query) => $query->whereIn('assessment_subjects.subject_id', $student_subjects)->where('assessment_subjects.class_id', $student_class) )
+                                ->where( fn($query) => $query->whereIn('assessment_subjects.subject_id', $student_subjects)->where('assessment_subjects.class_id', $student_class)->whereBetween('assessment_subjects.start_date',  [ now()->startOfDay()->toDateTimeString(), now()->toDateTimeString() ] ) )
                                 ->join('subjects', 'subjects.id', '=', 'assessment_subjects.subject_id')
                                 ->select('assessment_subjects.assessment_duration as duration', 'subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode')
                                 ->get()
