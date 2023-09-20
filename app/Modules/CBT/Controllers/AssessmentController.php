@@ -88,12 +88,9 @@ class AssessmentController extends Controller
 
         $class = ClassModel::firstWhere('class_code', $data['classId'])->id;
 
-        DB::table('assessment_subjects')
-                ->updateOrInsert(
-                    [ 'assessment_id' => $assessment->id, 'subject_id' => $data['subjectId'], 'class_id' => $class ], 
-                    [
-                        'is_published' => $data['shouldPublish'],
-                    ]);
+        DB::table('assessment_subjects')->where(fn($query) => $query->where('assessment_id', $assessment->id)->where('subject_id', $data['subjectId'])->where('class_id', $class))
+            ->limit(1)
+            ->update([ 'is_published' => $data['shouldPublish'] ]); 
 
         return response()->json([
             'message' => 'Publised Success', 
