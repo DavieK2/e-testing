@@ -17,6 +17,7 @@ class PublishTermlyAssessmentRequest extends FormRequest
             'assessmentId'  => 'required|exists:assessments,uuid',
             'subjectId'     => 'required|exists:subjects,id',
             'classId'       => 'required|exists:classes,class_code',
+            'shouldPublish' => 'required'
         ];
     }
 }

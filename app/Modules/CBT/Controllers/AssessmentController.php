@@ -21,6 +21,7 @@ use App\Modules\CBT\Requests\PublishAssessmentRequest;
 use App\Modules\CBT\Requests\PublishTermlyAssessmentRequest;
 use App\Modules\CBT\Requests\UpdateAssessmentRequest;
 use App\Modules\SchoolManager\Models\ClassModel;
+use Illuminate\Support\Facades\DB;
 
 class AssessmentController extends Controller
 {
@@ -87,11 +88,17 @@ class AssessmentController extends Controller
 
         $class = ClassModel::firstWhere('class_code', $data['classId'])->id;
 
-        $assessment_subject = $assessment->subjects()->where(fn($query) => $query->where('class_id', $class)->where('subject_id', $data['subjectId']))->first();
+        DB::table('assessment_subjects')
+                ->updateOrInsert(
+                    [ 'assessment_id' => $assessment->id, 'subject_id' => $data['subjectId'], 'class_id' => $class ], 
+                    [
+                        'is_published' => $data['shouldPublish'],
+                    ]);
 
-        $assessment_subject->update(['is_published' => ! $assessment_subject->is_published ]);
-
-        return response()->json(['message' => 'Publised Success', 'published' => ! $assessment_subject->is_published ]);
+        return response()->json([
+            'message' => 'Publised Success', 
+            'published' => $data['shouldPublish'] ? 'Published' : 'Unpublished' 
+        ]);
     }
 
     

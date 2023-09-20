@@ -17,7 +17,7 @@ class AssessmentModel extends Model
 
     protected $table = 'assessments';
 
-    protected $guarded = ['id'];
+    // protected $guarded = ['id'];
 
     public function questions()
     {
