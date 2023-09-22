@@ -53,6 +53,8 @@ class CreateAssessmentTasks extends BaseTasks {
 
         $data = collect($this->item['subjects'])->groupBy('classId');
 
+        $assessment->subjects()->detach();
+
         $data->each(function($subject) use($assessment) {
 
             $subjectData = collect($subject)->mapWithKeys( fn($subject) => [ $subject['subjectId'] => ['class_id' => $subject['classId'], 'start_date' => $subject['startDate'], 'end_date' => $subject['endDate'], 'assessment_duration' => $subject['duration'] * 60 ] ]);

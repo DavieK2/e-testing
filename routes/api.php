@@ -44,6 +44,8 @@ Route::post('/assessment/create', [ AssessmentController::class, 'create' ]);
 Route::post('/assessment/update', [ AssessmentController::class, 'update' ]);
 Route::post('/assessment/publish', [ AssessmentController::class, 'publish' ]);
 
+Route::post('/assessment/publish/termly', [ AssessmentController::class, 'publishTermly' ]);
+
 Route::post('/assessment/assign-classes', [ AssessmentController::class, 'addClassesToAssessment' ]);
 Route::post('/assessment/termly/complete', [ AssessmentController::class, 'complete' ]);
 

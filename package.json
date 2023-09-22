@@ -24,6 +24,7 @@
         "@sveltejs/vite-plugin-svelte": "^2.2.0",
         "class-variance-authority": "^0.6.0",
         "clsx": "^1.2.1",
+        "katex": "^0.16.8",
         "lucide-svelte": "^0.241.0",
         "moment": "^2.29.4",
         "pikaday": "^1.8.2",

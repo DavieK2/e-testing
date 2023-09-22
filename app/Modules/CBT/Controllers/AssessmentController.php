@@ -18,7 +18,10 @@ use App\Modules\CBT\Requests\CompleteAssessmentRequest;
 use App\Modules\CBT\Requests\CreateAssessmentRequest;
 use App\Modules\CBT\Requests\GetAssessmentSubjectRequest;
 use App\Modules\CBT\Requests\PublishAssessmentRequest;
+use App\Modules\CBT\Requests\PublishTermlyAssessmentRequest;
 use App\Modules\CBT\Requests\UpdateAssessmentRequest;
+use App\Modules\SchoolManager\Models\ClassModel;
+use Illuminate\Support\Facades\DB;
 
 class AssessmentController extends Controller
 {
@@ -75,6 +78,24 @@ class AssessmentController extends Controller
     public function getPublishedAssessments()
     {
         return $this->serve( new GetPublishedAssessmentFeature() );
+    }
+
+    public function publishTermly(PublishTermlyAssessmentRequest $request)
+    {
+        $data = $request->validated();
+
+        $assessment = AssessmentModel::firstWhere('uuid', $data['assessmentId']);
+
+        $class = ClassModel::firstWhere('class_code', $data['classId'])->id;
+
+        DB::table('assessment_subjects')->where(fn($query) => $query->where('assessment_id', $assessment->id)->where('subject_id', $data['subjectId'])->where('class_id', $class))
+            ->limit(1)
+            ->update([ 'is_published' => $data['shouldPublish'] ]); 
+
+        return response()->json([
+            'message' => 'Publised Success', 
+            'published' => $data['shouldPublish'] ? 'Published' : 'Unpublished' 
+        ]);
     }
 
     

@@ -99,8 +99,9 @@ ExamController extends Controller
 
         header("Cache-Control: no-store");
         header("Content-Type: text/event-stream");
+        header("X-Accel-Buffering: no");
 
-
+        
         $studentId = auth()->guard('student')->user()->id;
 
         $data = $request->validated();
@@ -139,8 +140,7 @@ ExamController extends Controller
 
         echo 'data: '. 0 . "\n\n";
 
-        ob_end_clean();
-        // ob_end_flush();
+        ob_end_flush();
 
     }
 
@@ -170,15 +170,17 @@ ExamController extends Controller
 
             return [
                 'questionId'        => $response->questionId,
-                'selectedAnswer'    => $response->studentAnswer,
+                'selectedAnswer'    => trim($response->studentAnswer),
                 'markedForReview'   => $response->markedForReview,
                 'notAnswered'       => $not_answered
             ];
         });
 
-       return response()->json([
-            'data' => $student_responses->toArray()
-       ]);
+
+        
+        return response()->json([
+                'data' => $student_responses->toArray()
+        ]);
     }
 
     public function saveStudentExamSessionAnswer(AssessmentModel $assessment, SaveStudentExamSessionResponsesRequest $request)
@@ -220,7 +222,7 @@ ExamController extends Controller
         }
 
         $available_subjects = DB::table('assessment_subjects')
-                                ->where( fn($query) => $query->whereIn('assessment_subjects.subject_id', $student_subjects)->where('assessment_subjects.class_id', $student_class)->whereBetween('assessment_subjects.start_date',  [ now()->startOfDay()->toDateTimeString(), now()->toDateTimeString() ] ) )
+                                ->where( fn($query) => $query->whereIn('assessment_subjects.subject_id', $student_subjects)->where('assessment_subjects.class_id', $student_class)->where('assessment_subjects.is_published', true)->whereBetween('assessment_subjects.start_date',  [ now()->startOfDay()->toDateTimeString(), now()->toDateTimeString() ] ) )
                                 ->join('subjects', 'subjects.id', '=', 'assessment_subjects.subject_id')
                                 ->select('assessment_subjects.assessment_duration as duration', 'subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode')
                                 ->get()
