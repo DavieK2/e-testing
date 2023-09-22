@@ -1,6 +1,7 @@
 services:
     web:
-        image: nginx:latest
+        build:
+            dockerfile: nginx/Dockerfile
         ports: 
           - "80:80"
         restart: unless-stopped

@@ -9,7 +9,19 @@ RUN apt-get update && apt-get install -y \
      unzip \
      nano \
      git-all \
-     libzip-dev
+     libzip-dev \
+     supervisor \ 
+     python3 \
+     python3-venv \
+     python3-pip
+
+ENV VIRTUAL_ENV=/opt/venv
+
+RUN python3 -m venv $VIRTUAL_ENV
+
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN pip install pypsexec
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
