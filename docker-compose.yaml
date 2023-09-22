@@ -13,9 +13,7 @@ services:
         networks:
           - example-net
         depends_on:
-          - app
-        certbot:
-        
+          - app        
     app:
         build:
             dockerfile: Dockerfile
