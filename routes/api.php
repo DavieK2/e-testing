@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\CBT\Controllers\AssessmentController;
+use App\Modules\CBT\Controllers\AssessmentResultController;
 use App\Modules\CBT\Controllers\AssessmentTypeController;
 use App\Modules\CBT\Controllers\ExamController;
 use App\Modules\CBT\Controllers\QuestionController;
@@ -92,6 +93,9 @@ Route::post('/term/update', [ TermController::class, 'update']);
 Route::get('/sessions', [ AcademicSessionController::class, 'index']);
 Route::post('/session/create', [ AcademicSessionController::class, 'create']);
 Route::post('/session/update', [ AcademicSessionController::class, 'update']);
+
+
+Route::get('/results/assessment-subjects/{assessment:uuid}', [ AssessmentResultController::class, 'subjects']);
 
 
 Route::middleware(['auth:sanctum'])->group(function(){

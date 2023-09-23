@@ -25,7 +25,7 @@ enum ResponseType
 
 abstract class BaseTasks {
 
-    public function __construct(protected LengthAwarePaginator|Builder|QueryBuilder|Model|Collection|array|null $item = []){}
+    public function __construct(public LengthAwarePaginator|Builder|QueryBuilder|Model|Collection|array|null $item = []){}
 
     protected function start($data)
     {
