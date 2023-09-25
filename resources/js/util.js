@@ -126,6 +126,26 @@ export const router  = {
         }
     },
 
+    downloadExcel : async (url, data, events = {}) => {
+
+        try {
+
+            let response = await axios.post(url, data, {
+                headers: {
+                    "Content-Type" : "application/json",
+                    "Content-Disposition" : "attachment; filename=results.xlsx"
+                },
+                responseType: 'arraybuffer'
+            });  
+
+            return triggerSuccessEvent(response, events);
+
+        } catch (error) {
+
+            return triggerFailureEvent(error, events);
+            
+        }
+    },
     navigateTo : (url) => {
         return routr.get(url);
     }

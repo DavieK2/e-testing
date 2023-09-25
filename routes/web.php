@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Modules\CBT\Controllers\AssessmentResultController;
 use App\Modules\CBT\Controllers\ExamController;
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\SchoolManager\Models\ClassModel;
