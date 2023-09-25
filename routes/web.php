@@ -32,7 +32,9 @@ require __DIR__ . '/auth.php';
 
 Route::get('/', function(){
 
-   
+   $assessment_subjects = AssessmentModel::find(2)->subjects->pluck('id');
+
+   StudentProfileModel::where('class_id', 3)->get()->each(fn($student) => $student->subjects()->sync($assessment_subjects) );
 });
 
 Route::middleware(['auth'])->group(function(){
