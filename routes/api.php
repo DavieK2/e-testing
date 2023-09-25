@@ -96,6 +96,9 @@ Route::post('/session/update', [ AcademicSessionController::class, 'update']);
 
 
 Route::get('/results/assessment-subjects/{assessment:uuid}', [ AssessmentResultController::class, 'subjects']);
+Route::post('/assessment/t/results', [ AssessmentResultController::class, 'getTermlyAssessmentResults']);
+
+Route::post('/assessment/student/results', [ AssessmentResultController::class, 'getStudentResults']);
 
 
 Route::middleware(['auth:sanctum'])->group(function(){

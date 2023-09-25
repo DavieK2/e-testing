@@ -9,6 +9,7 @@ use App\Modules\SchoolManager\Models\SubjectModel;
 use App\Modules\UserManager\Constants\UserManagerConstants;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -29,6 +30,10 @@ use PragmaRX\Google2FAQRCode\QRCode\Bacon;
 require __DIR__ . '/auth.php';
 
 
+Route::get('/', function(){
+
+   
+});
 
 Route::middleware(['auth'])->group(function(){
 
@@ -57,6 +62,10 @@ Route::middleware(['auth'])->group(function(){
         return Inertia::render('CBT/Assessment/termly/results/Index', [ 'assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title ] );
     } );
 
+    Route::get('/assessments/student/result/{student}/{assessment:uuid}', function($student, AssessmentModel $assessment ) {
+        if( $assessment->is_standalone ) abort(404);
+        return Inertia::render('CBT/Assessment/termly/results/Result', [ 'assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title, 'studentId' => $student ] );
+    } );
 
     //Assessment Types
     Route::get('/assessment-types', fn() => Inertia::render('CBT/Assessment/assessment_types/AssessmentTypesView') );
