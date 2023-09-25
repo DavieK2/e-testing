@@ -4,6 +4,7 @@ namespace App\Modules\SchoolManager\Models;
 
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Models\CheckInModel;
+use App\Modules\CBT\Models\ExamResultsModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -63,5 +64,10 @@ class StudentProfileModel extends Authenticatable
     public function checkIns()
     {
         return $this->hasOne(CheckInModel::class, 'student_checkins', 'student_profile_id');
+    }
+
+    public function results()
+    {
+        return $this->hasMany(ExamResultsModel::class, 'assessment_results', 'student_profile_id');
     }
 }

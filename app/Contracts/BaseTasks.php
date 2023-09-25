@@ -90,6 +90,10 @@ abstract class BaseTasks {
         return new static($this->item->toArray());
     }
 
+    public function get()
+    {
+        return $this->item;
+    }
 
     public function search()
     {

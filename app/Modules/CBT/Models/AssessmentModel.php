@@ -17,7 +17,7 @@ class AssessmentModel extends Model
 
     protected $table = 'assessments';
 
-    // protected $guarded = ['id'];
+    protected $guarded = ['id'];
 
     public function questions()
     {
@@ -84,8 +84,8 @@ class AssessmentModel extends Model
         $data->each(function($subject, $key) {
 
             DB::table('assessment_subjects')
-                ->updateOrInsert(
-                    [ 'assessment_id' => $this->id, 'subject_id' => $key, 'class_id' => $subject['class_id'] ], 
+                ->insert(
+                    // [ 'assessment_id' => $this->id, 'subject_id' => $key, 'class_id' => $subject['class_id'] ], 
                     [
                         'assessment_id' => $this->id, 
                         'subject_id' => $key, 

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('assessment_duration')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
+            $table->boolean('has_generated_results')->default(false);
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
        });

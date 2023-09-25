@@ -6,6 +6,7 @@ use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Tasks\GetAssessmentClassesTasks;
+use App\Modules\SchoolManager\Resources\ClassListCollection;
 
 class GetAssessmentClassesFeature extends FeatureContract {
 
@@ -19,7 +20,7 @@ class GetAssessmentClassesFeature extends FeatureContract {
 
             $builder = $task->start($this->assessment)->getAssessmentClasses()->all();
 
-            return $task::formatResponse( $builder );
+            return $task::formatResponse( $builder, formatter: ClassListCollection::class );
 
        } catch (\Throwable $th) {
         

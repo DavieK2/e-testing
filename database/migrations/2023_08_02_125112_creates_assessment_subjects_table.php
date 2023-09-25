@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamp('start_date');
             $table->timestamp('end_date');
             $table->boolean('is_published')->default(false);
+            $table->boolean('has_generated_results')->default(false);
             $table->boolean('is_synced')->default(false);
         });
     }

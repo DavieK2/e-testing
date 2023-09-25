@@ -1,8 +1,10 @@
 services:
     web:
-        image: nginx:latest
+        build:
+            dockerfile: nginx/Dockerfile
         ports: 
           - "80:80"
+          - "443:443"
         restart: unless-stopped
         tty: true
         volumes: 
@@ -11,8 +13,7 @@ services:
         networks:
           - example-net
         depends_on:
-          - app
-        
+          - app        
     app:
         build:
             dockerfile: Dockerfile

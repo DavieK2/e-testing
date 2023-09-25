@@ -20,6 +20,7 @@ return new class extends Migration
             $table->boolean('has_submitted')->default(false);     
             $table->integer('tries')->default(5);     
             $table->integer('total_score')->nullable();
+            $table->string('grade')->nullable();
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });
