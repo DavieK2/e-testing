@@ -10,6 +10,7 @@ class GetTermlyAssessmentResultListResource extends BaseResource
     {
         return [
             'studentName'   => $this->first_name." ".$this->surname,
+            'studentRegNo'  => $this->reg_no,
             'studentId'     => $this->id,
             'class'         => strtoupper($this->class_name),
             'subject'       => strtoupper("$this->subject_name ($this->subject_code)"),

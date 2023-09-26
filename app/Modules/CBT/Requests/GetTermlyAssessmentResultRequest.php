@@ -16,7 +16,8 @@ class GetTermlyAssessmentResultRequest extends FormRequest
         return [
             'assessmentId'  => 'required|exists:assessments,uuid',
             'subjectId'     => 'required|exists:subjects,id',
-            'classId'       => 'required|exists:classes,id'
+            'classId'       => 'required|exists:classes,id',
+            'export'        => 'required|boolean',
         ];
     }
 }

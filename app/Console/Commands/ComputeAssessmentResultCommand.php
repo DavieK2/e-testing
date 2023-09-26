@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class ComputeAssessmentResultCommand extends Command
 {
-    protected $signature = 'app:compute-assessment-result-command';
+    protected $signature = 'compute:result';
     protected $description = 'Command description';
 
     public function handle()
@@ -46,8 +46,17 @@ class ComputeAssessmentResultCommand extends Command
                         ( $agg_score < 50 ) => 'F',
                         default => NULL
                     };
+
+                    $remarks = match( true ){
+                        ( $agg_score >= 80 ) => 'Distinction',
+                        ( $agg_score >= 70 && $agg_score < 80 ) => 'Upper Credit',
+                        ( $agg_score >= 60 && $agg_score < 70 ) => 'Lower Credit',
+                        ( $agg_score >= 50 && $agg_score < 60 ) => 'Pass',
+                        ( $agg_score < 50 ) => 'Fail',
+                        default => NULL
+                    };
     
-                    DB::table('assessment_results')->where('student_profile_id', $studentId)->where('assessment_id', $assessment->id)->where('subject_id', $subjectId)->limit(1)->update(['total_score' => $agg_score, 'grade' => $grade ]);
+                    DB::table('assessment_results')->where('student_profile_id', $studentId)->where('assessment_id', $assessment->id)->where('subject_id', $subjectId)->limit(1)->update(['total_score' => $agg_score, 'grade' => $grade, 'remarks' => $remarks ]);
                 });
         });
     }
