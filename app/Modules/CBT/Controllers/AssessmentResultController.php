@@ -40,7 +40,7 @@ class AssessmentResultController extends Controller
         if( $data['export'] ){
 
             $results = $results->map(function($result, $key){
-                
+
                 return [
                     'S/N' => $key + 1,
                     'studentName' => strtoupper("$result->first_name $result->surname"),
@@ -52,7 +52,9 @@ class AssessmentResultController extends Controller
                 ];
             });
 
-            return Excel::download( new Export($results), "$assessment->title.xlsx" );
+            $headings = ['S/N', 'STUDENT NAME', 'REG NO', 'LEVEL', 'COURSE', 'SCORE', 'GRADE'];
+
+            return Excel::download( new Export($results, $headings), "$assessment->title.xlsx" );
         }
 
         return new GetTermlyAssessmentResultListCollection($results);   
@@ -71,7 +73,7 @@ class AssessmentResultController extends Controller
                         ->join('classes', 'student_profiles.class_id', '=', 'classes.id')
                         ->join('subjects', 'assessment_results.subject_id', '=', 'subjects.id')
                         ->where(fn($query) => $query ->where('assessment_id', $assessmentId)->where('student_profile_id', $data['studentId']))
-                        ->select('subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode', 'assessment_results.total_score as score', 'assessment_results.grade')
+                        ->select('subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode', 'assessment_results.total_score as score', 'assessment_results.grade', 'assessment_results.remarks as remarks')
                         ->get()
                         ->toArray();
 

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('tries')->default(5);     
             $table->integer('total_score')->nullable();
             $table->string('grade')->nullable();
+            $table->string('remarks')->nullable();
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });

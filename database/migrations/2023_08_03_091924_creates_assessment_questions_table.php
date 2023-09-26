@@ -15,6 +15,7 @@ return new class extends Migration
             $table->foreignId('question_id')->constrained();
             $table->foreignId('subject_id')->nullable()->constrained();
             $table->foreignId('class_id')->nullable()->constrained();
+            $table->timestamps();
         });
     }
 

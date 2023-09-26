@@ -21,7 +21,7 @@ class AssessmentModel extends Model
 
     public function questions()
     {
-        return $this->belongsToMany(QuestionModel::class, 'assessment_questions', 'assessment_id', 'question_id')->withPivot(['subject_id', 'class_id']);
+        return $this->belongsToMany(QuestionModel::class, 'assessment_questions', 'assessment_id', 'question_id')->withPivot(['subject_id', 'class_id'])->withTimestamps();
     }
 
     public function assignQuestion($question_id, $subject_id = null, $class_id = null)
