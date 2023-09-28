@@ -35,8 +35,7 @@ require __DIR__ . '/auth.php';
 
 Route::get('/', function(){
 
-    set_time_limit(0);
-
+    //JEPH
     // $assessment = AssessmentModel::find(1);
  
 

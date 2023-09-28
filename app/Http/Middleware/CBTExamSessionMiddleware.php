@@ -11,8 +11,11 @@ class CBTExamSessionMiddleware
     
     public function handle(Request $request, Closure $next)
     {
+       
         $student = auth()->guard('student')->user() ?? $request->user();
         $assessment = $request->route('assessment');
+
+        // dd($student);
 
         // dd(request('subjectId'));
 

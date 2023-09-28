@@ -127,4 +127,7 @@ Route::middleware(['auth:sanctum', 'cbt', 'cbt.session'])->group(function(){
     Route::get('/cbt/t/session/student/{assessment:uuid}', [ ExamController::class, 'getStudentTermlyExamAssessments' ]);
     Route::get('/cbt/t/session/student/{assessment:uuid}/{subject:subject_code}', [ ExamController::class, 'getStudentTermlyExamAssessmentSession' ]);
     Route::post('/cbt/t/start-session/student/{assessment:uuid}/{subject:subject_code}', [ ExamController::class, 'startStudentTermlyExamSession' ]);
+
+
+
 });
