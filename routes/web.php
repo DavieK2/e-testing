@@ -32,41 +32,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 require __DIR__ . '/auth.php';
 
-
-Route::get('/', function(){
-
-    //JEPH
-    // $assessment = AssessmentModel::find(1);
- 
-
-    // $student = StudentProfileModel::where('class_id', 2)->get()->each(function($student) use($assessment){
-    //     $results = DB::table('assessment_results')
-    //     ->join('student_profiles', 'student_profiles.id', '=', 'assessment_results.student_profile_id')
-    //     ->join('classes', 'student_profiles.class_id', '=', 'classes.id')
-    //     ->join('subjects', 'assessment_results.subject_id', '=', 'subjects.id')
-    //     ->where(fn($query) => $query ->where('assessment_id', $assessment->id)->where('student_profile_id', $student->id))
-    //     ->select('subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode', 'assessment_results.total_score as score', 'assessment_results.grade', 'assessment_results.remarks as remarks')
-    //     ->get()
-    //     ->toArray();
-
-
-    //     $studentName = "$student->first_name $student->surname";
-
-    //     $pdf = Pdf::loadView('result',[
-    //     'assessmentTitle'   => $assessment->title,
-    //     'studentName'       => "$student->first_name $student->surname",
-    //     'studentClass'      => $student->class->class_name,
-    //     'studentPhoto'      => $student->profile_pic,
-    //     'studentId'         => $student->student_code,
-    //     'studentResults'    => $results,
-    //     ]);
-
-    //     $pdf->save("$studentName.pdf");
-    // });
-
-   
-});
-
 Route::middleware(['auth'])->group(function(){
 
     Route::get('/students/check-in/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/CheckIn/Index', ['assessmentId' => $assessment->uuid]) );
