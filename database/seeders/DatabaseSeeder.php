@@ -38,8 +38,8 @@ class DatabaseSeeder extends Seeder
 
         UserModel::create([
             'fullname' => 'Test User',
-            'email' => 'admin@soncal.com',
-            'password' => Hash::make('SONCALadmin1234!'),
+            'email' => 'admin@jephthah.com',
+            'password' => Hash::make('JEPHadmin1234!'),
             'phone_no' => '2345678900000',
             'role_id' => $role3->id
         ]);
