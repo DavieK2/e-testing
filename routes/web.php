@@ -16,7 +16,6 @@ use Inertia\Inertia;
 use Laravel\Sanctum\PersonalAccessToken;
 use PragmaRX\Google2FAQRCode\Google2FA;
 use PragmaRX\Google2FAQRCode\QRCode\Bacon;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 
 /*
@@ -31,6 +30,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 */
 
 require __DIR__ . '/auth.php';
+
+
+// Route::get('/', function(){  
+   
+// });
 
 Route::middleware(['auth'])->group(function(){
 
