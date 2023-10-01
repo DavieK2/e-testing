@@ -45,9 +45,10 @@ class SyncDatabaseTasks extends BaseTasks{
                         // $this->writer->writeToCSV( $records, "/syncs/$table/", $headers );  
                     });
                     
-                    dd('here 4');
+
+                   
     
-                   $this->writer->close();
+                //    $this->writer->close();
     
                    $unsynced_records->update(['is_synced' => true]);
     
@@ -62,6 +63,7 @@ class SyncDatabaseTasks extends BaseTasks{
      
             });
 
+            dd(memory_get_usage() / (1024 * 1024));
             dd($sync_paths);
             return $sync_paths;
 
