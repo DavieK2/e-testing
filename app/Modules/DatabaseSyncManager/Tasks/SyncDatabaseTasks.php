@@ -31,17 +31,18 @@ class SyncDatabaseTasks extends BaseTasks{
     
                 $unsynced_records = DB::table($table)->where('is_synced', false);
     
-                dd('here 2');
                 if( $unsynced_records->count() > 0 ){
-    
-                   DB::table($table)->where('is_synced', false)->cursor()->each(function($record) use($table){
-    
+                    
+                    DB::table($table)->where('is_synced', false)->cursor()->each(function($record) use($table){
+                        
                         $records = (array) $record;
-    
+                        
                         $headers = array_keys($records);
-    
+                        
                         $records = collect($records)->map(fn($value) => is_array($value) ? serialize($value) : $value )->toArray();
-    
+                        
+                        dd('here 3');
+                        
                         $this->writer->writeToCSV( $records, "/syncs/$table/", $headers );  
                    });
     
