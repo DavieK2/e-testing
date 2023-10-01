@@ -52,7 +52,6 @@ class SyncDatabaseTasks extends BaseTasks{
                     
                     $table_sync_paths->push(['sync_path' => $question_sync->sync_path, 'id' => $question_sync->id ]);
                     
-                    $this->writer->close();
                 }  
                 
                 
@@ -60,6 +59,7 @@ class SyncDatabaseTasks extends BaseTasks{
                 
             });
             
+            $this->writer->close();
 
             // dd(memory_get_usage() / (1024 * 1024));
             // dd($sync_paths);
