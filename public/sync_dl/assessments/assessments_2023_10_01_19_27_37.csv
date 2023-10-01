@@ -1,3 +1,0 @@
-id,uuid,title,description,is_standalone,is_published,assessment_type_id,academic_session_id,school_term_id,assessment_duration,start_date,end_date,is_synced,created_at,updated_at,has_generated_results
-1,ZPxN22hY,"MIDWIFERY EXAMS 2022 MARCH","Please answer all questions",0,1,1,1,1,0,,,0,"2023-09-18 08:01:56","2023-09-18 08:26:58",0
-2,DSuAfizp,"MIDWIFERY EXAMINATION MARCH 2021","Please make sure you answer all questions",0,1,1,2,1,0,,,0,"2023-09-25 08:34:54","2023-09-27 08:46:26",0
