@@ -1,0 +1,2 @@
+id,fullname,email,phone_no,password,has_two_factor_auth,is_synced,two_factor_secret,two_factor_created_at,two_factor_expires_at,role_id,email_verified_at,remember_token,created_at,updated_at
+2,"Test Teacher",teacher@example.com,2345678900100,$2y$10$55jjQGncSM3SjOaOAEXZ4eSvOYVXVxtukq0XDhm1iSrapCPEDgLmy,0,0,,,,1,,,"2023-10-01 13:52:40","2023-10-01 13:52:40"

@@ -45,7 +45,7 @@ class SyncDatabaseTasks extends BaseTasks{
                    });
     
     
-                //    $this->writer->close();
+                   $this->writer->close();
     
                    $unsynced_records->update(['is_synced' => true]);
     
@@ -55,10 +55,12 @@ class SyncDatabaseTasks extends BaseTasks{
                    
                 }  
                 
+
                 $sync_paths[$table] = $table_sync_paths;
      
             });
 
+            dd($sync_paths);
             return $sync_paths;
 
         // } catch (\Throwable $th) {
