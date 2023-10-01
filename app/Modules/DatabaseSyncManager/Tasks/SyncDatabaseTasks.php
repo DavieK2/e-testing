@@ -31,6 +31,7 @@ class SyncDatabaseTasks extends BaseTasks{
     
                 $unsynced_records = DB::table($table)->where('is_synced', false);
     
+                dd('here 2');
                 if( $unsynced_records->count() > 0 ){
     
                    DB::table($table)->where('is_synced', false)->cursor()->each(function($record) use($table){
