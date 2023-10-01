@@ -34,10 +34,7 @@ class CSVWriter {
                 
                 fputcsv($this->file, $header_row);
             }
-            
         }
-
-        dd($this->file);
 
         fputcsv($this->file, $data);
     }

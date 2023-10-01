@@ -45,7 +45,7 @@ class SyncDatabaseTasks extends BaseTasks{
                    });
     
     
-                   $this->writer->close();
+                //    $this->writer->close();
     
                    $unsynced_records->update(['is_synced' => true]);
     
