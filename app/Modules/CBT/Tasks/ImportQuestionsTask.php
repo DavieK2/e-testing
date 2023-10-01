@@ -52,44 +52,46 @@ class ImportQuestionsTask extends BaseTasks{
                     }
                 }
 
+                $row = collect($row)->mapWithKeys(fn($value, $key) => [ trim($key) => $value ])->toArray();
+                
                 return [
-                    $index =>  is_array($map) ? $options : $row[$map] 
+                    $index =>  is_array($map) ? $options : $row[ trim($map) ] 
                 ];
 
             })->toArray();
 
-                $validator = Validator::make($data, [
-                    'question'          => 'required',
-                    'options'           => ['required', 'array', function($atrr, $val, $fail){
+            $validator = Validator::make($data, [
+                'question'          => 'required',
+                'options'           => ['required', 'array', function($atrr, $val, $fail){
 
-                                                if(count($val) < 2) {
-                                                    $fail("Must have at least two options");
-                                                    return false;
-                                                }
-                                            }],
-                    'correctAnswer'     => ['required', function($atrr, $val, $fail) use($data) {
+                                            if(count($val) < 2) {
+                                                $fail("Must have at least two options");
+                                                return false;
+                                            }
+                                        }],
+                'correctAnswer'     => ['required', function($atrr, $val, $fail) use($data) {
 
-                                                if( ! in_array($val, $data['options']) ) {
+                                            if( ! in_array($val, $data['options']) ) {
 
-                                                    $fail($val." is not part of the options and cannot be the correct answer");
-                                                    return false;
-                                                }
-                                            }],
-                    'questionScore'     => 'nullable',
-                ]);
+                                                $fail($val." is not part of the options and cannot be the correct answer");
+                                                return false;
+                                            }
+                                        }],
+                'questionScore'     => 'nullable',
+            ]);
 
-                if($validator->fails()){
+            if($validator->fails()){
 
-                    $this->errorFileWriter = $this->errorFileWriter ?? new CSVWriter();
+                $this->errorFileWriter = $this->errorFileWriter ?? new CSVWriter();
 
-                    $this->errorFileWriter->writeToCSV(array_values($row), 'imports/question/', array_keys($row) );
+                $this->errorFileWriter->writeToCSV(array_values($row), 'imports/question/', array_keys($row) );
 
-                    return ;
-                }
+                return ;
+            }
 
-                $assessment = AssessmentModel::firstWhere('uuid', $this->item['assessmentId']);
+            $assessment = AssessmentModel::firstWhere('uuid', $this->item['assessmentId']);
 
-                ( new CreateQuestionTasks() )->start($validator->validated() + ['assessment' => $assessment, 'subjectId' => $this->item['subjectId'] ?? null, 'classId' => $this->item['classId'] ?? null ])->createQuestion();
+            ( new CreateQuestionTasks() )->start($validator->validated() + ['assessment' => $assessment, 'subjectId' => $this->item['subjectId'] ?? null, 'classId' => $this->item['classId'] ?? null ])->createQuestion();
             
         });
 

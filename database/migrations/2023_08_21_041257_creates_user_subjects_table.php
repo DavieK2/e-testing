@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('user_subjects', function(Blueprint $table) {
             $table->foreignId('user_id')->constrained(); 
             $table->foreignId('subject_id')->constrained(); 
+            $table->boolean('is_synced')->default(false);
         });
     }
 

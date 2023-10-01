@@ -4,10 +4,12 @@ use App\Models\User;
 use App\Modules\CBT\Controllers\AssessmentResultController;
 use App\Modules\CBT\Controllers\ExamController;
 use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\QuestionModel;
 use App\Modules\SchoolManager\Models\ClassModel;
 use App\Modules\SchoolManager\Models\StudentProfileModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
 use App\Modules\UserManager\Constants\UserManagerConstants;
+use App\Services\CSVWriter;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +19,10 @@ use Laravel\Sanctum\PersonalAccessToken;
 use PragmaRX\Google2FAQRCode\Google2FA;
 use PragmaRX\Google2FAQRCode\QRCode\Bacon;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Process;
+use Spatie\SimpleExcel\SimpleExcelReader;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,11 +39,6 @@ require __DIR__ . '/auth.php';
 
 
 Route::get('/', function(){
-
-    set_time_limit(0);
-
-    // $assessment = AssessmentModel::find(1);
- 
 
     // $student = StudentProfileModel::where('class_id', 2)->get()->each(function($student) use($assessment){
     //     $results = DB::table('assessment_results')

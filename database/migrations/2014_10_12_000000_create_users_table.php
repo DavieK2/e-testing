@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('phone_no')->unique();
             $table->string('password');
             $table->boolean('has_two_factor_auth')->default(false);
+            $table->boolean('is_synced')->default(false);
             $table->string('two_factor_secret')->nullable();
             $table->timestamp('two_factor_created_at')->nullable();
             $table->timestamp('two_factor_expires_at')->nullable();

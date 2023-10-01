@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_profile_id')->constrained();
             $table->foreignId('subject_id')->constrained();
+            $table->boolean('is_synced')->default(false);
         });
     }
 
