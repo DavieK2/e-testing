@@ -22,7 +22,7 @@ class CSVWriter {
             mkdir( public_path($path), recursive: true );
         }
         
-        if( ! $this->file ){
+        if( ! is_resource($this->file) ){
 
             $this->path = $path.Str::random().'_'.now()->format('Y_m_d').'.csv';
             

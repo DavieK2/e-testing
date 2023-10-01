@@ -45,7 +45,7 @@ class SyncDatabaseTasks extends BaseTasks{
                         $this->writer->writeToCSV( $records, "/syncs/$table/", $headers );  
                     });
                     
-                    
+                    $this->writer->close();
                     // $unsynced_records->update(['is_synced' => true]);
                     
                     $question_sync = DBSyncModel::create(['table_synced' => $table, 'sync_path' => $this->writer->getFilePath(), 'last_synced_date' => now()->toDateTimeString() ]);
@@ -59,7 +59,7 @@ class SyncDatabaseTasks extends BaseTasks{
                 
             });
             
-            $this->writer->close();
+          
 
             return $sync_paths;
 
