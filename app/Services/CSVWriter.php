@@ -26,7 +26,7 @@ class CSVWriter {
 
             $this->path = $path.Str::random().'_'.now()->format('Y_m_d').'.csv';
             
-            $this->file = fopen(public_path($this->path), 'a');
+            $this->file = fopen( public_path($this->path), 'a' );
 
             $this->headers = array_keys($data);
 
@@ -36,6 +36,8 @@ class CSVWriter {
             }
             
         }
+
+        dd($this->file);
 
         fputcsv($this->file, $data);
     }
