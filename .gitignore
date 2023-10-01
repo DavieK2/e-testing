@@ -3,8 +3,8 @@
 /resources/js/Pages
 /public/hot
 /public/storage
-/public/snycs
-/public/snyc_dl
+/public/syncs
+/public/sync_dl
 /storage/*.key
 /vendor
 .env

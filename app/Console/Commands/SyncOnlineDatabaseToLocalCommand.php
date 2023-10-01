@@ -53,7 +53,13 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                             $row = collect($row)->map(function($value) {
     
                                 $value = @unserialize($value) ? unserialize($value) : $value;
-                                $value = is_array($value) ? json_encode($value) : $value;
+
+                                if( is_array($value) ){
+                                    
+                                    $value = json_encode($value);
+                                    $value = str_replace('\\', '', $value);
+                                }
+
                                 $value = $value == "" ? null : $value;
     
                                 return $value;
