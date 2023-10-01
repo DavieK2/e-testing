@@ -15,6 +15,8 @@ class SyncDatabaseTasks extends BaseTasks{
 
     public function sync()
     {
+        set_time_limit(0);
+
         $this->writer = new CSVWriter();
 
         $unnecssary_tables = $this->item['filter'];
