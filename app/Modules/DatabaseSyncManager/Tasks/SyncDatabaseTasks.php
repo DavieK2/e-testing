@@ -42,7 +42,7 @@ class SyncDatabaseTasks extends BaseTasks{
                         $records = collect($records)->map(fn($value) => is_array($value) ? serialize($value) : $value )->toArray();
                         
                         
-                        // $this->writer->writeToCSV( $records, "/syncs/$table/", $headers );  
+                        $this->writer->writeToCSV( $records, "/syncs/$table/", $headers );  
                     });
                     
 
