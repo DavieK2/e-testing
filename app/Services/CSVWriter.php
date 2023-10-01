@@ -26,17 +26,17 @@ class CSVWriter {
 
             $this->path = $path.Str::random().'_'.now()->format('Y_m_d').'.csv';
             
-            // $this->file = fopen( public_path($this->path), 'a' );
+            $this->file = fopen( public_path($this->path), 'a' );
 
-            // $this->headers = array_keys($data);
+            $this->headers = array_keys($data);
 
-            // if( ! empty($header_row) ){
+            if( ! empty($header_row) ){
                 
-            //     fputcsv($this->file, $header_row);
-            // }
+                fputcsv($this->file, $header_row);
+            }
         }
 
-        // fputcsv($this->file, $data);
+        fputcsv($this->file, $data);
     }
 
     public function getHeaders() : array
@@ -51,6 +51,6 @@ class CSVWriter {
 
     public function close() : void
     {
-        // if( $this->file ) fclose($this->file);
+        if( $this->file ) fclose($this->file);
     }
 }
