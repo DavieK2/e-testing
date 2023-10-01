@@ -48,23 +48,23 @@ class SyncDatabaseTasks extends BaseTasks{
 
                    
     
-                //    $this->writer->close();
+                   $this->writer->close();
     
                 //    $unsynced_records->update(['is_synced' => true]);
     
-                //    $question_sync = DBSyncModel::create(['table_synced' => $table, 'sync_path' => $this->writer->getFilePath(), 'last_synced_date' => now()->toDateTimeString() ]);
+                   $question_sync = DBSyncModel::create(['table_synced' => $table, 'sync_path' => $this->writer->getFilePath(), 'last_synced_date' => now()->toDateTimeString() ]);
     
-                //    $table_sync_paths->push(['sync_path' => $question_sync->sync_path, 'id' => $question_sync->id ]);
+                   $table_sync_paths->push(['sync_path' => $question_sync->sync_path, 'id' => $question_sync->id ]);
                    
                 }  
                 
 
-                // $sync_paths[$table] = $table_sync_paths;
+                $sync_paths[$table] = $table_sync_paths;
      
             });
 
-            dd(memory_get_usage() / (1024 * 1024));
-            dd($sync_paths);
+            // dd(memory_get_usage() / (1024 * 1024));
+            // dd($sync_paths);
             return $sync_paths;
 
         } catch (\Throwable $th) {
