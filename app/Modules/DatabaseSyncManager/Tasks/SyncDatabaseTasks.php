@@ -41,11 +41,11 @@ class SyncDatabaseTasks extends BaseTasks{
                         
                         $records = collect($records)->map(fn($value) => is_array($value) ? serialize($value) : $value )->toArray();
                         
-                        dd('here 3');
                         
                         $this->writer->writeToCSV( $records, "/syncs/$table/", $headers );  
-                   });
-    
+                    });
+                    
+                    dd('here 4');
     
                    $this->writer->close();
     
