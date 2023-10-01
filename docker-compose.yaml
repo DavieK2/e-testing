@@ -9,6 +9,7 @@ services:
         tty: true
         volumes: 
           - ./:/var/www/html
+          - letsencrypt:/etc/letsencrypt
           - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
         networks:
           - example-net
@@ -60,6 +61,7 @@ services:
 
 volumes:
     mysqldata:
+    letsencrypt:
 
 networks:
   example-net:
