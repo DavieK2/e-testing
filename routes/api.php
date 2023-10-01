@@ -132,7 +132,7 @@ Route::middleware(['auth:sanctum', 'cbt', 'cbt.session'])->group(function(){
 });
 
 
-// Route::get('/sync-to-local', [ SyncOnlineDabataseToLocalController::class, 'sync' ]);
+Route::get('/sync-to-local', [ SyncOnlineDabataseToLocalController::class, 'sync' ]);
 Route::post('/sync-to-local-confirm', [ SyncOnlineDabataseToLocalController::class, 'confirmSync' ]);
 
 // Route::get('/sync-to-online', [ SyncLocalDatabaseToOnlineController::class, 'sync']);

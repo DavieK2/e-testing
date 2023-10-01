@@ -22,6 +22,8 @@ class SyncOnlineDatabaseToLocalCommand extends Command
 
         $responses = $request->json();
         
+        // $this->info( json_encode( $responses ));
+
         if( ! $request->ok() ){
 
             return ;
