@@ -6,6 +6,7 @@ use App\Contracts\BaseTasks;
 use App\Modules\DatabaseSyncManager\Models\DBSyncModel;
 use App\Services\CSVWriter;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
@@ -52,7 +53,7 @@ class SyncDatabaseTasks extends BaseTasks{
                     
                     $this->writer->close();
 
-                    // $unsynced_records->update(['is_synced' => true]);
+                    $unsynced_records->update(['uuid' => Str::ulid() ]);
                     
                     $question_sync = DBSyncModel::create(['table_synced' => $table, 'sync_path' => $this->writer->getFilePath(), 'last_synced_date' => now()->toDateTimeString() ]);
                     
