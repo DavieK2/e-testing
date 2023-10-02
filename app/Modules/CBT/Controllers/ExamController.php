@@ -17,6 +17,7 @@ use App\Modules\CBT\Requests\SubmitStudentExamRequest;
 use App\Modules\SchoolManager\Models\StudentProfileModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Question\Question;
 
 class 
@@ -52,6 +53,7 @@ ExamController extends Controller
         $student = request()->user();
 
         $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id ],[
+            'uuid'                 => Str::ulid(),
             'student_profile_id'    => $student->id,
             'assessment_id'        => $assessment->id,
             'time_remaining'       => $assessment->assessment_duration
@@ -161,7 +163,7 @@ ExamController extends Controller
                                     }
                                 })
                                 ->join('questions', 'questions.id', '=', 'assessment_sessions.question_id')
-                                ->select('assessment_sessions.student_answer as studentAnswer', 'assessment_sessions.marked_for_review as markedForReview', 'questions.uuid as questionId')
+                                ->select('assessment_sessions.student_answer as studentAnswer', 'assessment_sessions.uuid as sessionId', 'assessment_sessions.marked_for_review as markedForReview', 'questions.uuid as questionId')
                                 ->get();
 
         $student_responses = $student_responses->map( function($response) {
@@ -169,6 +171,7 @@ ExamController extends Controller
             $not_answered = ( is_null( $response->studentAnswer ) );
 
             return [
+                'sessionId'         => $response->sessionId,
                 'questionId'        => $response->questionId,
                 'selectedAnswer'    => trim($response->studentAnswer),
                 'markedForReview'   => $response->markedForReview,
@@ -193,7 +196,7 @@ ExamController extends Controller
 
         $score = trim(strtolower($data['studentAnswer'])) == trim(strtolower($question->correct_answer)) ? $question->question_score : 0;
 
-        $student->saveStudentResponse($assessment, $question->id, $data['studentAnswer'], $data['markedForReview'], $score, $data['subjectId'] ?? null );
+        $student->saveStudentResponse($assessment,  $question->id, $data['studentAnswer'], $data['markedForReview'], $score, $data['subjectId'] ?? null );
 
         return response()->json(['message' => 'Answer Saved']);
     }
@@ -244,6 +247,7 @@ ExamController extends Controller
         $assessment_subject = $assessment->subjects()->where('assessment_subjects.subject_id', $subject->id)->where('assessment_subjects.class_id', $student->class_id)->first();
 
         $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id, 'subject_id' => $subject->id ],[
+                            'uuid'                 => Str::ulid(),
                             'student_profile_id'    => $student->id,
                             'assessment_id'        => $assessment->id,
                             'subject_id'           => $subject->id,

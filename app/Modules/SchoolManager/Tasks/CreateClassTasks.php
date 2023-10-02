@@ -4,6 +4,7 @@ namespace App\Modules\SchoolManager\Tasks;
 
 use App\Contracts\BaseTasks;
 use App\Modules\SchoolManager\Models\ClassModel;
+use Illuminate\Support\Str;
 
 class CreateClassTasks extends BaseTasks {
 
@@ -18,6 +19,7 @@ class CreateClassTasks extends BaseTasks {
     public function addClassToDatabase()
     {
         ClassModel::create([
+            'uuid'       => Str::ulid(),
             'class_name' => $this->item['className'],
             'class_code' => $this->item['class_code']
         ]);

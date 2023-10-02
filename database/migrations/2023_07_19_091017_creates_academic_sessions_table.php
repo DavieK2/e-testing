@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('academic_sessions', function(Blueprint $table){
             $table->id();
+            $table->ulid('uuid')->unique();
             $table->string('session');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();

@@ -9,6 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('assessment_subjects', function(Blueprint $table){
+            $table->ulid('uuid')->unique();
             $table->string('assessment_id');
             $table->foreignId('subject_id')->constrained();
             $table->foreignId('class_id')->constrained();

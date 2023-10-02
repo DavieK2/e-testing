@@ -15,10 +15,10 @@ class SaveStudentExamSessionResponsesRequest extends FormRequest
     public function rules()
     {
         return [
-            'questionId' => 'required|exists:questions,uuid',
-            'subjectId' => [ Rule::requiredIf( ! $this->route('assessment')->is_standalone ) ],
-            'studentAnswer' => 'nullable',
-            'markedForReview' => 'required',
+            'questionId'        => 'required|exists:questions,uuid',
+            'subjectId'         => [ Rule::requiredIf( ! $this->route('assessment')->is_standalone ) ],
+            'studentAnswer'     => 'nullable',
+            'markedForReview'   => 'required',
         ];
     }
 }

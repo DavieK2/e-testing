@@ -9,6 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('class_subjects', function(Blueprint $table){
+            $table->ulid('uuid')->unique();
             $table->string('class_id');
             $table->string('subject_id');
             $table->boolean('is_synced')->default(false);

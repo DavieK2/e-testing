@@ -11,6 +11,7 @@ return new class extends Migration
     {
         Schema::create('assessment_questions', function(Blueprint $table){
             $table->id();
+            $table->ulid('uuid')->unique();
             $table->foreignId('assessment_id')->constrained();
             $table->foreignId('question_id')->constrained();
             $table->foreignId('subject_id')->nullable()->constrained();

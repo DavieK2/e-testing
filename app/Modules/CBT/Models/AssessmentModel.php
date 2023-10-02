@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AssessmentModel extends Model
 {
@@ -21,7 +22,7 @@ class AssessmentModel extends Model
 
     public function questions()
     {
-        return $this->belongsToMany(QuestionModel::class, 'assessment_questions', 'assessment_id', 'question_id')->withPivot(['subject_id', 'class_id'])->withTimestamps();
+        return $this->belongsToMany(QuestionModel::class, 'assessment_questions', 'assessment_id', 'question_id')->withPivot(['subject_id', 'class_id', 'uuid'])->withTimestamps();
     }
 
     public function assignQuestion($question_id, $subject_id = null, $class_id = null)
@@ -29,7 +30,7 @@ class AssessmentModel extends Model
         $question_id = QuestionModel::firstWhere('uuid', $question_id)->id;
         $class_id = ClassModel::firstWhere('class_code', $class_id)?->id;
         
-        return $this->questions()->syncWithoutDetaching([ $question_id => [ 'subject_id' => $subject_id, 'class_id' => $class_id ]]);
+        return $this->questions()->syncWithoutDetaching([ $question_id => [ 'subject_id' => $subject_id, 'class_id' => $class_id, 'uuid' => Str::ulid() ]]);
     }
 
     public function unAssignQuestion($question_id, $class_id = null, $subject_id = null)
@@ -55,7 +56,11 @@ class AssessmentModel extends Model
 
     public function addClassesToAssessment($classes)
     {
-        return $this->classes()->sync($classes);
+        $this->classes()->detach();
+
+        foreach( $classes as $class ){
+            DB::table('assessment_classes')->insert(['uuid' => Str::ulid(), 'assessment_id' => $this->id, 'class_id' => $class ]);
+        }
     }
 
     public function assessmentType()
@@ -87,6 +92,7 @@ class AssessmentModel extends Model
                 ->insert(
                     // [ 'assessment_id' => $this->id, 'subject_id' => $key, 'class_id' => $subject['class_id'] ], 
                     [
+                        'uuid' => Str::ulid(),
                         'assessment_id' => $this->id, 
                         'subject_id' => $key, 
                         'class_id' => $subject['class_id'],

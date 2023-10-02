@@ -9,6 +9,8 @@ use App\Modules\UserManager\Models\UserModel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,18 +27,22 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $role1 = RoleModel::create([
+            'uuid'      => Str::ulid(),
             'role_name' => 'teacher'
         ]);
 
         $role2 = RoleModel::create([
+            'uuid'      => Str::ulid(),
             'role_name' => 'student'
         ]);
 
         $role3 = RoleModel::create([
+            'uuid'      => Str::ulid(),
             'role_name' => 'admin'
         ]);
 
         UserModel::create([
+            'uuid'     => Str::ulid(),
             'fullname' => 'Test User',
             'email' => 'admin@soncal.com',
             'password' => Hash::make('SONCALadmin1234!'),
@@ -45,6 +51,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         UserModel::create([
+            'uuid'     => Str::ulid(),
             'fullname' => 'Test Teacher',
             'email' => 'teacher@example.com',
             'password' => Hash::make('password'),
