@@ -28,6 +28,8 @@ return new class extends Migration
                     $table->uuid('uuid')->change();
                 });
 
+                DB::statement("UPDATE $table SET `uuid` = UUID()");
+
             }else{
                 
                 Schema::table($table, function (Blueprint $table) {
