@@ -31,16 +31,19 @@ class SyncDatabaseTasks extends BaseTasks{
 
                 $table_sync_paths =  DBSyncModel::where('has_synced', false)->where('table_synced', $table)->get()->map(fn($path) => ['id' => $path->id, 'sync_path' => $path->sync_path ]);
     
-                $unsynced_records = DB::table($table)->where('is_synced', false);
+                $unsynced_records = DB::table($table)->where('is_synced', true);
     
                 if( $unsynced_records->count() > 0 ){
                     
-                    DB::table($table)->where('is_synced', false)->cursor()->each(function($record) use($table){
+                    DB::table($table)->where('is_synced', true)->cursor()->each(function($record) use($table){
                         
                         $records = (array) $record;
                         
                         $headers = array_keys($records);
                         
+                        if($table === 'questions' && $record->id == 61){
+                            dd(json_decode($record->options));
+                        }
                         $records = collect($records)->map(fn($value) => is_array($value) ? serialize($value) : $value )->toArray();
                         
                         
