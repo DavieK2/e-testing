@@ -50,12 +50,14 @@ class SyncDatabaseTasks extends BaseTasks{
                         
                         $this->writer->writeToCSV( $records, "/syncs/$table/", $headers );  
 
-                        $record->update(['uuid' => Str::ulid() ]);
                     });
                     
                     $this->writer->close();
 
-                    // $unsynced_records->update(['uuid' => Str::ulid() ]);
+                    for( $i = 0 ; $i < $unsynced_records->count(); $i++){
+                        $unsynced_records->skip($i)->limit(1)->update(['uuid' => Str::ulid() ]);
+                    }
+                    
                     
                     $question_sync = DBSyncModel::create(['table_synced' => $table, 'sync_path' => $this->writer->getFilePath(), 'last_synced_date' => now()->toDateTimeString() ]);
                     
