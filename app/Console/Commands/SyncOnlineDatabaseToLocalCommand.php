@@ -81,7 +81,7 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                                 $updateColumn = $row;
                             }
                            
-                            DB::table($table)->updateOrInsert( $updateColumn , $row);  
+                            // DB::table($table)->updateOrInsert( $updateColumn , $row);  
                             
                         });
     
