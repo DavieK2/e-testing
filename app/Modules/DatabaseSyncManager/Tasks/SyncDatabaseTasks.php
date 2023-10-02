@@ -6,7 +6,6 @@ use App\Contracts\BaseTasks;
 use App\Modules\DatabaseSyncManager\Models\DBSyncModel;
 use App\Services\CSVWriter;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
@@ -38,9 +37,6 @@ class SyncDatabaseTasks extends BaseTasks{
                     
                     DB::table($table)->where('is_synced', false)->cursor()->each(function($record) use($table){
                         
-                        $record->uuid = Str::ulid();
-                        $record->save();
-                        
                         $records = (array) $record;
                         
                         $headers = array_keys($records);
@@ -52,10 +48,11 @@ class SyncDatabaseTasks extends BaseTasks{
                         $records = collect($records)->map(fn($value) => is_array($value) ? serialize($value) : $value )->toArray();
                         
                         $this->writer->writeToCSV( $records, "/syncs/$table/", $headers );  
-
                     });
                     
-                    $this->writer->close();                    
+                    $this->writer->close();
+
+                    // $unsynced_records->update(['is_synced' => true]);
                     
                     $question_sync = DBSyncModel::create(['table_synced' => $table, 'sync_path' => $this->writer->getFilePath(), 'last_synced_date' => now()->toDateTimeString() ]);
                     
