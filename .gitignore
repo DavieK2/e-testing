@@ -5,6 +5,7 @@
 /public/storage
 /public/syncs
 /public/sync_dl
+/public/imports
 /storage/*.key
 /vendor
 .env
