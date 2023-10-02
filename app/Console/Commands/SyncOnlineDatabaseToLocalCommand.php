@@ -70,6 +70,10 @@ class SyncOnlineDatabaseToLocalCommand extends Command
     
                             $row['is_synced'] = true;
     
+                            if( isset( $row['id'] ) ){
+                                unset( $row['id'] );
+                            }
+                            
                             if( isset( $row['uuid'] ) ){
     
                                 $updateColumn = ['uuid' => $row['uuid'] ];

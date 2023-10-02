@@ -17,7 +17,7 @@ class SyncOnlineDabataseToLocalController extends Controller
 
         $sync_data = $sync_data->map( fn($data) => $data->map( fn($value) => [ 'id' => $value['id'], 'sync_path' => env('APP_URL').$value['sync_path']  ] ) );
 
-        return response()->json($sync_data);
+        return response()->json(['status' => true, 'message' => 'Success']);
 
     }
 
