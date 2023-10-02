@@ -47,6 +47,8 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                     $this->info($output);
     
                     if( $output ){
+
+                        Schema::disableForeignKeyConstraints();
     
                         SimpleExcelReader::create($outputPath)->getRows()->each(function($row) use($table){
     
@@ -67,13 +69,21 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                             })->toArray();
     
                             $row['is_synced'] = true;
-                            
-                            Schema::disableForeignKeyConstraints();
+    
+                            if( isset( $row['uuid'] ) ){
+    
+                                $updateColumn = ['uuid' => $row['uuid'] ];
+    
+                            }else{
+    
+                                $updateColumn = $row;
+                            }
                            
-                            DB::table($table)->insertOrIgnore( $row );  
+                            DB::table($table)->updateOrInsert( $updateColumn , $row);  
                             
                         });
     
+                        Schema::enableForeignKeyConstraints();
                         // $request = Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $data['id'] ] );
                         
                         $this->info( json_encode( $request->json() ) );

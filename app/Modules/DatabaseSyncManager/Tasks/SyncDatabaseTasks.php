@@ -41,16 +41,17 @@ class SyncDatabaseTasks extends BaseTasks{
                         
                         $headers = array_keys($records);
                         
-                        if($table === 'questions' && $record->id == 60){
-                            dd(json_decode($record->options));
+                        if($table === 'questions'){
+                            $records['options'] = json_decode( $records['options'] );
                         }
+
                         $records = collect($records)->map(fn($value) => is_array($value) ? serialize($value) : $value )->toArray();
-                        
                         
                         $this->writer->writeToCSV( $records, "/syncs/$table/", $headers );  
                     });
                     
                     $this->writer->close();
+
                     // $unsynced_records->update(['is_synced' => true]);
                     
                     $question_sync = DBSyncModel::create(['table_synced' => $table, 'sync_path' => $this->writer->getFilePath(), 'last_synced_date' => now()->toDateTimeString() ]);
@@ -58,7 +59,6 @@ class SyncDatabaseTasks extends BaseTasks{
                     $table_sync_paths->push(['sync_path' => $question_sync->sync_path, 'id' => $question_sync->id ]);
                     
                 }  
-                
                 
                 $sync_paths[$table] = $table_sync_paths;
                 
