@@ -76,11 +76,12 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                             
                         });
     
-                        Schema::enableForeignKeyConstraints();
-
+                        
                         $request = Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $data['id'] ] );
                         
                         $this->info( json_encode( $request->json() ) );
+                        
+                        Schema::enableForeignKeyConstraints();
                     }
                 }
     

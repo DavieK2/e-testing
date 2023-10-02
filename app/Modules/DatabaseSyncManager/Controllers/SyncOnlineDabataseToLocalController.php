@@ -13,7 +13,7 @@ class SyncOnlineDabataseToLocalController extends Controller
 
     public function sync()
     {
-        $sync_data = $this->tasks->start(['filter' => ['personal_access_tokens', 'password_reset_tokens', 'migrations', 'failed_jobs', 'syncs', 'student_checkins', 'assessment_results', 'assessment_sessions', 'roles'] ])->sync();
+        $sync_data = $this->tasks->start(['filter' => ['personal_access_tokens', 'password_reset_tokens', 'migrations', 'failed_jobs', 'syncs', 'student_checkins', 'assessment_results', 'assessment_sessions', 'roles', 'users'] ])->sync();
 
         $sync_data = $sync_data->map( fn($data) => $data->map( fn($value) => [ 'id' => $value['id'], 'sync_path' => env('APP_URL').$value['sync_path']  ] ) );
 
@@ -25,7 +25,7 @@ class SyncOnlineDabataseToLocalController extends Controller
     {
         $data = $request->validated();
 
-        DBSyncModel::find($data['id'])->update(['has_synced' => true ]);
+        DBSyncModel::find( $data['id'] )->update( ['has_synced' => true ]);
 
         return response()->json(['message' => 'Success']);
     }
