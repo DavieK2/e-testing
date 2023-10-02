@@ -38,6 +38,9 @@ class SyncDatabaseTasks extends BaseTasks{
                     
                     DB::table($table)->where('is_synced', false)->cursor()->each(function($record) use($table){
                         
+                        $record->uuid = Str::ulid();
+                        $record->save();
+                        
                         $records = (array) $record;
                         
                         $headers = array_keys($records);
@@ -52,12 +55,7 @@ class SyncDatabaseTasks extends BaseTasks{
 
                     });
                     
-                    $this->writer->close();
-
-                    for( $i = 0 ; $i < $unsynced_records->count(); $i++){
-                        $unsynced_records->skip($i)->limit(1)->update(['uuid' => Str::ulid() ]);
-                    }
-                    
+                    $this->writer->close();                    
                     
                     $question_sync = DBSyncModel::create(['table_synced' => $table, 'sync_path' => $this->writer->getFilePath(), 'last_synced_date' => now()->toDateTimeString() ]);
                     

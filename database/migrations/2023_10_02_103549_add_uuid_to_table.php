@@ -18,11 +18,11 @@ return new class extends Migration
         $tables = collect(Schema::getAllTables())->filter(fn($table) => ! in_array($table->Tables_in_cbt, $unnecssary_tables))->map(fn($table) => $table->Tables_in_cbt);
 
         $tables->each(function($table){
-            
-            if( ! Schema::hasColumn( $table, 'uuid') ){
 
+            if( ! Schema::hasColumn( $table, 'uuid') ){
+                
                 Schema::table($table, function (Blueprint $table) {
-                    $table->ulid('uuid');
+                    $table->ulid('uuid')->unique();
                 });
             }  
         });
