@@ -49,11 +49,13 @@ class SyncDatabaseTasks extends BaseTasks{
                         $records = collect($records)->map(fn($value) => is_array($value) ? serialize($value) : $value )->toArray();
                         
                         $this->writer->writeToCSV( $records, "/syncs/$table/", $headers );  
+
+                        $record->update(['uuid' => Str::ulid() ]);
                     });
                     
                     $this->writer->close();
 
-                    $unsynced_records->update(['uuid' => Str::ulid() ]);
+                    // $unsynced_records->update(['uuid' => Str::ulid() ]);
                     
                     $question_sync = DBSyncModel::create(['table_synced' => $table, 'sync_path' => $this->writer->getFilePath(), 'last_synced_date' => now()->toDateTimeString() ]);
                     
