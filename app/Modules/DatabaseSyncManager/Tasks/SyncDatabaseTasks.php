@@ -25,7 +25,7 @@ class SyncDatabaseTasks extends BaseTasks{
 
         $sync_paths = collect();
 
-        // try {
+        try {
            
             $tables->each(function($table) use($sync_paths){
 
@@ -52,7 +52,7 @@ class SyncDatabaseTasks extends BaseTasks{
                     
                     $this->writer->close();
 
-                    // $unsynced_records->update(['is_synced' => true]);
+                    $unsynced_records->update(['is_synced' => true]);
                     
                     $question_sync = DBSyncModel::create(['table_synced' => $table, 'sync_path' => $this->writer->getFilePath(), 'last_synced_date' => now()->toDateTimeString() ]);
                     
@@ -64,14 +64,14 @@ class SyncDatabaseTasks extends BaseTasks{
                 
             });
             
-          
 
             return $sync_paths;
 
-        // } catch (\Throwable $th) {
 
-        //     $this->writer->close();
-        // }
+        } catch (\Throwable $th) {
+
+            $this->writer->close();
+        }
     }
 
     public function save($path, $table)

@@ -71,24 +71,16 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                             if( isset( $row['id'] ) ){
                                 unset( $row['id'] );
                             }
-
-                            if( isset( $row['uuid'] ) ){
-    
-                                $updateColumn = ['uuid' => $row['uuid'] ];
-    
-                            }else{
-    
-                                $updateColumn = $row;
-                            }
                            
-                            // DB::table($table)->updateOrInsert( $updateColumn , $row);  
+                            DB::table($table)->updateOrInsert( ['uuid' => $row['uuid'] ] , $row);  
                             
                         });
     
                         Schema::enableForeignKeyConstraints();
-                        // $request = Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $data['id'] ] );
+
+                        $request = Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $data['id'] ] );
                         
-                        // $this->info( json_encode( $request->json() ) );
+                        $this->info( json_encode( $request->json() ) );
                     }
                 }
     

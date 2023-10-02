@@ -51,6 +51,6 @@ class CSVWriter {
 
     public function close() : void
     {
-        if( $this->file ) fclose($this->file);
+        if( is_resource($this->file) ) fclose( $this->file );
     }
 }
