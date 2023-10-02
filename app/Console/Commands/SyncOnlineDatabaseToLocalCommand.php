@@ -57,9 +57,7 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                                 $value = @unserialize($value) ? unserialize($value) : $value;
 
                                 if( is_array($value) ){
-
                                     $value = json_encode($value);
-                                    $value = str_replace('\\', '', $value);
                                 }
 
                                 $value = $value == "" ? null : $value;
@@ -73,7 +71,7 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                             if( isset( $row['id'] ) ){
                                 unset( $row['id'] );
                             }
-                            
+
                             if( isset( $row['uuid'] ) ){
     
                                 $updateColumn = ['uuid' => $row['uuid'] ];
@@ -90,7 +88,7 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                         Schema::enableForeignKeyConstraints();
                         // $request = Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $data['id'] ] );
                         
-                        $this->info( json_encode( $request->json() ) );
+                        // $this->info( json_encode( $request->json() ) );
                     }
                 }
     
