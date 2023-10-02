@@ -33,7 +33,18 @@ return new class extends Migration
 
                 DB::statement("UPDATE $table SET `uuid` = UUID()");
             }  
+
+            if( ! Schema::hasColumn( $table, 'is_synced') ){
+
+                Schema::table($table, function (Blueprint $table) {
+                    $table->boolean('is_synced')->default(false);
+                });
+
+            }
         });
+
+
+        
     }
 
     public function down()
