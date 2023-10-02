@@ -67,12 +67,11 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                             })->toArray();
     
                             $row['is_synced'] = true;
-    
-                            if( isset( $row['id'] ) ){
-                                unset( $row['id'] );
+                            
+                            if( ! DB::table($table)->where('uuid', $row['uuid'] )->first() ){
+
+                                DB::table($table)->insert($row);  
                             }
-                           
-                            DB::table($table)->updateOrInsert( ['uuid' => $row['uuid'] ] , $row);  
                             
                         });
     
