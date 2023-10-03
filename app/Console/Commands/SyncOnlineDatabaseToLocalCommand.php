@@ -67,14 +67,13 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                             })->toArray();
     
                             $row['is_synced'] = true;
-                            
+
                             if( ! DB::table($table)->where('uuid', $row['uuid'] )->first() ){
 
                                 DB::table($table)->insert($row);  
                             }
                             
                         });
-    
                         
                         $request = Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $data['id'] ] );
                         
