@@ -25,7 +25,7 @@ class SyncDatabaseTasks extends BaseTasks{
 
         $sync_paths = collect();
 
-        try {
+        // try {
            
             $tables->each(function($table) use($sync_paths){
 
@@ -65,13 +65,15 @@ class SyncDatabaseTasks extends BaseTasks{
             });
             
 
+            // dd()
             return $sync_paths;
 
 
-        } catch (\Throwable $th) {
+        // } catch (\Throwable $th) {
 
-            $this->writer->close();
-        }
+
+        //     $this->writer->close();
+        // }
     }
 
     public function save($path, $table)

@@ -7,6 +7,8 @@ use App\Modules\DatabaseSyncManager\Jobs\SyncOnlineDBToLocalJob;
 use App\Modules\DatabaseSyncManager\Models\DBSyncModel;
 use App\Modules\DatabaseSyncManager\Requests\ConfirmDBSyncedToLocalRequest;
 use App\Modules\DatabaseSyncManager\Tasks\SyncDatabaseTasks;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 
 class SyncOnlineDabataseToLocalController extends Controller
 {
@@ -14,15 +16,15 @@ class SyncOnlineDabataseToLocalController extends Controller
 
     public function syncOnlineDatabaseToLocal()
     {
-        SyncOnlineDBToLocalJob::dispatch();
+        $batch = Bus::batch([  new  SyncOnlineDBToLocalJob() ])->dispatch();
 
-        response()->json(['message' => 'Sync has started']);
+        return response()->json(['message' => 'Sync has started', 'id' => $batch->id ]);
     }
 
     public function sync()
     {        
-        $sync_data = $this->tasks->start(['filter' => ['personal_access_tokens', 'password_reset_tokens', 'migrations', 'failed_jobs', 'syncs', 'student_checkins', 'assessment_results', 'assessment_sessions'] ])->sync();
-
+        $sync_data = $this->tasks->start(['filter' => ['personal_access_tokens', 'password_reset_tokens', 'migrations', 'failed_jobs', 'syncs', 'student_checkins', 'assessment_results', 'assessment_sessions', 'job_batches', 'jobs'] ])->sync();
+        
         $sync_data = $sync_data->map( fn($data) => $data->map( fn($value) => [ 'id' => $value['id'], 'sync_path' => env('APP_URL').$value['sync_path']  ] ) );
 
         return response()->json($sync_data);

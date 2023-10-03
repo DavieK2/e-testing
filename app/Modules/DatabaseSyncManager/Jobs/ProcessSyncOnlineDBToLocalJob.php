@@ -2,16 +2,18 @@
 
 namespace App\Modules\DatabaseSyncManager\Jobs;
 
+use Illuminate\Bus\Batchable;
+use Illuminate\Bus\PendingBatch;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Process;
-use Illuminate\Support\Facades\Schema;
-use Spatie\SimpleExcel\SimpleExcelReader;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
-class ProcessSyncOnlineDBToLocalJob
+class ProcessSyncOnlineDBToLocalJob implements ShouldQueue
 {
-    use Dispatchable;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+ 
 
    
     public function __construct(protected string $table, protected array $response){}
@@ -29,44 +31,15 @@ class ProcessSyncOnlineDBToLocalJob
 
         $outputPath = public_path("$path/$this->table".'_'.now()->format('Y_m_d_H_i_s').".csv");
 
-        foreach ($this->response as $data) {
-        
-            $output = Process::run("curl -o $outputPath ".$data['sync_path'] );
-
-            if( $output->successful() ){
-
-                Schema::disableForeignKeyConstraints();
-
-                SimpleExcelReader::create($outputPath)->getRows()->each(function($row){
-
-                    $row = collect($row)->map(function($value) {
-
-                        $value = @unserialize($value) ? unserialize($value) : $value;
-
-                        if( is_array($value) ){
-                            $value = json_encode($value);
-                        }
-
-                        $value = $value == "" ? null : $value;
-
-                        return $value;
-
-                    })->toArray();
-
-                    $row['is_synced'] = true;
-
-                    if( ! DB::table($this->table)->where('uuid', $row['uuid'] )->first() ){
-
-                        DB::table($this->table)->insert($row);  
-                    }
-                    
-                });
+        $jobs = [];
                 
-                $request = Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $data['id'] ] );
-                                
-                Schema::enableForeignKeyConstraints();
-            }
+        foreach ($this->response as $data) {
+            
+            $jobs[] = new DownloadOnlineDBToLocalJob( $this->table, $outputPath, $data['sync_path'], $data['id'] );
+  
         }
+
+        $this->batch()->add($jobs);
 
     }
 }
