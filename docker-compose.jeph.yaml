@@ -1,6 +1,5 @@
 services:
     web:
-        container_name: jeph_web
         build:
             dockerfile: nginx/Dockerfile
         ports: 
@@ -10,36 +9,39 @@ services:
         tty: true
         volumes: 
           - ./:/var/www/html
+          - letsencrypt:/etc/letsencrypt
           - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
         networks:
-          - example-net
+          vlan:
+            ipv4_address: 192.168.1.100
         depends_on:
           - app        
     app:
-        container_name: jeph_app
         build:
             dockerfile: Dockerfile
         volumes:
           - ./:/var/www/html
           - ./php/php.ini:/usr/local/etc/php/php.ini
         networks:
-          - example-net
+          vlan:
+            ipv4_address: 192.168.1.101
         restart: unless-stopped
         tty: true
         depends_on:
           - db
        
     db:
-        container_name: jeph_db
         image: mysql:8.0
         volumes: 
           - mysqldata:/var/lib/mysql
         ports:
           - "3308:3306"
         networks:
-          - example-net
+          vlan:
+            ipv4_address: 192.168.1.102
         restart: unless-stopped
         command: --max_allowed_packet=325058560
+        container_name: db
         environment:
             MYSQL_ROOT_PASSWORD: 12345678
             MYSQL_USER: user
@@ -47,7 +49,6 @@ services:
             MYSQL_DATABASE: cbt
     
     phpmyadmin:
-        container_name: jeph_phpmyadmin
         image: phpmyadmin
         restart: always
         ports:
@@ -59,11 +60,19 @@ services:
         depends_on:
           - db
         networks:
-          - example-net
+          vlan:
+            ipv4_address: 192.168.1.103
 
 volumes:
     mysqldata:
+    letsencrypt:
+    redis_insight_volume:
+    redis_volume:
 
 networks:
-  example-net:
-    driver: bridge
+  vlan:
+    external: true
+    name: vlan
+
+
+    
