@@ -17,7 +17,7 @@ class StudentProfileModel extends Authenticatable
 
     protected $table = 'student_profiles';
 
-    protected $guarded = ['id'];
+    protected $guarded = [];
 
     public function class()
     {

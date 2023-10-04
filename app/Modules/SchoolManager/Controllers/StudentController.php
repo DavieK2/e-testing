@@ -12,6 +12,7 @@ use App\Modules\SchoolManager\Requests\AssignSubjectToStudentRequest;
 use App\Modules\SchoolManager\Requests\CreateStudentRequest;
 use App\Modules\SchoolManager\Requests\CreateSudentProfileRequest;
 use App\Modules\SchoolManager\Requests\StudentListRequest;
+use App\Modules\SchoolManager\Requests\UpdateStudentProfileRequest;
 
 class StudentController extends Controller
 {
@@ -23,6 +24,17 @@ class StudentController extends Controller
     public function create(CreateStudentRequest $request)
     {
         return $this->serve( new CreateStudentFeature(), $request->validated() );
+    }
+
+    public function update(UpdateStudentProfileRequest $request)
+    {
+        $data = $request->validated();
+
+        $student = StudentProfileModel::find($data['studentId']);
+
+        $student->update(['first_name' => $data['firstName'], 'surname' => $data['surname'], 'class_id' => $data['classId'] ]);
+
+        return response()->json(['message' => 'Success']);
     }
 
     public function assignStudentToSubject(AssignSubjectToStudentRequest $request)
