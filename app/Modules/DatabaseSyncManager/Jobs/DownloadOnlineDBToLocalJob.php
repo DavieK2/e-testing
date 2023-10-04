@@ -27,9 +27,9 @@ class DownloadOnlineDBToLocalJob implements ShouldQueue
 
         if( $output->successful() ){
 
-           
-
             $jobs = collect();
+
+            // $count = SimpleExcelReader::create($this->outputPath)->getRows()->count();
 
             SimpleExcelReader::create($this->outputPath)->getRows()->each(function($row) use($jobs){
 
@@ -39,9 +39,7 @@ class DownloadOnlineDBToLocalJob implements ShouldQueue
 
             $this->batch()->add($jobs->toArray());
 
-            // $request = Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $this->sync_id ] );     
-            
-            Schema::enableForeignKeyConstraints();
+            // $request = Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $this->sync_id ] );       
         }
     }
 }

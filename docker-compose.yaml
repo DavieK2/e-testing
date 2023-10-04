@@ -29,20 +29,20 @@ services:
           - db
           - redis
     
-    horizon:
-        build:
-            dockerfile: Dockerfile
-        volumes:
-          - ./:/var/www/html
-          - ./php/php.ini:/usr/local/etc/php/php.ini
-        networks:
-          - example-net
-        restart: unless-stopped
-        tty: true
-        depends_on:
-          - db
-          - redis
-        command: php artisan horizon
+    # horizon:
+    #     build:
+    #         dockerfile: Dockerfile
+    #     volumes:
+    #       - ./:/var/www/html
+    #       - ./php/php.ini:/usr/local/etc/php/php.ini
+    #     networks:
+    #       - example-net
+    #     restart: unless-stopped
+    #     tty: true
+    #     depends_on:
+    #       - db
+    #       - redis
+    #     command: php artisan horizon
        
     db:
         image: mysql:8.0
