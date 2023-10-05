@@ -17,7 +17,8 @@ class UpdateStudentProfileRequest extends FormRequest
             'studentId'     => 'required|exists:student_profiles,id',
             'firstName'      => 'required|string',
             'surname'       => 'required|string',
-            'classId'       => 'required|exists:classes,id'
+            'classId'       => 'required|exists:classes,id',
+            'profilePic'     => 'nullable|string'
         ];
     }
 }

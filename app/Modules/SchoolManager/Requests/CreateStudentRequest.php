@@ -16,7 +16,8 @@ class CreateStudentRequest extends FormRequest
         return [
             'firstName'      => 'required|string',
             'surname'       => 'required|string',
-            'classId'       => 'required|exists:classes,id'
+            'classId'       => 'required|exists:classes,id',
+            'profilePic'     => 'nullable|string'
         ];
     }
 }

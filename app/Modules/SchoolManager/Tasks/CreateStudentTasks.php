@@ -17,6 +17,7 @@ class CreateStudentTasks extends BaseTasks{
             'first_name'     =>  $this->item['firstName'],
             'surname'       =>  $this->item['surname'],
             'class_id'      =>  $this->item['classId'],
+            'profile_pic'    =>  $this->item['profilePic'],
             'student_code'  =>  strtoupper($student_code)
         ]);
 

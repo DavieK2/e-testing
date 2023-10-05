@@ -32,7 +32,7 @@ class StudentController extends Controller
 
         $student = StudentProfileModel::find($data['studentId']);
 
-        $student->update(['first_name' => $data['firstName'], 'surname' => $data['surname'], 'class_id' => $data['classId'] ]);
+        $student->update(['first_name' => $data['firstName'], 'surname' => $data['surname'], 'class_id' => $data['classId'], 'profile_pic' => $data['profilePic'] ?? null ]);
 
         return response()->json(['message' => 'Success']);
     }
