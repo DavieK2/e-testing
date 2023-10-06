@@ -74,6 +74,9 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/dashboard', fn() => Inertia::render('Dashboard/Index') );
 
+    //Settings
+    Route::get('/settings', fn() => Inertia::render('CBT/Settings/Index') );
+    
     //Assessments
     Route::get('/assessments', fn() => Inertia::render('CBT/Assessment/Index') );
 
