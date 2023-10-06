@@ -10,7 +10,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use PgSql\Lob;
 
 class SyncOnlineDBToLocalJob implements ShouldQueue
 {
@@ -19,8 +18,6 @@ class SyncOnlineDBToLocalJob implements ShouldQueue
     public function handle()
     {
         try {
-
-            // set_time_limit(0);
         
             $request = Http::get(env('APP_URL').'/api/sync-to-local');
     
@@ -41,12 +38,10 @@ class SyncOnlineDBToLocalJob implements ShouldQueue
             
             $this->batch()->add( $jobs );
 
-            // $this->info('completed');
 
         } catch (\Throwable $th) {
             
             Log::info($th);
-            // $this->info($th->getMessage());
         }
     }
 

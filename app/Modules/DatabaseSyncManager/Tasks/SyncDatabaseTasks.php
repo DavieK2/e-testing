@@ -3,10 +3,9 @@
 namespace App\Modules\DatabaseSyncManager\Tasks;
 
 use App\Contracts\BaseTasks;
-use App\Modules\DatabaseSyncManager\Jobs\SaveOnlineDBToLocalJob;
+use App\Modules\DatabaseSyncManager\Jobs\SaveLocalDBDataToOnlineJob;
 use App\Modules\DatabaseSyncManager\Models\DBSyncModel;
 use App\Services\CSVWriter;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Spatie\SimpleExcel\SimpleExcelReader;
@@ -87,15 +86,11 @@ class SyncDatabaseTasks extends BaseTasks{
 
     public function save($path, $table)
     {
-        $jobs = collect();
+        SimpleExcelReader::create($path)->getRows()->each(function($row) use($table){
 
-        SimpleExcelReader::create($path)->getRows()->each(function($row) use($table, $jobs){
-
-            $jobs->push(new SaveOnlineDBToLocalJob( $row, $table ));
+            dispatch( new SaveLocalDBDataToOnlineJob($row, $table) );
             
         });
-
-        Bus::batch($jobs->toArray())->allowFailures()->dispatch();
 
     }
     

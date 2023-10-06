@@ -28,7 +28,6 @@ class SyncLocalDBToOnlineJob implements ShouldQueue
         $sync_data = $this->tasks->start(['tables' => ['assessment_sessions', 'assessment_results'] ])->sync();
 
         $sync_data = $sync_data->each( fn($data, $key) => $data->each( function($value) use($key) {
-
             
             $file = fopen( public_path( $value['sync_path'] ), 'r' );
 
