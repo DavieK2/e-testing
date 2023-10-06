@@ -8,10 +8,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Process;
-use Illuminate\Support\Facades\Schema;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
 class DownloadOnlineDBToLocalJob implements ShouldQueue
@@ -23,23 +22,26 @@ class DownloadOnlineDBToLocalJob implements ShouldQueue
 
     public function handle()
     {
+        $sync_id = $this->sync_id;
+        
         $output = Process::run("curl -o $this->outputPath ".$this->path );
 
         if( $output->successful() ){
 
             $jobs = collect();
 
-            // $count = SimpleExcelReader::create($this->outputPath)->getRows()->count();
-
+            $batch = Bus::batch([]);
+            
             SimpleExcelReader::create($this->outputPath)->getRows()->each(function($row) use($jobs){
 
                 $jobs->push(new SaveOnlineDBToLocalJob( $row, $this->table ));
                 
             });
 
-            $this->batch()->add($jobs->toArray());
+            $batch->add($jobs->toArray())
+                  ->finally(fn() => Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $sync_id ] ))
+                  ->dispatch();
 
-            // $request = Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $this->sync_id ] );       
         }
     }
 }
