@@ -1,13 +1,13 @@
 {
-  "_preline-22f3e65a.js": {
-    "file": "assets/preline-22f3e65a.js",
+  "_preline-59219683.js": {
+    "file": "assets/preline-59219683.js",
     "imports": [
       "resources/js/app.js"
     ],
     "isDynamicEntry": true
   },
   "node_modules/canvg/lib/index.es.js": {
-    "file": "assets/index.es-1181b758.js",
+    "file": "assets/index.es-67010de9.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -25,7 +25,7 @@
     "src": "node_modules/html2canvas/dist/html2canvas.esm.js"
   },
   "resources/css/app.css": {
-    "file": "assets/app-fa0957b9.css",
+    "file": "assets/app-a51e21f4.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -41,9 +41,9 @@
       "node_modules/html2canvas/dist/html2canvas.esm.js",
       "node_modules/dompurify/dist/purify.es.js",
       "node_modules/canvg/lib/index.es.js",
-      "_preline-22f3e65a.js"
+      "_preline-59219683.js"
     ],
-    "file": "assets/app-fe4d342e.js",
+    "file": "assets/app-da26e41e.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

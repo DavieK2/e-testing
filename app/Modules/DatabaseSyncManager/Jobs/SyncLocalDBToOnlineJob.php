@@ -1,19 +1,26 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Modules\DatabaseSyncManager\Jobs;
 
 use App\Modules\DatabaseSyncManager\Models\DBSyncModel;
 use App\Modules\DatabaseSyncManager\Tasks\SyncDatabaseTasks;
-use Illuminate\Console\Command;
+use Illuminate\Bus\Batchable;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 
-class SyncLocalDatabaseToOnlineCommand extends Command
+class SyncLocalDBToOnlineJob implements ShouldQueue
 {
-    protected $signature = 'app:sync-online';
-    protected $description = 'Command description';
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(protected SyncDatabaseTasks $tasks){
-        parent::__construct();
+    protected SyncDatabaseTasks $tasks;
+   
+    public function __construct(){
+
+        $this->tasks = new SyncDatabaseTasks();
     }
 
     public function handle()
@@ -22,6 +29,7 @@ class SyncLocalDatabaseToOnlineCommand extends Command
 
         $sync_data = $sync_data->each( fn($data, $key) => $data->each( function($value) use($key) {
 
+            
             $file = fopen( public_path( $value['sync_path'] ), 'r' );
 
             $request = Http::attach( 'file', $file  )->post( env('APP_URL').'/api/sync-to-online', [ 'table' => $key ]);
@@ -34,7 +42,5 @@ class SyncLocalDatabaseToOnlineCommand extends Command
             if( is_resource( $file ) ) fclose( $file ) ;
 
         } ) );
-
-        $this->info('Completed');
     }
 }

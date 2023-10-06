@@ -31,7 +31,7 @@ class UserModel extends User
 
     public function getIsQuestionManagerAttribute()
     {
-        return $this->role->role_name === 'admin';
+        return $this->role->role_name === 'admin' || $this->role->role_name === 'editor';
     }
 
     public function subjects()

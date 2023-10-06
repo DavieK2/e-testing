@@ -37,10 +37,9 @@ class SaveOnlineDBToLocalJob implements ShouldQueue
 
         $row['is_synced'] = true;
 
-        if( ! DB::table($this->table)->where('uuid', $row['uuid'] )->first() ){
+        if( DB::table($this->table)->where('uuid', $row['uuid'] )->first() ) return;
 
-            DB::table($this->table)->insert($row);  
-        }
+        DB::table($this->table)->insert($row);  
 
         Schema::enableForeignKeyConstraints();
     }

@@ -37,7 +37,7 @@ class ImportQuestionsTask extends BaseTasks{
 
         $errors = [];
         
-        SimpleExcelReader::create( storage_path("app/$importFileKey") )->getRows()->each(function($row){
+        SimpleExcelReader::create( storage_path("app/$importFileKey") )->trimHeaderRow()->getRows()->each(function($row){
                
             $mapping = $this->item['mappings'];
             

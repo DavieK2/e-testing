@@ -3,8 +3,10 @@
 namespace App\Modules\DatabaseSyncManager\Tasks;
 
 use App\Contracts\BaseTasks;
+use App\Modules\DatabaseSyncManager\Jobs\SaveOnlineDBToLocalJob;
 use App\Modules\DatabaseSyncManager\Models\DBSyncModel;
 use App\Services\CSVWriter;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Spatie\SimpleExcel\SimpleExcelReader;
@@ -19,9 +21,16 @@ class SyncDatabaseTasks extends BaseTasks{
 
         $this->writer = new CSVWriter();
 
-        $unnecssary_tables = $this->item['filter'];
+        if( isset($this->item['tables']) ){
 
-        $tables = collect(Schema::getAllTables())->filter(fn($table) => ! in_array($table->Tables_in_cbt, $unnecssary_tables))->map(fn($table) => $table->Tables_in_cbt);
+            $tables = collect( $this->item['tables'] );
+
+        }else{
+
+            $unnecssary_tables = $this->item['filter'];
+
+            $tables = collect(Schema::getAllTables())->filter(fn($table) => ! in_array($table->Tables_in_cbt, $unnecssary_tables))->map(fn($table) => $table->Tables_in_cbt);
+        }
 
         $sync_paths = collect();
 
@@ -78,36 +87,15 @@ class SyncDatabaseTasks extends BaseTasks{
 
     public function save($path, $table)
     {
-        Schema::disableForeignKeyConstraints();
+        $jobs = collect();
 
-        SimpleExcelReader::create($path)->getRows()->each(function($row) use($table){
+        SimpleExcelReader::create($path)->getRows()->each(function($row) use($table, $jobs){
 
-            $row = collect($row)->map(function($value) {
-
-                $value = @unserialize($value) ? unserialize($value) : $value;
-                $value = is_array($value) ? json_encode($value) : $value;
-                $value = $value == "" ? null : $value;
-
-                return $value;
-
-            })->toArray();
-
-            $row['is_synced'] = true;
-
-            if( isset( $row['uuid'] ) ){
-
-                $updateColumn = ['uuid' => $row['uuid'] ];
-
-            }else{
-
-                $updateColumn = $row;
-            }
-           
-            DB::table($table)->updateOrInsert( $updateColumn , $row);  
+            $jobs->push(new SaveOnlineDBToLocalJob( $row, $table ));
             
         });
 
-        Schema::enableForeignKeyConstraints();
+        Bus::batch($jobs->toArray())->allowFailures()->dispatch();
 
     }
     

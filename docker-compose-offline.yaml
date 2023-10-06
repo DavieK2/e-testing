@@ -20,7 +20,6 @@ services:
         build:
             dockerfile: Dockerfile
         volumes:
-          - ./:/var/www/html
           - ./php/php.ini:/usr/local/etc/php/php.ini
         networks:
           vlan:

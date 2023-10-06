@@ -3,6 +3,7 @@
 namespace App\Modules\DatabaseSyncManager\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\DatabaseSyncManager\Jobs\SyncLocalDBToOnlineJob;
 use App\Modules\DatabaseSyncManager\Jobs\SyncOnlineDBToLocalJob;
 use App\Modules\DatabaseSyncManager\Models\DBSyncModel;
 use App\Modules\DatabaseSyncManager\Requests\ConfirmDBSyncedToLocalRequest;
@@ -20,6 +21,7 @@ class SyncOnlineDabataseToLocalController extends Controller
 
         return response()->json(['message' => 'Sync has started', 'id' => $batch->id ]);
     }
+
 
     public function sync()
     {        
