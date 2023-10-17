@@ -15,9 +15,7 @@ class SyncDataFromFile extends Command
     public function handle()
     {
         Schema::dropIfExists('assessment_results_backup');
-        Schema::dropIfExists('assessment_sessions_backup');
-
-        DB::unprepared( file_get_contents( base_path('assessment_sessions_latest.sql') ) );
+        
         DB::unprepared( file_get_contents( base_path('assessment_results_newest.sql') ) );
 
         DB::table('assessment_results_backup')->cursor()->each(function($session){
@@ -25,16 +23,8 @@ class SyncDataFromFile extends Command
             dispatch( new SaveLocalDBDataToOnlineJob( (array) $session, 'assessment_results') );
  
         });
-
-        DB::table('assessment_sessions_backup')->cursor()->each(function($session){
-
-           dispatch( new SaveLocalDBDataToOnlineJob( (array) $session, 'assessment_sessions') );
-
-        });
-
        
         Schema::dropIfExists('assessment_results_backup');
-        Schema::dropIfExists('assessment_sessions_backup');
 
     }
 }
