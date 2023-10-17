@@ -37,6 +37,7 @@ class SaveLocalDBDataToOnlineJob implements ShouldQueue
 
         $row['is_synced'] = true;
 
+        if( isset( $row['id'] ) ) unset( $row['id'] );
 
         if( ! DB::table($this->table)->where('uuid', $row['uuid'])->first()  ){
 
