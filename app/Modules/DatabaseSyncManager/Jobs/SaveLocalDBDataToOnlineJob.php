@@ -16,7 +16,7 @@ class SaveLocalDBDataToOnlineJob implements ShouldQueue
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
    
-    public function __construct(protected string $row, protected string $table)
+    public function __construct(protected array $row, protected string $table)
     {
         //
     }
