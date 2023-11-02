@@ -227,14 +227,16 @@ ExamController extends Controller
         $available_subjects = DB::table('assessment_subjects')
                                 ->where( fn($query) => $query->whereIn('assessment_subjects.subject_id', $student_subjects)->where('assessment_subjects.class_id', $student_class)->where('assessment_subjects.is_published', true)->whereBetween('assessment_subjects.start_date',  [ now()->startOfDay()->toDateTimeString(), now()->toDateTimeString() ] ) )
                                 ->join('subjects', 'subjects.id', '=', 'assessment_subjects.subject_id')
-                                ->select('assessment_subjects.assessment_duration as duration', 'subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode')
-                                ->get()
-                                ->toArray();
+                                ->select('assessment_subjects.assessment_duration as duration', 'subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode', 'subjects.id as subId')
+                                ->get();
 
+        $checked_in_subjects = CheckInModel::where('student_profile_id', $student->id)->where('assessment_id', $assessment->id)->first()->subject_ids;
 
-       return response()->json([
-            'data' => $available_subjects
-       ]);
+        $available_subjects = $available_subjects->filter( fn($subject) => in_array( $subject->subId, json_decode($checked_in_subjects) ) )->toArray();
+        
+        return response()->json([
+                'data' => $available_subjects
+        ]);
 
     }
 
@@ -358,14 +360,16 @@ ExamController extends Controller
 
         $data = request()->validate([
             'studentId' => 'required|exists:student_profiles,student_code',
+            'subjects'  => 'required|array'
         ]);
 
         $student = StudentProfileModel::firstWhere('student_code', $data['studentId'])->id;
         
         CheckInModel::updateOrCreate([ 'assessment_id' => $assessment->id, 'student_profile_id' => $student ], [
-            'assessment_id' => $assessment->id,
-            'student_profile_id' => $student,
-            'checked_in_at' => now(),
+            'assessment_id'         => $assessment->id,
+            'subject_ids'           => json_encode($data['subjects']),
+            'student_profile_id'     => $student,
+            'checked_in_at'         => now(),
             'checked_in_expires_at' => now()->endOfDay()
         ]);
 

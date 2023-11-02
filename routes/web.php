@@ -3,8 +3,10 @@
 use App\Models\User;
 use App\Modules\CBT\Controllers\AssessmentResultController;
 use App\Modules\CBT\Controllers\ExamController;
+use App\Modules\CBT\Jobs\ImportStudentResultsJob;
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Models\QuestionModel;
+use App\Modules\Excel\Export;
 use App\Modules\SchoolManager\Models\ClassModel;
 use App\Modules\SchoolManager\Models\StudentProfileModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
@@ -23,6 +25,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Process;
 use Spatie\SimpleExcel\SimpleExcelReader;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +42,52 @@ require __DIR__ . '/auth.php';
 
 
 Route::get('/', function(){
+
+        
+    // DB::table('computed_assessment_results')
+    //     ->join('student_profiles', 'student_profiles.id', '=', 'computed_assessment_results.student_profile_id')
+    //     ->where(fn($query) => $query->where('computed_assessment_results.academic_session_id', 2)
+    //                                 ->where('computed_assessment_results.school_term_id', 1)
+    //                                 ->where('student_profiles.class_id', 3)
+
+    //     )
+    //     ->get()
+    //     ->groupBy('subject_id')
+    //     ->each(function($results, $subjectId){
+
+    //         $subject = SubjectModel::find($subjectId);
+    //         $headings = collect();
+
+    //         $results = $results->map(function($result, $index) use($subject, $headings){
+
+    //             $student = StudentProfileModel::find($result->student_profile_id);
+
+    //             $assessment_results = json_decode($result->assessments);
+
+    //             $total_max_score = collect($assessment_results)->sum('max_score');
+
+    //             $assessment_results = collect($assessment_results)->mapWithKeys(fn($value) => [ strtoupper($value->title)." ($value->max_score)" => $value->score ])->toArray();
+                
+    //             $data = [
+    //                 'S/N' => $index + 1,
+    //                 'STUDENT NAME' => "$student->first_name $student->surname",
+    //                 'REG NO' => $student->student_code,
+    //                 'COURSE' => "$subject->subject_name ($subject->subject_code)",
+    //                 ...$assessment_results,
+    //                 "TOTAL SCORE ($total_max_score)" => $result->total_score,
+    //                 "GRADE" => $result->grade,
+    //                 'REMARKS' => $result->remarks
+    //             ];
+
+    //             $headings->push( array_keys($data) );
+
+    //             return $data;
+    //         });
+
+    //         return Excel::store( new Export($results, $headings->first()), "$subject->subject_name.xlsx" );
+            
+    //     });
+                                            
 
     // $student = StudentProfileModel::where('class_id', 2)->get()->each(function($student) use($assessment){
     //     $results = DB::table('assessment_results')
@@ -66,6 +115,7 @@ Route::get('/', function(){
     // });
 
    
+    
 });
 
 Route::middleware(['auth'])->group(function(){
