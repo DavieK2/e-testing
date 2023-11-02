@@ -234,7 +234,7 @@ ExamController extends Controller
 
         $available_subjects = $available_subjects->filter( fn($subject) => in_array( $subject->subId, json_decode($checked_in_subjects) ) );
         
-        // $available_subjects = $assessment_subject->flatMap( fn($subject) => [$subject] )->toArray();
+        $available_subjects = $available_subjects->map(fn( $subject) => ['duration' => $subject->duration, 'subjectName' => $subject->subjectName, 'subjectCode' => $subject->subjectCode ]);
        
         return response()->json([
                 'data' => $available_subjects
