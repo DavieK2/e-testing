@@ -232,8 +232,10 @@ ExamController extends Controller
 
         $checked_in_subjects = CheckInModel::where('student_profile_id', $student->id)->where('assessment_id', $assessment->id)->first()->subject_ids;
 
-        $available_subjects = $available_subjects->filter( fn($subject) => in_array( $subject->subId, json_decode($checked_in_subjects) ) )->toArray();
+        $available_subjects = $available_subjects->filter( fn($subject) => in_array( $subject->subId, json_decode($checked_in_subjects) ) );
         
+        // $available_subjects = $assessment_subject->flatMap( fn($subject) => [$subject] )->toArray();
+       
         return response()->json([
                 'data' => $available_subjects
         ]);
