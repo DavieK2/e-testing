@@ -228,16 +228,28 @@ ExamController extends Controller
                                 ->where( fn($query) => $query->whereIn('assessment_subjects.subject_id', $student_subjects)->where('assessment_subjects.class_id', $student_class)->where('assessment_subjects.is_published', true)->whereBetween('assessment_subjects.start_date',  [ now()->startOfDay()->toDateTimeString(), now()->toDateTimeString() ] ) )
                                 ->join('subjects', 'subjects.id', '=', 'assessment_subjects.subject_id')
                                 ->select('assessment_subjects.assessment_duration as duration', 'subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode', 'subjects.id as subId')
-                                ->get();
+                                ->get()
+                                ->toArray();
 
         $checked_in_subjects = CheckInModel::where('student_profile_id', $student->id)->where('assessment_id', $assessment->id)->first()->subject_ids;
-
-        $available_subjects = $available_subjects->filter( fn($subject) => in_array( $subject->subId, json_decode($checked_in_subjects) ) );
         
-        $available_subjects = $available_subjects->map(fn( $subject) => ['duration' => $subject->duration, 'subjectName' => $subject->subjectName, 'subjectCode' => $subject->subjectCode ]);
+        $newAvailableSubjects = [];
+
+        foreach ($available_subjects as $key => $subject) {
+           
+            if( ! in_array( $subject->subId, json_decode($checked_in_subjects, true) ) ) continue;
+
+            $data = [
+                'duration'      =>  $subject->duration,
+                'subjectName'   =>  $subject->subjectName,
+                'subjectCode'   =>  $subject->subjectCode
+            ];
+
+            $newAvailableSubjects[] = $data;
+        }
        
         return response()->json([
-                'data' => $available_subjects
+                'data' => $newAvailableSubjects
         ]);
 
     }
