@@ -20,7 +20,7 @@ class SyncOnlineDatabaseToLocalCommand extends Command
 
             set_time_limit(0);
         
-            $request = Http::get(env('APP_URL').'/api/sync-to-local');
+            $request = Http::get('https://conscal.site/api/sync-to-local');
     
             $responses = $request->json();
     
@@ -75,7 +75,7 @@ class SyncOnlineDatabaseToLocalCommand extends Command
                             
                         });
                         
-                        $request = Http::post(env('APP_URL').'/api/sync-to-local-confirm', ['id' => $data['id'] ] );
+                        $request = Http::post('https://conscal.site/api/sync-to-local-confirm', ['id' => $data['id'] ] );
                         
                         $this->info( json_encode( $request->json() ) );
                         
