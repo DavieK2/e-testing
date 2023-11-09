@@ -11,6 +11,7 @@ return new class extends Migration
     {
         Schema::create('roles', function(Blueprint $table){
             $table->id();
+            $table->ulid('uuid');
             $table->string('role_name')->unique();
             $table->boolean('is_synced')->default(false);
             $table->timestamps();

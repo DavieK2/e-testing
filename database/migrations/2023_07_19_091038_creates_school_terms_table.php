@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('school_terms', function(Blueprint $table){
             $table->id();
+            $table->ulid('uuid');
             $table->string('term');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();

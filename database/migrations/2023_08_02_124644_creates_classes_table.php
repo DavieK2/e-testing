@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('classes', function(Blueprint $table){
             $table->id();
+            $table->ulid('uuid');
             $table->string('class_name');
             $table->string('class_code');
             $table->boolean('is_synced')->default(false);

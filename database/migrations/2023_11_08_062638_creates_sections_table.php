@@ -6,18 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+   
     public function up()
     {
-        Schema::create('class_subjects', function(Blueprint $table){
+        Schema::create('sections', function(Blueprint $table){
+            $table->id();
             $table->ulid('uuid');
-            $table->string('class_id');
-            $table->string('subject_id');
+            $table->foreignId('assessment_id')->constrained();
+            $table->foreignId('subject_id')->constrained();
+            $table->string('title');
             $table->boolean('is_synced')->default(false);
+            $table->timestamps();
+
         });
     }
 
+    
     public function down()
     {
-        Schema::dropIfExists('class_subjects');
+        //
     }
 };

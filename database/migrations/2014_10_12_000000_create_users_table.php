@@ -15,6 +15,7 @@ return new class extends Migration
 
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->ulid('uuid');
             $table->string('fullname');
             $table->string('email')->unique();
             $table->string('phone_no')->unique();
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained()->default();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
+            $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });
     }

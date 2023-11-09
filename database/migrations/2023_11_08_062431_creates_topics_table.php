@@ -8,16 +8,20 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('class_subjects', function(Blueprint $table){
+        Schema::create('topics', function(Blueprint $table){
+            $table->id();
             $table->ulid('uuid');
-            $table->string('class_id');
-            $table->string('subject_id');
+            $table->foreignId('subject_id')->constrained();
+            $table->foreignId('class_id')->constrained();
+            $table->string('title');
             $table->boolean('is_synced')->default(false);
+            $table->timestamps();
+
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('class_subjects');
+        //
     }
 };

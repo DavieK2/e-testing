@@ -11,7 +11,9 @@ return new class extends Migration
     {
         Schema::create('departments', function(Blueprint $table){
             $table->id();
+            $table->ulid('uuid');
             $table->string('department_name');
+            $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });
     }

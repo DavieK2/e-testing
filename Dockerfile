@@ -5,6 +5,12 @@ RUN apt-get update && apt-get install -y \
      libpng-dev \
      libonig-dev \
      libxml2-dev \
+     libjpeg-dev \
+     libfreetype6-dev \
+     libjpeg62-turbo-dev \
+     libmcrypt-dev \
+     libgd-dev \
+     jpegoptim optipng pngquant gifsicle \
      zip \
      unzip \
      nano \
@@ -25,6 +31,7 @@ RUN pip install pypsexec
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
