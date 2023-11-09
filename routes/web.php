@@ -20,16 +20,6 @@ use Inertia\Inertia;
 use Laravel\Sanctum\PersonalAccessToken;
 use PragmaRX\Google2FAQRCode\Google2FA;
 use PragmaRX\Google2FAQRCode\QRCode\Bacon;
-<<<<<<< HEAD
-
-=======
-use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Process;
-use Spatie\SimpleExcel\SimpleExcelReader;
-use Illuminate\Support\Str;
-use Maatwebsite\Excel\Facades\Excel;
->>>>>>> a06ed8dc4f043edbed90f401c145a824cd1ba2b4
 
 /*
 |--------------------------------------------------------------------------
