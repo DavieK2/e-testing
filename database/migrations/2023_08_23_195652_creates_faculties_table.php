@@ -10,7 +10,9 @@ return new class extends Migration
     {
         Schema::create('faculties', function(Blueprint $table){
             $table->id();
+            $table->ulid('uuid')->unique();
             $table->string('faculty_name');
+            $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });
     }

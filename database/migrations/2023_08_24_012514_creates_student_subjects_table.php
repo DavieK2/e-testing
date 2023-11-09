@@ -10,8 +10,10 @@ return new class extends Migration
     {
         Schema::create('student_subjects', function(Blueprint $table){
             $table->id();
+            $table->ulid('uuid')->unique();
             $table->foreignId('student_profile_id')->constrained();
             $table->foreignId('subject_id')->constrained();
+            $table->boolean('is_synced')->default(false);
         });
     }
 

@@ -7,7 +7,9 @@ use App\Modules\SchoolManager\Models\SubjectModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class UserModel extends User
 {
@@ -29,7 +31,7 @@ class UserModel extends User
 
     public function getIsQuestionManagerAttribute()
     {
-        return $this->role->role_name === 'admin';
+        return $this->role->role_name === 'admin' || $this->role->role_name === 'editor';
     }
 
     public function subjects()
@@ -44,12 +46,21 @@ class UserModel extends User
 
     public function assignToSubject(array $subjects)
     {
-        return $this->subjects()->sync($subjects);
+
+       $this->subjects()->detach();
+
+       foreach( $subjects as $subject ){
+            DB::table('user_subjects')->insert( ['user_id' => $this->id, 'subject_id' => $subject, 'uuid' => Str::ulid() ] );
+       }
     }
 
     public function assignToClass(array $classes)
     {
-        return $this->classes()->sync($classes);
+        $this->classes()->detach();
+
+        foreach( $classes as $class ){
+            DB::table('user_classes')->insert( ['user_id' => $this->id, 'class_id' => $class, 'uuid' => Str::ulid() ] );
+       }
     }
 
     public function scopeTeachers($query)

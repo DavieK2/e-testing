@@ -22,11 +22,11 @@ class CSVWriter {
             mkdir( public_path($path), recursive: true );
         }
         
-        if( ! $this->file ){
+        if( ! is_resource($this->file) ){
 
-            $this->path = $path.Str::random().'.csv';
+            $this->path = $path.Str::random().'_'.now()->format('Y_m_d').'.csv';
             
-            $this->file = fopen($this->path, 'a');
+            $this->file = fopen( public_path($this->path), 'a' );
 
             $this->headers = array_keys($data);
 
@@ -34,7 +34,6 @@ class CSVWriter {
                 
                 fputcsv($this->file, $header_row);
             }
-            
         }
 
         fputcsv($this->file, $data);
@@ -52,6 +51,6 @@ class CSVWriter {
 
     public function close() : void
     {
-        if( $this->file ) fclose($this->file);
+        if( is_resource($this->file) ) fclose( $this->file );
     }
 }

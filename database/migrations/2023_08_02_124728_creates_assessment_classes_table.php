@@ -9,6 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('assessment_classes', function(Blueprint $table){
+            $table->ulid('uuid')->unique();
             $table->string('assessment_id');
             $table->string('class_id');
             $table->boolean('is_synced')->default(false);

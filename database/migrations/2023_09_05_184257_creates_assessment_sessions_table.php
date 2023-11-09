@@ -10,6 +10,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('assessment_sessions', function(Blueprint $table){
+            $table->ulid('uuid')->unique();
             $table->foreignId('student_profile_id')->constrained();
             $table->foreignId('assessment_id')->constrained();
             $table->foreignId('question_id')->constrained();

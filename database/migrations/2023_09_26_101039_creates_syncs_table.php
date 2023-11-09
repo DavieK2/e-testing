@@ -9,10 +9,12 @@ return new class extends Migration
    
     public function up()
     {
-        Schema::table('syncs', function(Blueprint $table){
+        Schema::create('syncs', function(Blueprint $table){
             $table->id();
             $table->string('table_synced');
-            $table->timestamp('sync_date');
+            $table->string('sync_path');
+            $table->boolean('has_synced')->default(false);
+            $table->timestamp('last_synced_date')->nullable();
             $table->timestamps();
         });
     }

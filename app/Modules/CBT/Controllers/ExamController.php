@@ -17,6 +17,7 @@ use App\Modules\CBT\Requests\SubmitStudentExamRequest;
 use App\Modules\SchoolManager\Models\StudentProfileModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Question\Question;
 
 class 
@@ -52,6 +53,7 @@ ExamController extends Controller
         $student = request()->user();
 
         $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id ],[
+            'uuid'                 => Str::ulid(),
             'student_profile_id'    => $student->id,
             'assessment_id'        => $assessment->id,
             'time_remaining'       => $assessment->assessment_duration
@@ -161,7 +163,7 @@ ExamController extends Controller
                                     }
                                 })
                                 ->join('questions', 'questions.id', '=', 'assessment_sessions.question_id')
-                                ->select('assessment_sessions.student_answer as studentAnswer', 'assessment_sessions.marked_for_review as markedForReview', 'questions.uuid as questionId')
+                                ->select('assessment_sessions.student_answer as studentAnswer', 'assessment_sessions.uuid as sessionId', 'assessment_sessions.marked_for_review as markedForReview', 'questions.uuid as questionId')
                                 ->get();
 
         $student_responses = $student_responses->map( function($response) {
@@ -169,6 +171,7 @@ ExamController extends Controller
             $not_answered = ( is_null( $response->studentAnswer ) );
 
             return [
+                'sessionId'         => $response->sessionId,
                 'questionId'        => $response->questionId,
                 'selectedAnswer'    => trim($response->studentAnswer),
                 'markedForReview'   => $response->markedForReview,
@@ -193,7 +196,7 @@ ExamController extends Controller
 
         $score = trim(strtolower($data['studentAnswer'])) == trim(strtolower($question->correct_answer)) ? $question->question_score : 0;
 
-        $student->saveStudentResponse($assessment, $question->id, $data['studentAnswer'], $data['markedForReview'], $score, $data['subjectId'] ?? null );
+        $student->saveStudentResponse($assessment,  $question->id, $data['studentAnswer'], $data['markedForReview'], $score, $data['subjectId'] ?? null );
 
         return response()->json(['message' => 'Answer Saved']);
     }
@@ -224,14 +227,30 @@ ExamController extends Controller
         $available_subjects = DB::table('assessment_subjects')
                                 ->where( fn($query) => $query->whereIn('assessment_subjects.subject_id', $student_subjects)->where('assessment_subjects.class_id', $student_class)->where('assessment_subjects.is_published', true)->whereBetween('assessment_subjects.start_date',  [ now()->startOfDay()->toDateTimeString(), now()->toDateTimeString() ] ) )
                                 ->join('subjects', 'subjects.id', '=', 'assessment_subjects.subject_id')
-                                ->select('assessment_subjects.assessment_duration as duration', 'subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode')
+                                ->select('assessment_subjects.assessment_duration as duration', 'subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode', 'subjects.id as subId')
                                 ->get()
                                 ->toArray();
 
+        $checked_in_subjects = CheckInModel::where('student_profile_id', $student->id)->where('assessment_id', $assessment->id)->first()->subject_ids;
+        
+        $newAvailableSubjects = [];
 
-       return response()->json([
-            'data' => $available_subjects
-       ]);
+        foreach ($available_subjects as $key => $subject) {
+           
+            if( ! in_array( $subject->subId, json_decode($checked_in_subjects, true) ) ) continue;
+
+            $data = [
+                'duration'      =>  $subject->duration,
+                'subjectName'   =>  $subject->subjectName,
+                'subjectCode'   =>  $subject->subjectCode
+            ];
+
+            $newAvailableSubjects[] = $data;
+        }
+       
+        return response()->json([
+                'data' => $newAvailableSubjects
+        ]);
 
     }
 
@@ -244,6 +263,7 @@ ExamController extends Controller
         $assessment_subject = $assessment->subjects()->where('assessment_subjects.subject_id', $subject->id)->where('assessment_subjects.class_id', $student->class_id)->first();
 
         $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id, 'subject_id' => $subject->id ],[
+                            'uuid'                 => Str::ulid(),
                             'student_profile_id'    => $student->id,
                             'assessment_id'        => $assessment->id,
                             'subject_id'           => $subject->id,
@@ -354,14 +374,16 @@ ExamController extends Controller
 
         $data = request()->validate([
             'studentId' => 'required|exists:student_profiles,student_code',
+            'subjects'  => 'required|array'
         ]);
 
         $student = StudentProfileModel::firstWhere('student_code', $data['studentId'])->id;
         
         CheckInModel::updateOrCreate([ 'assessment_id' => $assessment->id, 'student_profile_id' => $student ], [
-            'assessment_id' => $assessment->id,
-            'student_profile_id' => $student,
-            'checked_in_at' => now(),
+            'assessment_id'         => $assessment->id,
+            'subject_ids'           => json_encode($data['subjects']),
+            'student_profile_id'     => $student,
+            'checked_in_at'         => now(),
             'checked_in_expires_at' => now()->endOfDay()
         ]);
 

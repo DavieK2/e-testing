@@ -3,6 +3,7 @@
 namespace App\Modules\CBT\Resources;
 
 use App\Http\Resources\BaseResource;
+use Illuminate\Support\Facades\Log;
 
 class GetAssessmentQuestionsResource extends BaseResource
 {
@@ -10,7 +11,15 @@ class GetAssessmentQuestionsResource extends BaseResource
     {
         $choices = json_decode($this->choices);
 
-        $choices = collect($choices)->map( fn($choice) => trim($choice) )->toArray();
+        try {
+
+            $choices = collect($choices)->map( fn($choice) => trim($choice) )->toArray();
+
+        } catch (\Throwable $th) {
+           
+            Log::error($th);
+        }
+
 
         return [
             'questionId'    => $this->questionId,

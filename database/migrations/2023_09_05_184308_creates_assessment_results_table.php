@@ -9,7 +9,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('assessment_results', function(Blueprint $table){
-            $table->id();
+            $table->id(); 
+            $table->ulid('uuid')->unique();
             $table->foreignId('student_profile_id')->constrained();
             $table->foreignId('assessment_id')->constrained();
             $table->foreignId('subject_id')->nullable()->constrained();
@@ -19,9 +20,7 @@ return new class extends Migration
             $table->boolean('has_started')->default(false);     
             $table->boolean('has_submitted')->default(false);     
             $table->integer('tries')->default(5);     
-            $table->integer('total_score')->nullable();
-            $table->string('grade')->nullable();
-            $table->string('remarks')->nullable();
+            $table->double('total_score')->nullable();
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });

@@ -6,6 +6,8 @@ use App\Modules\CBT\Controllers\AssessmentTypeController;
 use App\Modules\CBT\Controllers\ExamController;
 use App\Modules\CBT\Controllers\QuestionController;
 use App\Modules\CBT\Controllers\TeacherController;
+use App\Modules\DatabaseSyncManager\Controllers\SyncLocalDatabaseToOnlineController;
+use App\Modules\DatabaseSyncManager\Controllers\SyncOnlineDabataseToLocalController;
 use App\Modules\SchoolManager\Controllers\AcademicSessionController;
 use App\Modules\SchoolManager\Controllers\ClassController;
 use App\Modules\SchoolManager\Controllers\StudentController;
@@ -128,3 +130,13 @@ Route::middleware(['auth:sanctum', 'cbt', 'cbt.session'])->group(function(){
     Route::get('/cbt/t/session/student/{assessment:uuid}/{subject:subject_code}', [ ExamController::class, 'getStudentTermlyExamAssessmentSession' ]);
     Route::post('/cbt/t/start-session/student/{assessment:uuid}/{subject:subject_code}', [ ExamController::class, 'startStudentTermlyExamSession' ]);
 });
+
+
+Route::post('/sync-database', [ SyncOnlineDabataseToLocalController::class, 'syncOnlineDatabaseToLocal' ]);
+Route::post('/sync-database-online', [ SyncLocalDatabaseToOnlineController::class, 'syncOnline' ]);
+
+Route::get('/sync-to-local', [ SyncOnlineDabataseToLocalController::class, 'sync' ]);
+Route::post('/sync-to-local-confirm', [ SyncOnlineDabataseToLocalController::class, 'confirmSync' ]);
+
+// Route::get('/sync-to-online', [ SyncLocalDatabaseToOnlineController::class, 'sync']);
+Route::post('/sync-to-online', [ SyncLocalDatabaseToOnlineController::class, 'sync']);

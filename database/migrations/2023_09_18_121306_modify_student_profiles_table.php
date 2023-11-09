@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('student_profiles', function(Blueprint $table){
-            $table->longText('profile_pic')->change();
+            $table->longText('profile_pic')->change()->nullable();
         });
     }
 

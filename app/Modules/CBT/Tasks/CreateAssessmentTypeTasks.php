@@ -4,13 +4,15 @@ namespace App\Modules\CBT\Tasks;
 
 use App\Contracts\BaseTasks;
 use App\Modules\CBT\Models\AssessmentTypeModel;
+use Illuminate\Support\Str;
 
 class CreateAssessmentTypeTasks extends BaseTasks{
 
     public function addAssessmentTypeToDatabase()
     {
         AssessmentTypeModel::create([
-            'type' => $this->item['assessmentType'],
+            'uuid'      => Str::ulid(),
+            'type'      => $this->item['assessmentType'],
             'max_score' => $this->item['maxScore'],
         ]);
 
