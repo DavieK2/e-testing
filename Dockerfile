@@ -1,6 +1,6 @@
 FROM php:8.1.23-fpm
 
-RUN apt-get update && apt-get install -y \
+RUN  apt-get update && apt-get install -y \
      curl \
      libpng-dev \
      libonig-dev \
@@ -21,22 +21,22 @@ RUN apt-get update && apt-get install -y \
      python3-venv \
      python3-pip
 
-ENV VIRTUAL_ENV=/opt/venv
+ENV  VIRTUAL_ENV=/opt/venv
 
-RUN python3 -m venv $VIRTUAL_ENV
+RUN  python3 -m venv $VIRTUAL_ENV
 
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+ENV  PATH="$VIRTUAL_ENV/bin:$PATH"
 
-RUN pip install pypsexec
+RUN  pip install pypsexec
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN  apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV  COMPOSER_ALLOW_SUPERUSER=1
 
-RUN curl -sS https://getcomposer.org/installer​ | php -- \
+RUN  curl -sS https://getcomposer.org/installer​ | php -- \
      --install-dir=/usr/local/bin --filename=composer
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -47,11 +47,11 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html
 
-RUN chown -R www-data:www-data *
+RUN  chown -R www-data:www-data *
 
-RUN composer install --ignore-platform-reqs --no-interaction
+RUN  composer install --ignore-platform-reqs --no-interaction
 
-RUN php artisan optimize:clear && \
+RUN  php artisan optimize:clear && \
      php artisan cache:clear && \
      php artisan config:clear && \
      php artisan config:cache

@@ -3,11 +3,15 @@
 use App\Models\User;
 use App\Modules\CBT\Controllers\AssessmentResultController;
 use App\Modules\CBT\Controllers\ExamController;
+use App\Modules\CBT\Jobs\ImportStudentResultsJob;
 use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\QuestionModel;
+use App\Modules\Excel\Export;
 use App\Modules\SchoolManager\Models\ClassModel;
 use App\Modules\SchoolManager\Models\StudentProfileModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
 use App\Modules\UserManager\Constants\UserManagerConstants;
+use App\Services\CSVWriter;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +20,16 @@ use Inertia\Inertia;
 use Laravel\Sanctum\PersonalAccessToken;
 use PragmaRX\Google2FAQRCode\Google2FA;
 use PragmaRX\Google2FAQRCode\QRCode\Bacon;
+<<<<<<< HEAD
 
+=======
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Process;
+use Spatie\SimpleExcel\SimpleExcelReader;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+>>>>>>> a06ed8dc4f043edbed90f401c145a824cd1ba2b4
 
 /*
 |--------------------------------------------------------------------------
@@ -32,9 +45,82 @@ use PragmaRX\Google2FAQRCode\QRCode\Bacon;
 require __DIR__ . '/auth.php';
 
 
-// Route::get('/', function(){  
+Route::get('/', function(){
+
+        
+    // DB::table('computed_assessment_results')
+    //     ->join('student_profiles', 'student_profiles.id', '=', 'computed_assessment_results.student_profile_id')
+    //     ->where(fn($query) => $query->where('computed_assessment_results.academic_session_id', 2)
+    //                                 ->where('computed_assessment_results.school_term_id', 1)
+    //                                 ->where('student_profiles.class_id', 3)
+
+    //     )
+    //     ->get()
+    //     ->groupBy('subject_id')
+    //     ->each(function($results, $subjectId){
+
+    //         $subject = SubjectModel::find($subjectId);
+    //         $headings = collect();
+
+    //         $results = $results->map(function($result, $index) use($subject, $headings){
+
+    //             $student = StudentProfileModel::find($result->student_profile_id);
+
+    //             $assessment_results = json_decode($result->assessments);
+
+    //             $total_max_score = collect($assessment_results)->sum('max_score');
+
+    //             $assessment_results = collect($assessment_results)->mapWithKeys(fn($value) => [ strtoupper($value->title)." ($value->max_score)" => $value->score ])->toArray();
+                
+    //             $data = [
+    //                 'S/N' => $index + 1,
+    //                 'STUDENT NAME' => "$student->first_name $student->surname",
+    //                 'REG NO' => $student->student_code,
+    //                 'COURSE' => "$subject->subject_name ($subject->subject_code)",
+    //                 ...$assessment_results,
+    //                 "TOTAL SCORE ($total_max_score)" => $result->total_score,
+    //                 "GRADE" => $result->grade,
+    //                 'REMARKS' => $result->remarks
+    //             ];
+
+    //             $headings->push( array_keys($data) );
+
+    //             return $data;
+    //         });
+
+    //         return Excel::store( new Export($results, $headings->first()), "$subject->subject_name.xlsx" );
+            
+    //     });
+                                            
+
+    // $student = StudentProfileModel::where('class_id', 2)->get()->each(function($student) use($assessment){
+    //     $results = DB::table('assessment_results')
+    //     ->join('student_profiles', 'student_profiles.id', '=', 'assessment_results.student_profile_id')
+    //     ->join('classes', 'student_profiles.class_id', '=', 'classes.id')
+    //     ->join('subjects', 'assessment_results.subject_id', '=', 'subjects.id')
+    //     ->where(fn($query) => $query ->where('assessment_id', $assessment->id)->where('student_profile_id', $student->id))
+    //     ->select('subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode', 'assessment_results.total_score as score', 'assessment_results.grade', 'assessment_results.remarks as remarks')
+    //     ->get()
+    //     ->toArray();
+
+
+    //     $studentName = "$student->first_name $student->surname";
+
+    //     $pdf = Pdf::loadView('result',[
+    //     'assessmentTitle'   => $assessment->title,
+    //     'studentName'       => "$student->first_name $student->surname",
+    //     'studentClass'      => $student->class->class_name,
+    //     'studentPhoto'      => $student->profile_pic,
+    //     'studentId'         => $student->student_code,
+    //     'studentResults'    => $results,
+    //     ]);
+
+    //     $pdf->save("$studentName.pdf");
+    // });
+
    
-// });
+    
+});
 
 Route::middleware(['auth'])->group(function(){
 
@@ -42,6 +128,9 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/dashboard', fn() => Inertia::render('Dashboard/Index') );
 
+    //Settings
+    Route::get('/settings', fn() => Inertia::render('CBT/Settings/Index') );
+    
     //Assessments
     Route::get('/assessments', fn() => Inertia::render('CBT/Assessment/Index') );
 

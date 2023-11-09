@@ -3,7 +3,13 @@
 /resources/js/Pages
 /public/hot
 /public/storage
+<<<<<<< HEAD
 /public/images/
+=======
+/public/syncs
+/public/sync_dl
+/public/imports
+>>>>>>> main
 /storage/*.key
 /vendor
 .env

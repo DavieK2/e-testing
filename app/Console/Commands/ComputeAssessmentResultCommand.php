@@ -14,7 +14,7 @@ class ComputeAssessmentResultCommand extends Command
 
     public function handle()
     {
-        $assessment = AssessmentModel::find(2);
+        $assessment = AssessmentModel::find(6);
 
         DB::table('assessment_sessions')
             ->join('student_profiles', 'student_profiles.id', '=', 'assessment_sessions.student_profile_id')
@@ -38,25 +38,7 @@ class ComputeAssessmentResultCommand extends Command
     
                     $agg_score = floor( ( $student_score / $total_marks ) * ( $max_score ) );
     
-                    $grade = match( true ){
-                        ( $agg_score >= 80 ) => 'A',
-                        ( $agg_score >= 70 && $agg_score < 80 ) => 'B',
-                        ( $agg_score >= 60 && $agg_score < 70 ) => 'C',
-                        ( $agg_score >= 50 && $agg_score < 60 ) => 'D',
-                        ( $agg_score < 50 ) => 'F',
-                        default => NULL
-                    };
-
-                    $remarks = match( true ){
-                        ( $agg_score >= 80 ) => 'Distinction',
-                        ( $agg_score >= 70 && $agg_score < 80 ) => 'Upper Credit',
-                        ( $agg_score >= 60 && $agg_score < 70 ) => 'Lower Credit',
-                        ( $agg_score >= 50 && $agg_score < 60 ) => 'Pass',
-                        ( $agg_score < 50 ) => 'Fail',
-                        default => NULL
-                    };
-    
-                    DB::table('assessment_results')->where('student_profile_id', $studentId)->where('assessment_id', $assessment->id)->where('subject_id', $subjectId)->limit(1)->update(['total_score' => $agg_score, 'grade' => $grade, 'remarks' => $remarks ]);
+                    DB::table('assessment_results')->where('student_profile_id', $studentId)->where('assessment_id', $assessment->id)->where('subject_id', $subjectId)->limit(1)->update(['total_score' => $agg_score ]);
                 });
         });
     }
