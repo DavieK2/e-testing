@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class AssessmentModel extends Model
 {
@@ -91,15 +90,15 @@ class AssessmentModel extends Model
 
             DB::table('assessment_subjects')
                 ->insert(
-                    // [ 'assessment_id' => $this->id, 'subject_id' => $key, 'class_id' => $subject['class_id'] ], 
                     [
-                        'uuid' => Str::ulid(),
-                        'assessment_id' => $this->id, 
-                        'subject_id' => $key, 
-                        'class_id' => $subject['class_id'],
-                        'assessment_duration' => $subject['assessment_duration'],
-                        'start_date' => $subject['start_date'],
-                        'end_date' => $subject['end_date'],
+                        'uuid'                  => $subject['id'] ?? Str::ulid(),
+                        'assessment_id'         => $this->id, 
+                        'subject_id'            => $key, 
+                        'is_published'          => $subject['is_published'] === 'Published' ? true : false, 
+                        'class_id'              => $subject['class_id'],
+                        'assessment_duration'   => $subject['assessment_duration'],
+                        'start_date'            => $subject['start_date'],
+                        'end_date'              => $subject['end_date'],
                     ]);
         });
 

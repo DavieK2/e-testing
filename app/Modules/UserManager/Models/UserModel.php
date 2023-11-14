@@ -44,6 +44,11 @@ class UserModel extends User
         return $this->belongsToMany(ClassModel::class, 'user_classes', 'user_id', 'class_id');
     }
 
+    public function classSubjects()
+    {
+        return $this->belongsToMany(ClassModel::class, 'user_class_subjects', 'user_id', 'class_id')->withPivot(['subject_id']);
+    }
+
     public function assignToSubject(array $subjects)
     {
 
@@ -51,6 +56,21 @@ class UserModel extends User
 
        foreach( $subjects as $subject ){
             DB::table('user_subjects')->insert( ['user_id' => $this->id, 'subject_id' => $subject, 'uuid' => Str::ulid() ] );
+       }
+    }
+
+    public function assignToClassSubjects(array $classSubjects)
+    {
+
+       $this->classSubjects()->detach();
+
+       foreach( $classSubjects as $key => $classes ){
+
+          foreach( $classes as $class ){
+
+            DB::table('user_class_subjects')->insert( ['user_id' => $this->id, 'class_id' => ClassModel::firstWhere('class_code', $class)->id, 'subject_id' => SubjectModel::find($key)->id, 'uuid' => Str::ulid() ] );
+
+          }
        }
     }
 

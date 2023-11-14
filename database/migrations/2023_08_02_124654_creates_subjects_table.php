@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('subjects', function(Blueprint $table){
             $table->id();
-            $table->ulid('uuid');
+            $table->ulid('uuid')->unique();
             $table->string('subject_name');
             $table->string('subject_code');
             $table->boolean('is_synced')->default(false);

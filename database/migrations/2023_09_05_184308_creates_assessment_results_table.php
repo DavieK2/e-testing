@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('assessment_results', function(Blueprint $table){
             $table->id();
-            $table->ulid('uuid');
+            $table->ulid('uuid')->unique();
             $table->foreignId('student_profile_id')->constrained();
             $table->foreignId('assessment_id')->constrained();
             $table->foreignId('subject_id')->nullable()->constrained();

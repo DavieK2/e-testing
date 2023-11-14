@@ -18,7 +18,7 @@ return new class extends Migration
         });
 
         Schema::create('computed_assessment_results', function(Blueprint $table){
-            $table->ulid('id');
+            $table->ulid('uuid')->unique();
             $table->foreignId('student_profile_id')->constrained();
             $table->foreignId('subject_id')->constrained();
             $table->json('assessments');
@@ -27,6 +27,7 @@ return new class extends Migration
             $table->double('total_score')->nullable();
             $table->string('grade');
             $table->string('remarks');
+            $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });
     }

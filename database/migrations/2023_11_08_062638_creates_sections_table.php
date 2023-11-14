@@ -11,10 +11,10 @@ return new class extends Migration
     {
         Schema::create('sections', function(Blueprint $table){
             $table->id();
-            $table->ulid('uuid');
-            $table->foreignId('assessment_id')->constrained();
-            $table->foreignId('subject_id')->constrained();
+            $table->ulid('uuid')->unique();
+            $table->foreignId('question_bank_id')->constrained();
             $table->string('title');
+            $table->longText('description');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
 

@@ -3,21 +3,16 @@
 namespace App\Modules\CBT\Tasks;
 
 use App\Contracts\BaseTasks;
-use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Models\QuestionModel;
-use App\Modules\SchoolManager\Models\ClassModel;
-use App\Modules\SchoolManager\Models\SubjectModel;
 
 class GetTeacherAssessmentQuestionTasks extends BaseTasks{
 
     public function getQuestions()
     {
-        $assessmentId = AssessmentModel::firstWhere('uuid', $this->item['assessmentId'])->id;
-        $subjectId = SubjectModel::find($this->item['subjectId'])->id;
-        $classId = ClassModel::firstWhere('class_code', $this->item['classId'])->id;
-
-        // dd($subjectId);
-        $questions = QuestionModel::where(fn($query) => $query->where('assessment_id', $assessmentId)->where('class_id', $classId)->where('subject_id', $subjectId));
+        $questions = QuestionModel::where( fn($query) => $query->where('questions.question_bank_id', $this->item['question_bank']->id) )
+                                    ->join('sections', 'sections.id', '=', 'questions.section_id')
+                                    ->join('topics', 'topics.id', '=', 'questions.topic_id')
+                                    ->select('questions.correct_answer', 'questions.question_score', 'questions.options', 'questions.question', 'questions.uuid', 'topics.uuid as topicId', 'sections.uuid as sectionId');
 
         return new static( [ ...$this->item, 'query' => $questions ]);
     }

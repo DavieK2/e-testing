@@ -27,7 +27,6 @@ services:
         tty: true
         depends_on:
           - db
-          - redis
     
     # horizon:
     #     build:
@@ -75,22 +74,10 @@ services:
         networks:
           - example-net
 
-    redis_insight: 
-        image: redislabs/redisinsight:latest
-        container_name: redis_insight
-        restart: always
-        volumes:
-          - redis_insight_volume:/db
-        ports:
-          - 8001:8001
-        networks:
-          - example-net
         
 volumes:
     mysqldata:
     letsencrypt:
-    redis_insight_volume:
-    redis_volume:
 
 networks:
   example-net:

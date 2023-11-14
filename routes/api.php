@@ -4,8 +4,11 @@ use App\Modules\CBT\Controllers\AssessmentController;
 use App\Modules\CBT\Controllers\AssessmentResultController;
 use App\Modules\CBT\Controllers\AssessmentTypeController;
 use App\Modules\CBT\Controllers\ExamController;
+use App\Modules\CBT\Controllers\QuestionBankController;
 use App\Modules\CBT\Controllers\QuestionController;
 use App\Modules\CBT\Controllers\TeacherController;
+use App\Modules\CBT\Controllers\TeacherQuestionsController;
+use App\Modules\CBT\Controllers\TopicController;
 use App\Modules\DatabaseSyncManager\Controllers\SyncLocalDatabaseToOnlineController;
 use App\Modules\DatabaseSyncManager\Controllers\SyncOnlineDabataseToLocalController;
 use App\Modules\SchoolManager\Controllers\AcademicSessionController;
@@ -31,6 +34,16 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/2faa', [ AuthController::class, 'get2FA' ]);
 Route::middleware('auth:sanctum')->post('/two_factor_verify', [ AuthController::class, 'verify2FA' ]);
 
+
+
+Route::middleware(['auth:sanctum'])->group(function(){
+
+    //Assessment Question Creation
+    Route::post('/question/create/{assessment:uuid}', [ QuestionController::class, 'create']);
+    Route::post('/question/update/{assessment:uuid}', [ QuestionController::class, 'update']);
+
+});
+
 Route::get('/assessment-types', [ AssessmentTypeController::class, 'index' ]);
 Route::post('/assessment-type/create', [ AssessmentTypeController::class, 'create' ]);
 Route::post('/assessment-type/update', [ AssessmentTypeController::class, 'update' ]);
@@ -55,10 +68,11 @@ Route::post('/assessment/termly/complete', [ AssessmentController::class, 'compl
 
 Route::get('/questions/{assessment:uuid}', [ QuestionController::class, 'getQuestions']);
 Route::get('/question-bank', [ QuestionController::class, 'getQuestionBank']);
-Route::post('/question/create/{assessment:uuid}', [ QuestionController::class, 'create']);
-Route::post('/question/update/{assessment:uuid}', [ QuestionController::class, 'update']);
+
+
 Route::post('/question/assign/{assessment:uuid}', [ QuestionController::class, 'assignQuestionToAssessment']);
 Route::post('/question/unassign/{assessment:uuid}', [ QuestionController::class, 'unAssignQuestionFromAssessment']);
+
 Route::post('/question/import', [ QuestionController::class, 'import']);
 
 
@@ -86,8 +100,11 @@ Route::post('/teacher/create', [ UserController::class, 'createTeacher']);
 Route::post('/teacher/update/{teacher}', [ UserController::class, 'updateTeacher']);
 Route::post('/teacher/assign-subjects', [ UserController::class, 'assignTeacherToSubject']);
 Route::post('/teacher/assign-classes', [ UserController::class, 'assignTeacherToClass']);
+Route::post('/teacher/assign-class-subjects', [ UserController::class, 'assignTeacherToClassSubjects']);
+
 Route::get('/teacher/assigned-subjects/{teacher}', [ UserController::class, 'getTeacherAssignedSubjects']);
 Route::get('/teacher/assigned-classes/{teacher}', [ UserController::class, 'getTeacherAssignedClasses']);
+Route::get('/teacher/assigned-class-subjects/{teacher}', [ UserController::class, 'getTeacherAssignedClassSubjects']);
 
 Route::get('/terms', [ TermController::class, 'index']);
 Route::post('/term/create', [ TermController::class, 'create']);
@@ -105,9 +122,36 @@ Route::post('/assessment/student/results', [ AssessmentResultController::class, 
 
 
 Route::middleware(['auth:sanctum'])->group(function(){
+
     Route::get('/get-classes', [ TeacherController::class, 'getClasses' ]);
-    Route::get('/get-subjects/{class:class_code}', [ TeacherController::class, 'getSubjects' ]);
-    Route::get('/get-questions', [ TeacherController::class, 'getAssessmentQuestions' ]);
+    Route::get('/get-class-subjects/{subject}', [ TeacherController::class, 'getClassSubjects' ]);
+    Route::get('/get-subjects', [ TeacherController::class, 'getSubjects' ]);
+    Route::get('/get-questions/{question_bank:uuid}', [ TeacherController::class, 'getAssessmentQuestions' ]);
+
+
+    Route::get('/get-question-topics', [ TeacherQuestionsController::class, 'getQuestionTopics' ]);
+
+    Route::get('/question-banks', [ QuestionBankController::class, 'getQuestionBanks' ]);
+
+    Route::get('/question-bank/subjects/{assessment:uuid}', [ QuestionBankController::class, 'getAssessmentSubjects' ]);
+    Route::get('/question-bank/assessment-classes/{question_bank:uuid}', [ QuestionBankController::class, 'getAssessmentClasses' ]);
+    
+    Route::post('/question-bank/create', [ QuestionBankController::class, 'create' ]);
+   
+    Route::get('/question-bank/classes/{question_bank:uuid}', [ QuestionBankController::class, 'getClasses' ]);
+    Route::post('/question-bank/create/classes', [ QuestionBankController::class, 'addClasses' ]);
+    
+    Route::get('/question-bank/sections/{question_bank:uuid}', [ QuestionBankController::class, 'getSections' ]);
+    Route::post('/question-bank/create/sections', [ QuestionBankController::class, 'addSections' ]);
+    Route::post('/question-bank/create/section', [ QuestionBankController::class, 'createSection' ]);
+    Route::post('/question-bank/update/section/{section:uuid}', [ QuestionBankController::class, 'updateSection' ]);
+    Route::post('/question-bank/delete/section/{section:uuid}', [ QuestionBankController::class, 'deleteSection' ]);
+
+    
+    Route::post('/topic/create', [ TopicController::class, 'create' ]);
+    Route::post('/topic/update', [ TopicController::class, 'update' ]);
+    Route::post('/topics/get/', [ TopicController::class, 'getTopics' ]);
+    Route::get('/topics/classes/{topic:uuid}/{subject}', [ TopicController::class, 'getClasses' ]);
 });
 
 

@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('student_profiles', function(Blueprint $table){
             $table->id();
-            $table->ulid('uuid');
+            $table->ulid('uuid')->unique();
             $table->string('first_name')->nullable();
             $table->string('surname')->nullable();
             $table->string('student_code')->unique();

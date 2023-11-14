@@ -20,6 +20,8 @@ class CompleteAssessmentRequest extends BaseRequest
             'assessmentId'              => 'required|exists:assessments,uuid',
             'subjects'                  => 'required|array',
             'subjects.*.subjectId'      => 'required',
+            'subjects.*.published'      => 'nullable',
+            'subjects.*.id'             => 'nullable',
             'subjects.*.classId'        => 'required',
             'subjects.*.duration'       => 'required',
             'subjects.*.startDate'      => 'required',

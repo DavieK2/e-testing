@@ -3,7 +3,10 @@
 namespace App\Modules\CBT\Tasks;
 
 use App\Contracts\BaseTasks;
+use App\Modules\CBT\Models\QuestionBankModel;
 use App\Modules\CBT\Models\QuestionModel;
+use App\Modules\CBT\Models\SectionModel;
+use App\Modules\CBT\Models\TopicModel;
 use App\Modules\SchoolManager\Models\ClassModel;
 use App\Modules\UserManager\Models\UserModel;
 use Illuminate\Support\Str;
@@ -71,21 +74,46 @@ class CreateQuestionTasks extends BaseTasks{
             $options[] = $option;
         }
 
-        
-        $question = QuestionModel::create([
-                        'uuid'              => Str::uuid(),
-                        'assessment_id'     => $this->item['assessment']->id,
-                        'user_id'           => UserModel::find(1)->id,
-                        'question'          => $questionData,
-                        'options'           => $options,
-                        'correct_answer'    => $this->item['correctAnswer'],
-                        'question_score'    => $this->item['questionScore'] ?? 2,
-                        'subject_id'        => $this->item['subjectId'] ?? null,
-                        'class_id'          => ClassModel::firstWhere('class_code', $this->item['classId'] ?? null)?->id,
-                    ]);
+        $questionBank = QuestionBankModel::firstWhere('uuid', $this->item['questionBankId'] ?? null );
+        $topicId = TopicModel::firstWhere('uuid', $this->item['topicId'] ?? null )?->id;
+        $sectionId = SectionModel::firstWhere('uuid', $this->item['sectionId'] ?? null )?->id;
+
+        if( $questionBank ){
+
+            $question = $this->saveQuestionToDatabase( $questionData, $options, $questionBank->id, $questionBank->subject_id, $topicId, $sectionId );
+            
+
+            foreach (json_decode($questionBank->classes, true ) as $class) {
+
+                $classId = ClassModel::firstWhere('class_code', $class)->id;
+
+                $question->classes()->syncWithoutDetaching( [ $classId => [ 'uuid' => Str::ulid() ] ] );
+            }
+
+        }else{
+
+            $question = $this->saveQuestionToDatabase( $questionData, $options );
+        }
 
 
         return new static( [ ...$this->item, 'questionId'=> $question->uuid ] );
     }
     
+    protected function saveQuestionToDatabase($questionData, $options, $questionBankId = null, $subjectId = null, $topicId = null, $sectionId = null)
+    {
+        return QuestionModel::create([
+                    'uuid'              => Str::ulid(),
+                    'assessment_id'     => $this->item['assessment']->id,
+                    'user_id'           => request()->user()->id,
+                    'question'          => $questionData,
+                    'options'           => $options,
+                    'correct_answer'    => $this->item['correctAnswer'],
+                    'question_score'    => $this->item['questionScore'] ?? 1,
+                    'question_bank_id'  => $questionBankId,
+                    'subject_id'        => $subjectId,
+                    // 'class_id'          => ClassModel::firstWhere('class_code', $classId)?->id,
+                    'topic_id'          => $topicId,
+                    'section_id'        => $sectionId,
+                ]);
+    }
 }

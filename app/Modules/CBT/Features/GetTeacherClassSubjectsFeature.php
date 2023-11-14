@@ -5,13 +5,12 @@ namespace App\Modules\CBT\Features;
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
 use App\Modules\CBT\Tasks\GetTeacherClassSubjectsTasks;
-use App\Modules\SchoolManager\Models\ClassModel;
 use App\Modules\SchoolManager\Resources\SubjectListCollection;
 use App\Modules\UserManager\Models\UserModel;
 
 class GetTeacherClassSubjectsFeature extends FeatureContract {
 
-    public function __construct( protected UserModel $user, protected ClassModel $class){
+    public function __construct( protected UserModel $user){
         $this->tasks = new GetTeacherClassSubjectsTasks();
     }
     
@@ -19,7 +18,7 @@ class GetTeacherClassSubjectsFeature extends FeatureContract {
     {
         try {
             
-            $builder = $task->start(['teacher' => $this->user, 'class' => $this->class ])->getSubjects();
+            $builder = $task->start(['teacher' => $this->user ])->getSubjects();
 
             return $task::formatResponse( $builder->only(['query'])->all(), formatter: SubjectListCollection::class );
 

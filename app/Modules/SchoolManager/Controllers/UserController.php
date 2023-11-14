@@ -10,10 +10,12 @@ use App\Modules\SchoolManager\Features\GetTeacherAssignedClassFeature;
 use App\Modules\SchoolManager\Features\GetTeacherAssignedSubjectFeature;
 use App\Modules\SchoolManager\Features\GetTeacherListFeature;
 use App\Modules\SchoolManager\Requests\AssignTeacherToClassRequest;
+use App\Modules\SchoolManager\Requests\AssignTeacherToClassSubjectRequest;
 use App\Modules\SchoolManager\Requests\AssignTeacherToSubjectRequest;
 use App\Modules\SchoolManager\Requests\CreateTeacherRequest;
 use App\Modules\SchoolManager\Requests\GetTeacherListRequest;
 use App\Modules\UserManager\Models\UserModel;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -55,6 +57,19 @@ class UserController extends Controller
         return $this->serve( new AssignTeacherToClassFeature(), $request->validated() );
     }
 
+    public function assignTeacherToClassSubjects(AssignTeacherToClassSubjectRequest $request)
+    {
+
+        $data = $request->validated();
+
+        $teacher = UserModel::find($data['teacherId']);
+
+        $teacher->assignToClassSubjects( $data['classSubjects'] );
+
+        return response()->json(['message' => 'Successfully Assigned'] );
+
+    }
+
     public function getTeacherAssignedSubjects(UserModel $teacher)
     {
         return $this->serve( new GetTeacherAssignedSubjectFeature($teacher) );
@@ -64,4 +79,20 @@ class UserController extends Controller
     {
         return $this->serve( new GetTeacherAssignedClassFeature($teacher) );
     }
+
+    public function getTeacherAssignedClassSubjects(UserModel $teacher)
+    {
+        $subjects = DB::table('user_class_subjects')
+                    ->where('user_id', $teacher->id)
+                    ->join('classes', 'classes.id', '=', 'user_class_subjects.class_id')
+                    ->select('user_class_subjects.subject_id', 'classes.class_code')
+                    ->get()
+                    ->groupBy('subject_id')
+                    ->mapWithKeys(fn($value, $key) => [ $key => $value->pluck('class_code')])
+                    ->toArray();
+
+        return response()->json(['data' => $subjects ]);
+    }
+
+    
 }

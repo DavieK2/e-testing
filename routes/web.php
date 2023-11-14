@@ -5,6 +5,7 @@ use App\Modules\CBT\Controllers\AssessmentResultController;
 use App\Modules\CBT\Controllers\ExamController;
 use App\Modules\CBT\Jobs\ImportStudentResultsJob;
 use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\QuestionBankModel;
 use App\Modules\CBT\Models\QuestionModel;
 use App\Modules\Excel\Export;
 use App\Modules\SchoolManager\Models\ClassModel;
@@ -187,12 +188,17 @@ Route::middleware(['auth'])->group(function(){
 Route::middleware(['auth'])->group(function(){
 
     Route::get('/teacher/dashboard', fn() => Inertia::render('CBT/Teacher/Dashboard') );
+
+    Route::get('/teacher/subject-topics', fn() => Inertia::render('CBT/Teacher/SubjectTopics') );
     
     Route::get('/teacher/class-subjects/{class:class_code}', fn(ClassModel $class) => Inertia::render('CBT/Teacher/Subjects', ['classCode' => $class->class_code]) );
     
-    Route::get('/teacher/create-questions/{class:class_code}/{subject}', fn(ClassModel $class, SubjectModel $subject) => Inertia::render('CBT/Teacher/QuestionsIndex', [ 'classCode' => $class->class_code, 'subjectId' => $subject->id ]) );
+    Route::get('/teacher/create-question-bank', fn() => Inertia::render('CBT/Teacher/QuestionsIndex') );
+
+    Route::get('/teacher/create-question-bank/classes/{question_bank:uuid}', fn(QuestionBankModel $questionBank) => Inertia::render('CBT/Teacher/QuestionBankClasses', [ 'questionBankId' => $questionBank->uuid ]) );
+    Route::get('/teacher/create-question-bank/sections/{question_bank:uuid}', fn(QuestionBankModel $questionBank) => Inertia::render('CBT/Teacher/QuestionBankSections', [ 'questionBankId' => $questionBank->uuid ]) );
    
-    Route::get('/teacher/questions/{class:class_code}/{subject}/{assessment}', fn(ClassModel $class, SubjectModel $subject, $assessment) => Inertia::render('CBT/Teacher/CreateQuestions', [ 'classCode' => $class->class_code, 'subjectId' => $subject->id, 'assessmentId' => $assessment ]) );
+    Route::get('/teacher/questions/{question_bank:uuid}', fn(QuestionBankModel $questionBank) => Inertia::render('CBT/Teacher/CreateQuestions', [ 'questionBankId' => $questionBank->uuid, 'assessmentId' => AssessmentModel::find($questionBank->assessment_id)->uuid  ]) );
 
 });
 

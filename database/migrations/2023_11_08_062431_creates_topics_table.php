@@ -10,9 +10,7 @@ return new class extends Migration
     {
         Schema::create('topics', function(Blueprint $table){
             $table->id();
-            $table->ulid('uuid');
-            $table->foreignId('subject_id')->constrained();
-            $table->foreignId('class_id')->constrained();
+            $table->ulid('uuid')->unique();
             $table->string('title');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();

@@ -13,8 +13,6 @@ class CreateAssessmentTasks extends BaseTasks {
     {
         $required = ['assessmentTypeId', 'title', 'isStandalone'];
 
-       
-
         if( $this->item['isStandalone'] == false ) {
             $required[] = 'academicSessionId';
             $required[] = 'schoolTermId';
@@ -52,12 +50,12 @@ class CreateAssessmentTasks extends BaseTasks {
         $assessment = $this->getAssessment();
 
         $data = collect($this->item['subjects'])->groupBy('classId');
-
+        
         $assessment->subjects()->detach();
 
         $data->each(function($subject) use($assessment) {
 
-            $subjectData = collect($subject)->mapWithKeys( fn($subject) => [ $subject['subjectId'] => ['class_id' => $subject['classId'], 'start_date' => $subject['startDate'], 'end_date' => $subject['endDate'], 'assessment_duration' => $subject['duration'] * 60 ] ]);
+            $subjectData = collect($subject)->mapWithKeys( fn($subject) => [ $subject['subjectId'] =>  ['id' => ($subject['id'] ?? null), 'is_published' => ($subject['published'] ?? null), 'class_id' => $subject['classId'], 'start_date' => $subject['startDate'], 'end_date' => $subject['endDate'], 'assessment_duration' => $subject['duration'] * 60 ] ]);
 
             $assessment->addSubject( $subjectData );
 

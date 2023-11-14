@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('student_checkins', function(Blueprint $table){
             $table->id();
-            $table->ulid('uuid');
+            $table->ulid('uuid')->unique();
             $table->foreignId('assessment_id')->constrained();
             $table->foreignId('student_profile_id')->constrained();
             $table->timestamp('checked_in_at');

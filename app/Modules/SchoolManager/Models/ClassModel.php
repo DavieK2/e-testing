@@ -27,4 +27,9 @@ class ClassModel extends Model
             DB::table('class_subjects')->insert(['class_id' => $this->id, 'subject_id' => $subjectId, 'uuid' => Str::ulid() ]);
         }
     }
+
+    public function topics()
+    {
+        return $this->belongsToMany(TopicModel::class, 'class_topics', 'class_id', 'topic_id')->withPivot(['subject_id']);
+    }
 }
