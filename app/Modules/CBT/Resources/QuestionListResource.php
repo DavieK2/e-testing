@@ -3,7 +3,6 @@
 namespace App\Modules\CBT\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Tiptap\Editor;
 
 class QuestionListResource extends JsonResource
 {
@@ -12,6 +11,7 @@ class QuestionListResource extends JsonResource
     {
         $questionHTML = '';
         $question = json_decode($this->question, true);
+        $options = [];
 
         $contents = $question['content']['content'];
 
@@ -28,19 +28,42 @@ class QuestionListResource extends JsonResource
             }
 
             if( $content['type'] === 'image' ){
+
                 $img = $content['attrs']['src'];
-                $questionHTML .= "<img class='rounded-lg h-60 w-auto py-3' src='/$img' />";
+                $alt = $content['attrs']['alt'] ?? null;
+
+                $questionHTML .= "<img class='rounded-lg h-60 w-auto py-3' alt='$alt' src='$img' />";
             }
         }
+
+       foreach ( $this->options as $option ) {
+
+            if($option['type'] === 'text'){
+                $content = $option['content'];
+                $option['htmlContent'] = "<p>$content</p>";
+            }
+
+            if($option['type'] === 'image'){
+
+                $content = $option['content'];
+                $alt = $option['alt'] ?? null;
+
+                $option['htmlContent'] = "<img class='p-3 h-40 w-auto rounded-lg' alt='$alt' src='$content' />";
+            }
+
+            $options[] = $option;
+       }
 
         return [
             'questionId'    => $this->uuid,
             'question'      => $questionHTML,
             'correctAnswer' => $this->correct_answer,
-            'options'       => ! is_array($this->options) ? json_decode($this->options) : $this->options,
+            'options'       => $options,
             'source'        => $request->assigned ? 'assigned' : 'assessment',
             'questionScore' => $this->question_score,
             'assessmentId'  => $this->assessmentId,
+            'topicId'       => $this->topicId,
+            'sectionId'     => $this->sectionId,
         ];
     }
 }

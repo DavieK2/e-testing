@@ -11,6 +11,7 @@ use App\Modules\CBT\Features\QuestionListFeature;
 use App\Modules\CBT\Features\UnAssignQuestionFromAssessmentFeature;
 use App\Modules\CBT\Features\UpdateQuestionFeature;
 use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\QuestionModel;
 use App\Modules\CBT\Requests\AssignQuestionToAssessmentRequest;
 use App\Modules\CBT\Requests\CreateQuestionRequest;
 use App\Modules\CBT\Requests\ImportQuestionsRequest;
@@ -26,9 +27,9 @@ class QuestionController extends Controller
         return $this->serve( new CreateQuestionFeature( $assessment ), $request->validated() );
     }
 
-    public function update(AssessmentModel $assessment, UpdateQuestionRequest $request)
+    public function update(QuestionModel $question, UpdateQuestionRequest $request)
     {
-        return $this->serve( new UpdateQuestionFeature( $assessment ), $request->validated() );
+        return $this->serve( new UpdateQuestionFeature( $question ), $request->validated() );
     }
 
     public function import(ImportQuestionsRequest $request)

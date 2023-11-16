@@ -17,62 +17,13 @@ class CreateQuestionTasks extends BaseTasks{
     public function createQuestion()
     {
         
-        $questionData = json_decode($this->item['question'], true);
-        $questionContent = [];
-        $options = [];
-
-        if( isset( $questionData['type']) ){
-
-            foreach( $questionData['content']['content'] as $content){
-
-                if( $content['type'] === 'image'){
-
-                    $img = Image::make($content['attrs']['src'])->resize(500, null, function ($constraint) {
-                        $constraint->aspectRatio();
-                    });
-
-                    $imgName = 'question_images/'. Str::random(). '.jpg';
-
-                    $img->save(public_path($imgName), 90);
-
-                    $content['attrs']['src'] = $imgName;
-                }
-
-                $questionContent[] = $content;
-            }
+        $questionData = json_encode( $this->formatQuestionJSON( json_decode($this->item['question'], true) ) );
         
-        }
+        $options = $this->formatQuestionOptions( $this->item['options'], $this->item['correctAnswer'] );
 
-        $questionData['content']['content'] = $questionContent;
-
-        $questionData = json_encode($questionData);
         // if( ! in_array($this->item['correctAnswer'], $this->item['options']) ){
         //     throw ValidationException::withMessages(['message' => 'The correct answer provided is not part of the options list provided']);
         // }
-
-        foreach( $this->item['options'] as $option ){
-
-            if( $option['type'] === 'image' ){
-
-                $img = Image::make($option['content'])->resize(300, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
-
-                $imgName = 'question_images/'. Str::random(). '.jpg';
-
-                $img->save(public_path($imgName), 90);
-
-                if( $this->item['correctAnswer'] ===  $option['content'] ){
-
-                    $this->item['correctAnswer'] = $imgName;
-                }
-
-                $option['content'] = $imgName;
-
-            }
-
-            $options[] = $option;
-        }
 
         $questionBank = QuestionBankModel::firstWhere('uuid', $this->item['questionBankId'] ?? null );
         $topicId = TopicModel::firstWhere('uuid', $this->item['topicId'] ?? null )?->id;
@@ -106,8 +57,8 @@ class CreateQuestionTasks extends BaseTasks{
                     'assessment_id'     => $this->item['assessment']->id,
                     'user_id'           => request()->user()->id,
                     'question'          => $questionData,
-                    'options'           => $options,
-                    'correct_answer'    => $this->item['correctAnswer'],
+                    'options'           => $options['options'],
+                    'correct_answer'    => $options['correctAnswer'],
                     'question_score'    => $this->item['questionScore'] ?? 1,
                     'question_bank_id'  => $questionBankId,
                     'subject_id'        => $subjectId,
@@ -115,5 +66,73 @@ class CreateQuestionTasks extends BaseTasks{
                     'topic_id'          => $topicId,
                     'section_id'        => $sectionId,
                 ]);
+    }
+
+    public function formatQuestionJSON( array $questionData)
+    {
+        $questionContent = [];
+
+        if( isset( $questionData['type']) ){
+
+            foreach( $questionData['content']['content'] as $content){
+
+                if( $content['type'] === 'image' && $content['attrs']['alt'] === 'ques_image' ){
+
+                    $img = Image::make($content['attrs']['src'])->resize(500, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
+
+                    $imgName = 'question_images/'. Str::random(). '.jpg';
+
+                    $img->save(public_path($imgName), 90);
+
+                    $content['attrs']['src'] = "/$imgName";
+                    $content['attrs']['alt'] = 'question_image';
+                }
+
+                $questionContent[] = $content;
+            }
+        
+        }
+
+        $questionData['content']['content'] = $questionContent;
+
+        return $questionData;
+    }
+
+    public function formatQuestionOptions( array $questionOptions, $correctAnswer )
+    {
+        
+        $options = [];
+
+        foreach( $questionOptions as $option ){
+
+            if( $option['type'] === 'image' && $option['alt'] === 'ques_image'  ){
+
+                $img = Image::make($option['content'])->resize(300, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+                $imgName = 'question_images/'. Str::random(). '.jpg';
+
+                $img->save(public_path($imgName), 90);
+
+                if( $correctAnswer ===  $option['content'] ){
+
+                    $correctAnswer = "/$imgName";
+                }
+
+                $option['content'] = "/$imgName";
+                $option['alt'] = 'question_image';
+
+            }
+
+            $options[] = $option;
+        }
+
+        return [
+            'options'       => $options,
+            'correctAnswer' => $correctAnswer
+        ];
     }
 }

@@ -40,7 +40,7 @@ Route::middleware(['auth:sanctum'])->group(function(){
 
     //Assessment Question Creation
     Route::post('/question/create/{assessment:uuid}', [ QuestionController::class, 'create']);
-    Route::post('/question/update/{assessment:uuid}', [ QuestionController::class, 'update']);
+    Route::post('/question/update/{question:uuid}', [ QuestionController::class, 'update']);
 
 });
 

@@ -13,6 +13,7 @@ use App\Modules\SchoolManager\Requests\CreateStudentRequest;
 use App\Modules\SchoolManager\Requests\CreateSudentProfileRequest;
 use App\Modules\SchoolManager\Requests\StudentListRequest;
 use App\Modules\SchoolManager\Requests\UpdateStudentProfileRequest;
+use Illuminate\Support\Str;
 
 class StudentController extends Controller
 {
@@ -52,6 +53,7 @@ class StudentController extends Controller
         $data = $request->validated();
 
         StudentProfileModel::create([
+            'uuid' => Str::ulid(),
             'first_name' => $data['firstName'],
             'surname' => $data['lastName'],
             'student_code' => $data['regNo'],
