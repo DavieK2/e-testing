@@ -27,9 +27,19 @@ function findPattern($number, $str) {
 
     $patterns = [];
 
-    for( $i = 0 ; $i < strlen($str) - $number ; $i ++){
-        $pattern = str_split($str);
-        $pattern = array_slice( $pattern, $i, $i + $number );
-        $str_index = strpos($str, );
+    for( $i = 0 ; $i < ( strlen($str) - $number ) ; $i ++){
+
+        $pattern = substr($str, $i, $i + $number);
+        
+        $str_index = strpos( $pattern, $i );
+        
+        if( $str_index && $str_index != $i){
+
+            $patterns[] = $pattern;
+
+            break;
+        }
+
     }
+    dd( $patterns );
 }

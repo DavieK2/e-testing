@@ -36,44 +36,8 @@ use PragmaRX\Google2FAQRCode\QRCode\Bacon;
 require __DIR__ . '/auth.php';
 
 
-function patternChaser($str){
-    
-    $i = 2 ;
-
-    $j = round( strlen($str) / 2 );
-
-    while ( $i <= $j ){
-        findPattern($i++, $str);
-    }
-}
-
-function findPattern($number, $str) {
-
-    $patterns = [];
-
-    for( $i = 0 ; $i < ( strlen($str) - $number ) ; $i ++){
-
-        $pattern = str_split($str);
-
-        $pattern = array_slice( $pattern, $number, $i + $number );
-        
-        $str_index = strpos( $str, $pattern[$i] );
-        
-        if( $str_index && $str_index != $i){
-
-            $patterns[] = $pattern;
-
-            continue;
-        }
-
-    }
-    dd( $patterns );
-}
 
 Route::get('/', function(){
-
-    patternChaser('ddw444ddrttdddd');
-
     
     // DB::table('computed_assessment_results')
     //     ->join('student_profiles', 'student_profiles.id', '=', 'computed_assessment_results.student_profile_id')
