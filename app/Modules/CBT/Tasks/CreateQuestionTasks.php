@@ -8,7 +8,6 @@ use App\Modules\CBT\Models\QuestionModel;
 use App\Modules\CBT\Models\SectionModel;
 use App\Modules\CBT\Models\TopicModel;
 use App\Modules\SchoolManager\Models\ClassModel;
-use App\Modules\UserManager\Models\UserModel;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
@@ -82,7 +81,7 @@ class CreateQuestionTasks extends BaseTasks{
                         $constraint->aspectRatio();
                     });
 
-                    $imgName = 'question_images/'. Str::random(). '.jpg';
+                    $imgName = 'question_pics/'. Str::random(). '.jpg';
 
                     $img->save(public_path($imgName), 90);
 
@@ -113,7 +112,7 @@ class CreateQuestionTasks extends BaseTasks{
                     $constraint->aspectRatio();
                 });
 
-                $imgName = 'question_images/'. Str::random(). '.jpg';
+                $imgName = 'question_pics/'. Str::random(). '.jpg';
 
                 $img->save(public_path($imgName), 90);
 
