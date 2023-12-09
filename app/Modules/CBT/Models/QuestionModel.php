@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 
 class QuestionModel extends Model
 {
+    const QUESTION_TYPES = [ 'objectives', 'theory' ];
+
     use HasFactory;
 
     protected $table = 'questions';

@@ -59,6 +59,7 @@ class CreateQuestionTasks extends BaseTasks{
                     'options'           => $options['options'],
                     'correct_answer'    => $options['correctAnswer'],
                     'question_score'    => $this->item['questionScore'] ?? 1,
+                    'question_type'     => $this->item['questionType'],
                     'question_bank_id'  => $questionBankId,
                     'subject_id'        => $subjectId,
                     // 'class_id'          => ClassModel::firstWhere('class_code', $classId)?->id,
@@ -89,9 +90,35 @@ class CreateQuestionTasks extends BaseTasks{
                     $content['attrs']['alt'] = 'question_image';
                 }
 
+                if( $content['type'] === 'table'){
+                    
+                    foreach ($content['content'] as $key_one => $value) {
+                       
+                        foreach ($value['content'] as $key_two =>  $tableContent ) {
+                            
+                            foreach ($tableContent['content'] as $key_three => $contents) {
+                               
+                                if( $contents['type'] === 'image' && $contents['attrs']['alt'] === 'ques_image' ){
+
+                                    $img = Image::make($contents['attrs']['src'])->resize(500, null, function ($constraint) {
+                                        $constraint->aspectRatio();
+                                    });
+                
+                                    $imgName = 'question_pics/'. Str::random(). '.jpg';
+                
+                                    $img->save(public_path($imgName), 90);
+                
+                                    $content['content'][$key_one]['content'][$key_two]['content'][$key_three]['attrs']['src'] = "/$imgName";
+                                    $content['content'][$key_one]['content'][$key_two]['content'][$key_three]['attrs']['alt'] = 'question_image';
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $questionContent[] = $content;
             }
-        
+            
         }
 
         $questionData['content']['content'] = $questionContent;
@@ -133,5 +160,23 @@ class CreateQuestionTasks extends BaseTasks{
             'options'       => $options,
             'correctAnswer' => $correctAnswer
         ];
+    }
+
+    public function getImageContent(&$content){
+
+        if( ! isset($content['content']) && $content['type'] === 'image' ){
+
+           $content['attrs']['src'] = 'hello';
+
+           return $content;
+        }
+
+
+        foreach ($content['content'] as &$tableContent) {
+                    
+            return $this->getImageContent($tableContent);
+
+        }
+          
     }
 }

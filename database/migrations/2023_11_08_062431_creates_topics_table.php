@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('topics', function(Blueprint $table){
             $table->id();
             $table->ulid('uuid')->unique();
+            $table->string('topic_code')->unique();
             $table->string('title');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();

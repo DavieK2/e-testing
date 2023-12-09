@@ -20,6 +20,7 @@ class TopicController extends Controller
 
         $topic = TopicModel::create([
             'uuid'  => Str::ulid(),
+            'topic_code' => Str::random(5),
             'title' => $data['title']
         ]);
 

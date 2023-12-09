@@ -22,22 +22,23 @@ class AssessmentModel extends Model
 
     public function questions()
     {
-        return $this->belongsToMany(QuestionModel::class, 'assessment_questions', 'assessment_id', 'question_id')->withPivot(['subject_id', 'class_id', 'uuid'])->withTimestamps();
+        return $this->belongsToMany(QuestionModel::class, 'assessment_questions', 'assessment_id', 'question_id')->withPivot(['subject_id', 'class_id', 'uuid', 'section_id'])->withTimestamps();
     }
 
-    public function assignQuestion($question_id, $subject_id = null, $class_id = null)
+    public function assignQuestion($question_id, $subject_id = null, $class_id = null, $sectionId = null)
     {
         $question_id = QuestionModel::firstWhere('uuid', $question_id)->id;
         $class_id = ClassModel::firstWhere('class_code', $class_id)?->id;
+        $sectionId = SectionModel::firstWhere('uuid', $sectionId)?->id;
         
-        return $this->questions()->syncWithoutDetaching([ $question_id => [ 'subject_id' => $subject_id, 'class_id' => $class_id, 'uuid' => Str::ulid() ]]);
+        return $this->questions()->syncWithoutDetaching([ $question_id => [ 'subject_id' => $subject_id, 'class_id' => $class_id, 'uuid' => Str::ulid(), 'section_id' => $sectionId ]]);
     }
 
     public function unAssignQuestion($question_id, $class_id = null, $subject_id = null)
     {
         $question_id = QuestionModel::firstWhere('uuid', $question_id)->id;
        
-        if($this->is_standalone){
+        if( $this->is_standalone ){
 
             return $this->questions()->detach($question_id);
 

@@ -18,4 +18,9 @@ class SubjectModel extends Model
     {
         return $this->belongsToMany(TopicModel::class, 'subject_topics', 'subject_id', 'topic_id')->withPivot(['class_id']);
     }
+
+    public function classes()
+    {
+        return $this->belongsToMany(ClassModel::class, 'class_subjects', 'subject_id', 'class_id');
+    }
 }

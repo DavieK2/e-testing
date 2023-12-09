@@ -380,6 +380,7 @@ ExamController extends Controller
         $student = StudentProfileModel::firstWhere('student_code', $data['studentId'])->id;
         
         CheckInModel::updateOrCreate([ 'assessment_id' => $assessment->id, 'student_profile_id' => $student ], [
+            'uuid'                  => Str::ulid(),
             'assessment_id'         => $assessment->id,
             'subject_ids'           => json_encode($data['subjects']),
             'student_profile_id'     => $student,

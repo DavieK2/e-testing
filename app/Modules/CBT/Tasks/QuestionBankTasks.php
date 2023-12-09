@@ -4,10 +4,33 @@ namespace App\Modules\CBT\Tasks;
 
 use App\Contracts\BaseTasks;
 use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\QuestionBankModel;
 use App\Modules\SchoolManager\Models\ClassModel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class QuestionBankTasks extends BaseTasks {
+
+
+    public function createQuestionBank()
+    {
+        $question_bank = QuestionBankModel::create([
+            'uuid'              =>  Str::ulid(),
+            'assessment_id'     =>  AssessmentModel::firstWhere('uuid', $this->item['assessmentId'])->id,
+            'subject_id'        =>  $this->item['subjectId'],
+            'user_id'           =>  request()->user()->id
+        ]);
+
+        return new static( [ ...$this->item, 'questionBankId' => $question_bank->uuid ]);
+    }
+
+    public function addClassesToQuestionBank()
+    {
+        QuestionBankModel::firstWhere('uuid', $this->item['questionBankId'])->update(['classes' => json_encode( $this->item['classes'] )]);
+
+        return new static( $this->item );
+
+    }
 
     public function getQuestions()
     {

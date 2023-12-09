@@ -12,6 +12,7 @@ use App\Modules\CBT\Features\GetAssessmentSubjectsFeature;
 use App\Modules\CBT\Features\GetPublishedAssessmentFeature;
 use App\Modules\CBT\Features\UpdateAssessmentFeature;
 use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\QuestionBankModel;
 use App\Modules\CBT\Requests\AssessmentListRequest;
 use App\Modules\CBT\Requests\AssignClassesToAssessmentRequest;
 use App\Modules\CBT\Requests\CompleteAssessmentRequest;
@@ -93,8 +94,34 @@ class AssessmentController extends Controller
             ->update([ 'is_published' => $data['shouldPublish'] ]); 
 
         return response()->json([
-            'message' => 'Publised Success', 
+            'message' => 'Published Success', 
             'published' => $data['shouldPublish'] ? 'Published' : 'Unpublished' 
+        ]);
+    }
+
+    public function getQuestionBanks(AssessmentModel $assessment)
+    {
+        $question_banks = QuestionBankModel::where('question_banks.assessment_id', $assessment->id)
+                                            ->join('users', 'users.id', '=', 'question_banks.user_id')
+                                            ->join('subjects', 'subjects.id', '=', 'question_banks.user_id')
+                                            ->select('question_banks.*', 'subjects.subject_name', 'subjects.subject_code', 'users.fullname')
+                                            ->get();
+
+        $question_banks = $question_banks->map(function($question_bank){
+
+            return [
+                'questionBankId' => $question_bank->uuid,
+                'subject'        => $question_bank->subject_name,
+                'subjectCode'    => $question_bank->subject_code,
+                'totalQuestions' => $question_bank->questions()->count(),
+                'teacher'        => $question_bank->fullname,
+                'isVisible'      => true,
+                'classes'        => collect(json_decode($question_bank->classes, true))->flatMap( fn($class) => [ ClassModel::firstWhere('class_code', $class)->class_name ] )->toArray(),
+            ];
+        });
+
+        return response()->json([
+            'data' => $question_banks
         ]);
     }
 

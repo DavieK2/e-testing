@@ -3,6 +3,8 @@
 namespace App\Modules\CBT\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\CBT\Features\AddClassesToQuestionBankFeature;
+use App\Modules\CBT\Features\CreateQuestionBankFeature;
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Models\QuestionBankModel;
 use App\Modules\CBT\Models\SectionModel;
@@ -90,29 +92,13 @@ class QuestionBankController extends Controller
 
     public function create(CreateQuestionBankRequest $request)
     {
-        $data = $request->validated();
-
-        $question = QuestionBankModel::create([
-            'uuid'              =>  Str::ulid(),
-            'assessment_id'     =>  AssessmentModel::firstWhere('uuid', $data['assessmentId'])->id,
-            'subject_id'        =>  $data['subjectId'],
-            'user_id'           =>  request()->user()->id
-        ]);
-
-        return response()->json([
-            'questionBankId' => $question->uuid
-        ]);
+        return $this->serve( new CreateQuestionBankFeature, $request->validated() );
+        
     }
 
     public function addClasses(AddClassesToQuestionBankRequest $request)
     {
-        $data = $request->validated();
-
-        QuestionBankModel::firstWhere('uuid', $data['questionBankId'])->update(['classes' => json_encode( $data['classes'] )]);
-
-        return response()->json([
-            'message' => 'Classes Successfully added to Question Bank'
-        ]);
+        return $this->serve( new AddClassesToQuestionBankFeature, $request->validated() );
     }
 
     public function getClasses(QuestionBankModel $question_bank)
@@ -141,6 +127,8 @@ class QuestionBankController extends Controller
 
         $section = SectionModel::create([
             'uuid' => Str::ulid(),
+            'section_code' => Str::random(5),
+            'question_type' => $data['questionType'],
             'question_bank_id' => $question_bank->id,
             'title' => $data['title'],
             'description' => $data['description']
@@ -171,7 +159,9 @@ class QuestionBankController extends Controller
 
     public function getSections(QuestionBankModel $question_bank)
     {
-        $sections = SectionModel::where('question_bank_id', $question_bank->id)->select('uuid as sectionId', 'title  as sectionTitle', 'description as sectionDescription')->get();
+        $sections = SectionModel::where('question_bank_id', $question_bank->id)
+                                ->select('uuid as sectionId', 'title  as sectionTitle', 'description as sectionDescription', 'question_type as questionType')
+                                ->get();
 
         return response()->json([
             'data' => $sections
@@ -182,7 +172,7 @@ class QuestionBankController extends Controller
     {
         $data = $request->validated();
 
-        $section->update(['title' => $data['sectionTitle'], 'description' => $data['sectionDescription'] ]);
+        $section->update(['title' => $data['sectionTitle'], 'description' => $data['sectionDescription'], 'question_type' => $data['questionType'] ]);
     }
 
     public function deleteSection(SectionModel $section, DeleteSectionRequest $request)

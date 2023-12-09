@@ -10,7 +10,7 @@ use App\Modules\CBT\Tasks\QuestionListTasks;
 
 class QuestionListFeature extends FeatureContract {
 
-    public function __construct(protected AssessmentModel $assessment){
+    public function __construct(){
         $this->tasks = new QuestionListTasks();
     }
     
@@ -20,11 +20,11 @@ class QuestionListFeature extends FeatureContract {
 
             if( isset($args['assigned']) && ($args['assigned']) ) {
 
-                $builder = $task->start([ ...$args, 'assessment' => $this->assessment ])->getAssignedQuestions()->all();
+                $builder = $task->start([ ...$args ])->getAssignedQuestions()->all();
 
             }else{
 
-                $builder = $task->start([ ...$args, 'assessment' => $this->assessment ])->getQuestions()->all();
+                $builder = $task->start([ ...$args ])->getQuestions()->all();
 
                 // foreach($args as $key => $value){
                 //     $builder = $builder->$key();

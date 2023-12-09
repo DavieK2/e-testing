@@ -15,8 +15,9 @@ return new class extends Migration
             $table->foreignId('assessment_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->json('options');
-            $table->string('correct_answer');
-            $table->float('question_score');
+            $table->string('question_type');
+            $table->string('correct_answer')->nullable();
+            $table->float('question_score')->default(0);
             $table->foreignId('class_id')->nullable()->constrained();
             $table->foreignId('subject_id')->nullable()->constrained();
             $table->boolean('is_synced')->default(false);

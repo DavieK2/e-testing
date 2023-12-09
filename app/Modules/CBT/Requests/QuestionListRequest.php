@@ -15,11 +15,11 @@ class QuestionListRequest extends FormRequest
     public function rules()
     {
         return [
-            'subjectId'    =>  [ Rule::requiredIf( ! $this->route('assessment')->is_standalone ), 'exists:subjects,id' ],
-            'classId'      =>  [ Rule::requiredIf( ! $this->route('assessment')->is_standalone ), 'exists:classes,class_code' ],
-            'assigned'     =>  'boolean',
-            'filter'        =>  'json',
-            'perPage'      =>  'required|int',
+            'questionBankId'    =>  ['exists:question_banks,uuid'],
+            'assessmentId'      =>  ['exists:assessments,uuid'],
+            'assigned'          =>  'boolean',
+            'filter'             =>  'json',
+            'perPage'           =>  'required|int',
         ];
     }
 }
