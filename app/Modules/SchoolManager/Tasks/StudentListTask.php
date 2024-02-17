@@ -9,7 +9,7 @@ class StudentListTask extends BaseTasks{
 
     public function getStudents()
     {
-        $students = StudentProfileModel::query()->select('id', 'class_id', 'student_code', 'first_name', 'surname', 'profile_pic');
+        $students = StudentProfileModel::query()->select('uuid', 'class_id', 'student_code', 'first_name', 'surname', 'profile_pic');
 
         return new static([ ...$this->item, 'query' => $students ]);
     }

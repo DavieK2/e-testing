@@ -9,15 +9,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('assessment_subjects', function(Blueprint $table){
-            $table->ulid('uuid')->unique();
+            $table->ulid('uuid')->unique()->index();
             $table->string('assessment_id');
-            $table->foreignId('subject_id')->constrained();
-            $table->foreignId('class_id')->constrained();
+            $table->foreignUlid('subject_id')->constrained( table: 'subjects',column: 'uuid');
+            $table->foreignUlid('class_id')->constrained( table: 'classes',column: 'uuid');
             $table->integer('assessment_duration');
             $table->timestamp('start_date');
             $table->timestamp('end_date');
             $table->boolean('is_published')->default(false);
-            $table->boolean('has_generated_results')->default(false);
             $table->boolean('is_synced')->default(false);
         });
     }

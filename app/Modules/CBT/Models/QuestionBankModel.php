@@ -2,16 +2,19 @@
 
 namespace App\Modules\CBT\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class QuestionBankModel extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUlids;
 
     protected $table = 'question_banks';
 
-    protected $guarded = [];
+    protected $guarded = ['uuid'];
+
+    protected $primaryKey = 'uuid';
 
     public function questions()
     {

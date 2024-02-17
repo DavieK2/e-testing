@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('assessment_classes', function(Blueprint $table){
             $table->ulid('uuid')->unique();
-            $table->string('assessment_id');
-            $table->string('class_id');
+            $table->foreignUlid('assessment_id')->constrained( table: 'assessments',column: 'uuid');
+            $table->foreignUlid('class_id')->constrained( table: 'classes',column: 'uuid');
             $table->boolean('is_synced')->default(false);
         });
     }

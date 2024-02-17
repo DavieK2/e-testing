@@ -14,9 +14,9 @@ class AssignSubjectToStudentRequest extends FormRequest
     public function rules()
     {
         return [
-            'studentId' => 'required|exists:student_profiles,id',
+            'studentId' => 'required|exists:student_profiles,uuid',
             'subjects'  => 'required|array',
-            'subjects.*.subjectId' => 'required|exists:subjects,id'
+            'subjects.*.subjectId' => 'required|exists:subjects,uuid'
         ];
     }
 }

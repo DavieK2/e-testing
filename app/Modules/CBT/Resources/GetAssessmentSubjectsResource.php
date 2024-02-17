@@ -9,15 +9,14 @@ class GetAssessmentSubjectsResource extends BaseResource
     public function toArray($request)
     {
         return [
-            'id'            => $this->uuid,
-            'subjectId'     => $this->id,
+            'subjectId'     => $this->uuid,
             'subjectName'   => $this->subject_name,
             'subjectCode'   => $this->subject_code,
-            'classId'       => $this->pivot->class_id,
-            'duration'      => ( $this->pivot->assessment_duration ) / 60,
-            'startDate'     => $this->pivot->start_date,
-            'endDate'       => $this->pivot->end_date,
-            'published'     => $this->pivot->is_published ? 'Published' : 'Unpublished',
+            'classId'       => $this->class_id,
+            'duration'      => ( $this->assessment_duration ) / 60,
+            'startDate'     => $this->start_date,
+            'endDate'       => $this->end_date,
+            'published'     => $this->is_published ? 'Published' : 'Unpublished',
         ];
     }
 }

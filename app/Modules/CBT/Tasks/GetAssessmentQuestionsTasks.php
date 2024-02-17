@@ -15,7 +15,7 @@ class GetAssessmentQuestionsTasks extends BaseTasks {
 
         }else{
             
-            $subjectId = SubjectModel::firstWhere('subject_code', $this->item['subjectId'])->id;
+            $subjectId = SubjectModel::firstWhere('subject_code', $this->item['subjectId'])->uuid;
 
             $questions = $this->item['assessment']->questions()
                                                 ->where( fn($query) => $query->where('assessment_questions.subject_id', $subjectId)

@@ -17,7 +17,7 @@ class GetClassSubjectsFeature extends FeatureContract {
     {
         try {
             
-            $builder = $task->start($this->class)->getClassSubjects()->all();
+            $builder = $task->start( $this->class )->getClassSubjects()->all()->toArray()->except(['pivot'], true);
 
             return $task::formatResponse( $builder );
 

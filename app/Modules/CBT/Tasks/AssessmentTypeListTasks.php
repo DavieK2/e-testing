@@ -9,7 +9,7 @@ class AssessmentTypeListTasks extends BaseTasks{
 
     public function getTypes()
     {
-        return new static( [...$this->item, 'query' => AssessmentTypeModel::query()->select('id', 'type', 'max_score') ] );
+        return new static( [...$this->item, 'query' => AssessmentTypeModel::query()->select('uuid as id', 'type', 'max_score') ] );
     }
     
 }

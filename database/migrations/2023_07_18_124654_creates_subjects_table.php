@@ -8,10 +8,10 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('faculties', function(Blueprint $table){
-            $table->id();
-            $table->ulid('uuid')->unique();
-            $table->string('faculty_name');
+        Schema::create('subjects', function(Blueprint $table){
+            $table->ulid('uuid')->unique()->index();
+            $table->string('subject_name');
+            $table->string('subject_code');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });
@@ -20,6 +20,6 @@ return new class extends Migration
     
     public function down()
     {
-        Schema::dropIfExists('faculties');
+        Schema::dropIfExists('subjects');
     }
 };

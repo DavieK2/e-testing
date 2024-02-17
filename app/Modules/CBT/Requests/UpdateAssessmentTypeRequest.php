@@ -14,7 +14,7 @@ class UpdateAssessmentTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'assessmentTypeId' => 'required|exists:assessment_types,id',
+            'assessmentTypeId' => 'required|exists:assessment_types,uuid',
             'assessmentType' => 'nullable',
             'maxScore' => 'nullable'
         ];

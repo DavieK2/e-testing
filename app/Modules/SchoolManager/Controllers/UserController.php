@@ -83,8 +83,8 @@ class UserController extends Controller
     public function getTeacherAssignedClassSubjects(UserModel $teacher)
     {
         $subjects = DB::table('user_class_subjects')
-                    ->where('user_id', $teacher->id)
-                    ->join('classes', 'classes.id', '=', 'user_class_subjects.class_id')
+                    ->where('user_id', $teacher->uuid)
+                    ->join('classes', 'classes.uuid', '=', 'user_class_subjects.class_id')
                     ->select('user_class_subjects.subject_id', 'classes.class_code')
                     ->get()
                     ->groupBy('subject_id')

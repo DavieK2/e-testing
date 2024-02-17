@@ -10,11 +10,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('question_banks', function(Blueprint $table){
-            $table->id();
-            $table->ulid('uuid')->unique();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('assessment_id')->constrained();
-            $table->foreignId('subject_id')->constrained();
+            $table->ulid('uuid')->unique()->index();
+            $table->foreignUlid('user_id')->constrained( table: 'users', column: 'uuid' );
+            $table->foreignUlid('assessment_id')->constrained( table: 'assessments', column: 'uuid' );
+            $table->foreignUlid('subject_id')->constrained( table: 'subjects', column: 'uuid' );
             $table->json('classes')->nullable();
             $table->json('section_ids')->nullable();
             $table->boolean('is_synced')->default(false);

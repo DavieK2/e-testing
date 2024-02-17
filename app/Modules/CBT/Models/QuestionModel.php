@@ -3,6 +3,7 @@
 namespace App\Modules\CBT\Models;
 
 use App\Modules\SchoolManager\Models\ClassModel;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -11,11 +12,12 @@ class QuestionModel extends Model
 {
     const QUESTION_TYPES = [ 'objectives', 'theory' ];
 
-    use HasFactory;
+    use HasFactory, HasUlids;
 
     protected $table = 'questions';
 
-    protected $guarded = ['id'];
+    protected $guarded = ['uuid'];
+    protected $primaryKey = 'uuid';
 
     protected $casts = ['options' => 'array'];
 

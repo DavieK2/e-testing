@@ -55,6 +55,7 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/question-bank-subjects/{assessment:uuid}', [ AdminQuestionBankController::class, 'getAssessmentSubjects' ]);
     Route::get('/question-bank-subjects/{assessment:uuid}', [ AdminQuestionBankController::class, 'getAssessmentSubjects' ]);
     Route::post('/question-bank-create', [ AdminQuestionBankController::class, 'createQuestionBank' ]);
+    Route::post('/question-bank-update', [ AdminQuestionBankController::class, 'updateQuestionBankClasses' ]);
 
 
     Route::post('/question/import', [ QuestionController::class, 'import']);

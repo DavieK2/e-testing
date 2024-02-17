@@ -39,7 +39,7 @@ class CreateQuestionRequest extends BaseRequest
             'questionScore'     => 'required|integer',
             'questionBankId'    => [ Rule::requiredIf( fn() => ! $this->route('assessment')->is_standalone ), 'exists:question_banks,uuid'],
             'sectionId'         => [ Rule::requiredIf( fn() => ! $this->route('assessment')->is_standalone ), 'exists:sections,uuid'],
-            'topicId'           => [ Rule::requiredIf( fn() => (! $this->route('assessment')->is_standalone) && request()->user()->is_teacher ), 'exists:topics,uuid'],
+            // 'topicId'           => [ Rule::requiredIf( fn() => (! $this->route('assessment')->is_standalone) && request()->user()->is_teacher ), 'exists:topics,uuid'],
         ];
     }
 }

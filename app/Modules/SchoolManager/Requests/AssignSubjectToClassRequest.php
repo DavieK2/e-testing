@@ -14,7 +14,7 @@ class AssignSubjectToClassRequest extends FormRequest
     public function rules()
     {
         return [
-            'classId'   => 'required|exists:classes,id',
+            'classId'   => 'required|exists:classes,uuid',
             'subjects'  => 'required|array'
         ];
     }

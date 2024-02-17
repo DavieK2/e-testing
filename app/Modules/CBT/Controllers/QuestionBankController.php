@@ -54,17 +54,17 @@ class QuestionBankController extends Controller
     {
 
         $assessment_subjects = DB::table('assessment_subjects')
-                                ->where('assessment_id', $assessment->id)
+                                ->where('assessment_id', $assessment->uuid)
                                 ->distinct()
                                 ->pluck('subject_id');
 
         $user_subjects = DB::table('user_subjects')
-                            ->where('user_id', request()->user()->id)
+                            ->where('user_id', request()->user()->uuid)
                             ->pluck('subject_id');
 
         $subjects = $user_subjects->intersect($assessment_subjects)->toArray();
 
-        $subjects = SubjectModel::whereIn('id', $subjects)->select('subject_name as subjectName', 'id as subjectId')->get();
+        $subjects = SubjectModel::whereIn('uuid', $subjects)->select('subject_name as subjectName', 'uuid as subjectId')->get();
 
         return response()->json([
              'data' => $subjects
@@ -74,7 +74,7 @@ class QuestionBankController extends Controller
     public function getAssessmentClasses(QuestionBankModel $question_bank)
     {
         $user_classes = DB::table('user_class_subjects')
-                            ->where( fn( $query ) => $query->where('user_id', request()->user()->id)->where('subject_id', $question_bank->subject_id ))
+                            ->where( fn( $query ) => $query->where('user_id', request()->user()->uuid)->where('subject_id', $question_bank->subject_id ))
                             ->pluck('class_id');
 
         $assessment_classes = DB::table('assessment_subjects')
@@ -83,7 +83,7 @@ class QuestionBankController extends Controller
         
         $classes = $user_classes->intersect($assessment_classes);
 
-        $classes = ClassModel::whereIn('id', $classes)->select('class_name', 'class_code')->get();
+        $classes = ClassModel::whereIn('uuid', $classes)->select('class_name', 'class_code')->get();
 
         return response()->json([
             'data' => $classes
@@ -129,7 +129,7 @@ class QuestionBankController extends Controller
             'uuid' => Str::ulid(),
             'section_code' => Str::random(5),
             'question_type' => $data['questionType'],
-            'question_bank_id' => $question_bank->id,
+            'question_bank_id' => $question_bank->uuid,
             'title' => $data['title'],
             'description' => $data['description']
         ]);
@@ -148,7 +148,7 @@ class QuestionBankController extends Controller
         $data = $request->validated();
 
         $question_bank = QuestionBankModel::firstWhere('uuid', $data['questionBankId']);
-        $sections = SectionModel::where('question_bank_id', $question_bank->id)->get()->pluck('uuid')->toArray();
+        $sections = SectionModel::where('question_bank_id', $question_bank->uuid)->get()->pluck('uuid')->toArray();
 
         $question_bank->update(['section_ids' => json_encode( $sections )]);
 
@@ -159,7 +159,7 @@ class QuestionBankController extends Controller
 
     public function getSections(QuestionBankModel $question_bank)
     {
-        $sections = SectionModel::where('question_bank_id', $question_bank->id)
+        $sections = SectionModel::where('question_bank_id', $question_bank->uuid)
                                 ->select('uuid as sectionId', 'title  as sectionTitle', 'description as sectionDescription', 'question_type as questionType')
                                 ->get();
 

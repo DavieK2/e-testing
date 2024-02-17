@@ -30,8 +30,8 @@ class StudentController extends Controller
     public function update(UpdateStudentProfileRequest $request)
     {
         $data = $request->validated();
-
-        $student = StudentProfileModel::find($data['studentId']);
+        
+        $student = StudentProfileModel::firstWhere('uuid', $data['studentId']);
 
         $student->update(['first_name' => $data['firstName'], 'surname' => $data['surname'], 'class_id' => $data['classId'], 'profile_pic' => $data['profilePic'] ?? null ]);
 

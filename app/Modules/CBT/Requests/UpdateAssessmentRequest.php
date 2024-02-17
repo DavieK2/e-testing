@@ -21,10 +21,10 @@ class UpdateAssessmentRequest extends FormRequest
             'startDate'         => [ Rule::requiredIf( request('isStandalone') == true ), 'string'],
             'endDate'           => [ Rule::requiredIf( request('isStandalone') == true ), 'string'],
             'duration'          => [ Rule::requiredIf( request('isStandalone') == true ), 'integer'],
-            'assessmentTypeId'  => 'required|exists:assessment_types,id',
+            'assessmentTypeId'  => 'required|exists:assessment_types,uuid',
             'isStandalone'      => 'required|boolean',
-            'academicSessionId' => [ Rule::requiredIf( request('isStandalone') == false ), 'exists:academic_sessions,id' ],
-            'schoolTermId'      => [ Rule::requiredIf( request('isStandalone') == false ), 'exists:school_terms,id' ]
+            'academicSessionId' => [ Rule::requiredIf( request('isStandalone') == false ), 'exists:academic_sessions,uuid' ],
+            'schoolTermId'      => [ Rule::requiredIf( request('isStandalone') == false ), 'exists:school_terms,uuid' ]
         ];
     }
 }

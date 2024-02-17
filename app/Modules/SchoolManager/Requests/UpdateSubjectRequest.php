@@ -14,7 +14,7 @@ class UpdateSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'subjectId' => 'required|exists:subjects,id',
+            'subjectId' => 'required|exists:subjects,uuid',
             'subjectName' => 'required'
         ];
     }

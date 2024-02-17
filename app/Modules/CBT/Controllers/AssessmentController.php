@@ -101,9 +101,9 @@ class AssessmentController extends Controller
 
     public function getQuestionBanks(AssessmentModel $assessment)
     {
-        $question_banks = QuestionBankModel::where('question_banks.assessment_id', $assessment->id)
-                                            ->join('users', 'users.id', '=', 'question_banks.user_id')
-                                            ->join('subjects', 'subjects.id', '=', 'question_banks.user_id')
+        $question_banks = QuestionBankModel::where('question_banks.assessment_id', $assessment->uuid)
+                                            ->join('users', 'users.uuid', '=', 'question_banks.user_id')
+                                            ->join('subjects', 'subjects.uuid', '=', 'question_banks.subject_id')
                                             ->select('question_banks.*', 'subjects.subject_name', 'subjects.subject_code', 'users.fullname')
                                             ->get();
 
@@ -123,6 +123,12 @@ class AssessmentController extends Controller
         return response()->json([
             'data' => $question_banks
         ]);
+    }
+
+
+    public function editQuestionBank(QuestionBankModel $question_bank)
+    {
+        
     }
 
     

@@ -16,7 +16,7 @@ class CreateQuestionBankRequest extends FormRequest
     {
         return [
             'assessmentId'  => 'required|exists:assessments,uuid',
-            'subjectId'     => 'required|exists:subjects,id',
+            'subjectId'     => 'required|exists:subjects,uuid',
             'classes'       => [ 'array', Rule::requiredIf( request()->user()->is_admin ) , Rule::prohibitedIf( request()->user()->is_teacher) ],
             'classes.*'     => 'exists:classes,class_code'
         ];

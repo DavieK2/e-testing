@@ -14,9 +14,9 @@ class AssignTeacherToClassRequest extends FormRequest
     public function rules()
     {
         return [
-            'teacherId' => 'required|exists:users,id',
+            'teacherId' => 'required|exists:users,uuid',
             'classes'  => 'required|array',
-            'classes.*.id' => 'required|exists:classes,id',
+            'classes.*.id' => 'required|exists:classes,uuid',
         ];
     }
 }

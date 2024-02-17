@@ -18,7 +18,7 @@ class CreateTeacherTasks extends BaseTasks{
             'email'     => $this->item['email'],
             'phone_no'  => $this->item['phoneNumber'],
             'password'  => Hash::make($this->item['password'] ?? 'password'),
-            'role_id'   => RoleModel::firstWhere('role_name','teacher')->id
+            'role_id'   => RoleModel::firstWhere('role_name','teacher')->uuid
         ]);
 
         return new static( [ ...$this->item, 'user' => $user ] );

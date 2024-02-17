@@ -16,7 +16,7 @@ class CreateTopicRequest extends FormRequest
         return [
             'title'     => 'required|string',
             'classes'   => 'required|array',
-            'subjectId' => 'required|exists:subjects,id',
+            'subjectId' => 'required|exists:subjects,uuid',
             'classes.*' => 'exists:classes,class_code'
         ];
     }

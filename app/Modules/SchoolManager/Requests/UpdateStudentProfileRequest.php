@@ -14,10 +14,10 @@ class UpdateStudentProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'studentId'     => 'required|exists:student_profiles,id',
+            'studentId'     => 'required|exists:student_profiles,uuid',
             'firstName'      => 'required|string',
             'surname'       => 'required|string',
-            'classId'       => 'required|exists:classes,id',
+            'classId'       => 'required|exists:classes,uuid',
             'profilePic'     => 'nullable|string'
         ];
     }

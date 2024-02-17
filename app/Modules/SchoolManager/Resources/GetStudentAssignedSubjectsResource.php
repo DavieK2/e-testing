@@ -9,7 +9,7 @@ class GetStudentAssignedSubjectsResource extends BaseResource
     public function toArray($request)
     {
         return [
-            'subjectId'     => $this->id,
+            'subjectId'     => $this->uuid,
             'subjectName'   => $this->subject_name
         ];
     }

@@ -10,9 +10,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sections', function(Blueprint $table){
-            $table->id();
-            $table->ulid('uuid')->unique();
-            $table->foreignId('question_bank_id')->constrained();
+            $table->ulid('uuid')->unique()->index();
+            $table->foreignUlid('question_bank_id')->constrained( table: 'question_banks', column: 'uuid' );
             $table->string('section_code')->unique();
             $table->string('title');
             $table->longText('description');

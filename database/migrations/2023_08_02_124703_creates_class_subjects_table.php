@@ -9,9 +9,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('class_subjects', function(Blueprint $table){
-            $table->ulid('uuid')->unique();
-            $table->string('class_id');
-            $table->string('subject_id');
+            $table->ulid('uuid')->unique()->index();
+            $table->foreignUlid('class_id')->constrained( table: 'classes', column: 'uuid' );
+            $table->foreignUlid('subject_id')->constrained( table: 'subjects', column: 'uuid' );
             $table->boolean('is_synced')->default(false);
         });
     }

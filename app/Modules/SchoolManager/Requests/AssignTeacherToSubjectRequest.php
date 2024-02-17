@@ -14,9 +14,9 @@ class AssignTeacherToSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'teacherId'             => 'required|exists:users,id',
+            'teacherId'             => 'required|exists:users,uuid',
             'subjects'              => 'required|array',
-            'subjects.*.subjectId'  => 'required|exists:subjects,id',
+            'subjects.*.subjectId'  => 'required|exists:subjects,uuid',
         ];
     }
 }

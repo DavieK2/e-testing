@@ -45,11 +45,24 @@ abstract class BaseTasks {
         };
     }
 
-    public function except(array $keys)
+    public function except(array $keys, $recursive = false)
     {
-        foreach($keys as $key){
-            if(is_array($this->item) && array_key_exists($key, $this->item)){
+        foreach( $keys as $key ){
+
+            if( is_array($this->item) && array_key_exists($key, $this->item) ){
                 unset($this->item[$key]);
+            }
+
+            if( is_array( $this->item ) && $recursive ){
+
+                foreach( $this->item as $index => $item ){
+
+                    if( is_array( $item ) && array_key_exists($key, $item)  ){
+                        
+                        unset( $this->item[$index][$key] );
+                    }
+
+                }
             }
         }
 

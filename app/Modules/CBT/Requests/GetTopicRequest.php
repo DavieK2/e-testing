@@ -14,7 +14,7 @@ class GetTopicRequest extends FormRequest
     public function rules()
     {
         return [
-            'subjectId' => 'required|exists:subjects,id',
+            'subjectId' => 'required|exists:subjects,uuid',
             'classId'   => 'required|exists:classes,class_code',
         ];
     }

@@ -14,7 +14,7 @@ class UpdateAcademicSessionRequest extends FormRequest
     public function rules()
     {
         return [
-            'academicSessionId' => 'required|exists:academic_sessions,id',
+            'academicSessionId' => 'required|exists:academic_sessions,uuid',
             'session' => 'required'
         ];
     }

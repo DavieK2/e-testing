@@ -18,10 +18,8 @@ use App\Modules\SchoolManager\Models\StudentProfileModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Question\Question;
 
-class 
-ExamController extends Controller
+class ExamController extends Controller
 {
     
     public function getAssessmentQuestions(AssessmentModel $assessment, GetAssessmentQuestionsRequest $request)
@@ -33,9 +31,9 @@ ExamController extends Controller
     {
         date_default_timezone_set('Africa/Lagos');
 
-        $studentId = request()->user()->id;
+        $studentId = request()->user()->uuid;
 
-        $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->id)->first();
+        $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->uuid)->first();
 
         $end_time = now()->addSeconds($assessment->assessment_duration)->toDateTimeString();
         $start_time = now()->toDateTimeString();
@@ -52,10 +50,10 @@ ExamController extends Controller
 
         $student = request()->user();
 
-        $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id ],[
+        $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->uuid, 'assessment_id' => $assessment->uuid ],[
             'uuid'                 => Str::ulid(),
-            'student_profile_id'    => $student->id,
-            'assessment_id'        => $assessment->id,
+            'student_profile_id'    => $student->uuid,
+            'assessment_id'        => $assessment->uuid,
             'time_remaining'       => $assessment->assessment_duration
         ]);
 
@@ -104,19 +102,19 @@ ExamController extends Controller
         header("X-Accel-Buffering: no");
 
         
-        $studentId = auth()->guard('student')->user()->id;
+        $studentId = auth()->guard('student')->user()->uuid;
 
         $data = $request->validated();
 
         if( $assessment->is_standalone ){
 
-            $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->id)->first();
+            $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->uuid)->first();
 
         }else{
 
-            $subjectId = SubjectModel::firstWhere('subject_code',$data['subjectId'] )->id;
+            $subjectId = SubjectModel::firstWhere('subject_code',$data['subjectId'] )->uuid;
             
-            $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->id)->where('subject_id', $subjectId)->first();
+            $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->uuid)->where('subject_id', $subjectId)->first();
         }
 
         $end_time = $student_session->end_time;
@@ -148,21 +146,21 @@ ExamController extends Controller
 
     public function getStudentExamSessionResponses(AssessmentModel $assessment, GetStudentExamResponsesRequest $request)
     {
-        $studentId = request()->user()->id;
+        $studentId = request()->user()->uuid;
 
         $data = $request->validated();
 
         $student_responses = DB::table('assessment_sessions')
                                 ->where(function($query) use($assessment, $studentId, $data){
                                     $query->where('assessment_sessions.student_profile_id', $studentId)
-                                        ->where('assessment_sessions.assessment_id', $assessment->id);
+                                        ->where('assessment_sessions.assessment_id', $assessment->uuid);
 
                                     if( isset( $data['subjectId'] ) && $data['subjectId'] ){
-                                        $subjectId = SubjectModel::firstWhere('subject_code',$data['subjectId'] )->id;
+                                        $subjectId = SubjectModel::firstWhere('subject_code',$data['subjectId'] )->uuid;
                                         $query->where('assessment_sessions.subject_id', $subjectId);
                                     }
                                 })
-                                ->join('questions', 'questions.id', '=', 'assessment_sessions.question_id')
+                                ->join('questions', 'questions.uuid', '=', 'assessment_sessions.question_id')
                                 ->select('assessment_sessions.student_answer as studentAnswer', 'assessment_sessions.uuid as sessionId', 'assessment_sessions.marked_for_review as markedForReview', 'questions.uuid as questionId')
                                 ->get();
 
@@ -196,7 +194,7 @@ ExamController extends Controller
 
         $score = trim(strtolower($data['studentAnswer'])) == trim(strtolower($question->correct_answer)) ? $question->question_score : 0;
 
-        $student->saveStudentResponse($assessment,  $question->id, $data['studentAnswer'], $data['markedForReview'], $score, $data['subjectId'] ?? null );
+        $student->saveStudentResponse($assessment,  $question->uuid, $data['studentAnswer'], $data['markedForReview'], $score, $data['subjectId'] ?? null );
 
         return response()->json(['message' => 'Answer Saved']);
     }
@@ -210,11 +208,11 @@ ExamController extends Controller
 
         $student_class = $student->class_id;
 
-        $student_subjects = $student->subjects()->get()->pluck('id')->toArray();
+        $student_subjects = $student->subjects()->get()->pluck('uuid')->toArray();
 
         $student_session = ExamResultsModel::whereIn('subject_id', $student_subjects)
-                                            ->where('assessment_id', $assessment->id)
-                                            ->where('student_profile_id', $student->id)
+                                            ->where('assessment_id', $assessment->uuid)
+                                            ->where('student_profile_id', $student->uuid)
                                             ->where('has_submitted', true)
                                             ->get()
                                             ->pluck('subject_id')
@@ -226,12 +224,12 @@ ExamController extends Controller
 
         $available_subjects = DB::table('assessment_subjects')
                                 ->where( fn($query) => $query->whereIn('assessment_subjects.subject_id', $student_subjects)->where('assessment_subjects.class_id', $student_class)->where('assessment_subjects.is_published', true)->whereBetween('assessment_subjects.start_date',  [ now()->startOfDay()->toDateTimeString(), now()->toDateTimeString() ] ) )
-                                ->join('subjects', 'subjects.id', '=', 'assessment_subjects.subject_id')
-                                ->select('assessment_subjects.assessment_duration as duration', 'subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode', 'subjects.id as subId')
+                                ->join('subjects', 'subjects.uuid', '=', 'assessment_subjects.subject_id')
+                                ->select('assessment_subjects.assessment_duration as duration', 'subjects.subject_name as subjectName', 'subjects.subject_code as subjectCode', 'subjects.uuid as subId')
                                 ->get()
                                 ->toArray();
 
-        $checked_in_subjects = CheckInModel::where('student_profile_id', $student->id)->where('assessment_id', $assessment->id)->first()->subject_ids;
+        $checked_in_subjects = CheckInModel::where('student_profile_id', $student->uuid)->where('assessment_id', $assessment->uuid)->first()->subject_ids;
         
         $newAvailableSubjects = [];
 
@@ -260,19 +258,19 @@ ExamController extends Controller
 
         $student = request()->user();
 
-        $assessment_subject = $assessment->subjects()->where('assessment_subjects.subject_id', $subject->id)->where('assessment_subjects.class_id', $student->class_id)->first();
+        $assessment_subject = $assessment->subjects()->where('assessment_subjects.subject_id', $subject->uuid)->where('assessment_subjects.class_id', $student->class_id)->first();
 
-        $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->id, 'assessment_id' => $assessment->id, 'subject_id' => $subject->id ],[
+        $student_result = ExamResultsModel::firstOrCreate(['student_profile_id' => $student->uuid, 'assessment_id' => $assessment->uuid, 'subject_id' => $subject->uuid ],[
                             'uuid'                 => Str::ulid(),
-                            'student_profile_id'    => $student->id,
-                            'assessment_id'        => $assessment->id,
-                            'subject_id'           => $subject->id,
+                            'student_profile_id'    => $student->uuid,
+                            'assessment_id'        => $assessment->uuid,
+                            'subject_id'           => $subject->uuid,
                             'time_remaining'       => $assessment_subject->pivot->assessment_duration
         ]);
 
         $instructions = $assessment->description;
-        $total_questions = $assessment->questions()->where(fn($query) => $query->where('assessment_questions.subject_id', $subject->id )->where('assessment_questions.class_id', $student->class_id))->count();
-        $total_marks = $assessment->questions()->where(fn($query) => $query->where('assessment_questions.subject_id', $subject->id )->where('assessment_questions.class_id', $student->class_id))->sum('question_score');
+        $total_questions = $assessment->questions()->where(fn($query) => $query->where('assessment_questions.subject_id', $subject->uuid )->where('assessment_questions.class_id', $student->class_id))->count();
+        $total_marks = $assessment->questions()->where(fn($query) => $query->where('assessment_questions.subject_id', $subject->uuid )->where('assessment_questions.class_id', $student->class_id))->sum('question_score');
         $duration = $assessment_subject->pivot->assessment_duration;
         $assessment_title = $assessment->title;
 
@@ -310,12 +308,12 @@ ExamController extends Controller
 
         $student= request()->user();
 
-        $student_session = ExamResultsModel::where( fn($query) => $query->where('subject_id', $subject->id)
-                                                                        ->where('assessment_id', $assessment->id)
-                                                                        ->where('student_profile_id', $student->id)
+        $student_session = ExamResultsModel::where( fn($query) => $query->where('subject_id', $subject->uuid)
+                                                                        ->where('assessment_id', $assessment->uuid)
+                                                                        ->where('student_profile_id', $student->uuid)
                                                                   )->first();
 
-        $assessment_subject = $assessment->subjects()->where('assessment_subjects.subject_id', $subject->id)->where('assessment_subjects.class_id', $student->class_id)->first();
+        $assessment_subject = $assessment->subjects()->where('assessment_subjects.subject_id', $subject->uuid)->where('assessment_subjects.class_id', $student->class_id)->first();
 
         $end_time = now()->addSeconds( $assessment_subject->pivot->assessment_duration )->toDateTimeString();
         $start_time = now()->toDateTimeString();
@@ -327,19 +325,19 @@ ExamController extends Controller
 
     public function submitExam(AssessmentModel $assessment, SubmitStudentExamRequest $request)
     {
-        $studentId = request()->user()->id;
+        $studentId = request()->user()->uuid;
         
         $data = $request->validated();
 
         if( $assessment->is_standalone ){
 
-            $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->id)->first();
+            $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->uuid)->first();
 
         }else{
 
-            $subjectId = SubjectModel::firstWhere('subject_code',$data['subjectId'] )->id;
+            $subjectId = SubjectModel::firstWhere('subject_code',$data['subjectId'] )->uuid;
             
-            $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->id)->where('subject_id', $subjectId)->first();
+            $student_session = ExamResultsModel::where('student_profile_id', $studentId)->where('assessment_id', $assessment->uuid)->where('subject_id', $subjectId)->first();
         }
 
         $url = $assessment->is_standalone ? url("/completed/cbt/$assessment->uuid") : url("/cbt/$assessment->uuid/t");
@@ -377,11 +375,11 @@ ExamController extends Controller
             'subjects'  => 'required|array'
         ]);
 
-        $student = StudentProfileModel::firstWhere('student_code', $data['studentId'])->id;
+        $student = StudentProfileModel::firstWhere('student_code', $data['studentId'])->uuid;
         
-        CheckInModel::updateOrCreate([ 'assessment_id' => $assessment->id, 'student_profile_id' => $student ], [
+        CheckInModel::updateOrCreate([ 'assessment_id' => $assessment->uuid, 'student_profile_id' => $student ], [
             'uuid'                  => Str::ulid(),
-            'assessment_id'         => $assessment->id,
+            'assessment_id'         => $assessment->uuid,
             'subject_ids'           => json_encode($data['subjects']),
             'student_profile_id'     => $student,
             'checked_in_at'         => now(),

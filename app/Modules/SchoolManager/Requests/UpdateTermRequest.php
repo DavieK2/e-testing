@@ -14,7 +14,7 @@ class UpdateTermRequest extends FormRequest
     public function rules()
     {
         return [
-            'termId' => 'required|exists:school_terms,id',
+            'termId' => 'required|exists:school_terms,uuid',
             'term' => 'required'
         ];
     }

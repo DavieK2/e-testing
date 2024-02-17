@@ -9,7 +9,7 @@ class AcademicSessionListTasks extends BaseTasks{
 
     public function getSessions()
     {
-        return new static( [ ...$this->item, 'query' => AcademicSessionModel::query()->select('id', 'session') ]);
+        return new static( [ ...$this->item, 'query' => AcademicSessionModel::query()->select('uuid as id', 'session') ]);
     }
     
 }

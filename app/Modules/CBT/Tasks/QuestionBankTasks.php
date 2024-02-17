@@ -14,11 +14,14 @@ class QuestionBankTasks extends BaseTasks {
 
     public function createQuestionBank()
     {
+
+        // dd( $this->item );
+
         $question_bank = QuestionBankModel::create([
             'uuid'              =>  Str::ulid(),
-            'assessment_id'     =>  AssessmentModel::firstWhere('uuid', $this->item['assessmentId'])->id,
+            'assessment_id'     =>  AssessmentModel::firstWhere('uuid', $this->item['assessmentId'])->uuid,
             'subject_id'        =>  $this->item['subjectId'],
-            'user_id'           =>  request()->user()->id
+            'user_id'           =>  request()->user()->uuid
         ]);
 
         return new static( [ ...$this->item, 'questionBankId' => $question_bank->uuid ]);
@@ -35,8 +38,8 @@ class QuestionBankTasks extends BaseTasks {
     public function getQuestions()
     {
         $questions = DB::table('assessment_questions')
-                        ->join('questions', 'questions.id', '=', 'assessment_questions.question_id')
-                        ->join('assessments', 'assessments.id', '=', 'questions.assessment_id')
+                        ->join('questions', 'questions.uuid', '=', 'assessment_questions.question_id')
+                        ->join('assessments', 'assessments.uuid', '=', 'questions.assessment_id')
                         ->select('questions.question', 'questions.options', 'questions.correct_answer', 'questions.uuid', 'questions.subject_id', 'questions.question_score', 'assessments.uuid as assessmentId');
 
         if( isset( $this->item['assessmentId'] ) ){
@@ -55,7 +58,7 @@ class QuestionBankTasks extends BaseTasks {
 
         if( isset( $this->item['classId'] ) ){
 
-            $classId = ClassModel::firstWhere( 'class_code', $this->item['classId'] )->id;
+            $classId = ClassModel::firstWhere( 'class_code', $this->item['classId'] )->uuid;
             $questions = $questions->where( fn($query) => $query->where('questions.class_id', $classId ) );
 
         }

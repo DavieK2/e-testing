@@ -15,7 +15,7 @@ class AssignTeacherToClassSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'teacherId'             => 'required|exists:users,id',
+            'teacherId'             => 'required|exists:users,uuid',
             'classSubjects'         => 'required|array',
             'classSubjects'         => [ function($attr, $val, $fail){
                                             $keys = array_keys($val);

@@ -10,9 +10,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('class_questions', function(Blueprint $table){
-            $table->ulid('uuid');
-            $table->foreignId('class_id')->constrained();
-            $table->foreignId('question_id')->constrained();
+            $table->ulid('uuid')->unique()->index();
+            $table->foreignUlid('class_id')->constrained( table: 'classes', column: 'uuid' );
+            $table->foreignUlid('question_id')->constrained( table: 'questions', column: 'uuid' );
         });
     }
 

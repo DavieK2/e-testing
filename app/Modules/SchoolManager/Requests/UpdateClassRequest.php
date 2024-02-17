@@ -14,7 +14,7 @@ class UpdateClassRequest extends FormRequest
     public function rules()
     {
         return [
-            'classId' => 'required|exists:classes,id',
+            'classId' => 'required|exists:classes,uuid',
             'className' => 'required'
         ];
     }

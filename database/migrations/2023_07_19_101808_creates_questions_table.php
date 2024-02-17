@@ -9,17 +9,16 @@ return new class extends Migration
     public function up()
     {
         Schema::create('questions', function(Blueprint $table){
-            $table->id();
-            $table->ulid('uuid')->unique();
+            $table->ulid('uuid')->unique()->index();
             $table->longText('question');
-            $table->foreignId('assessment_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignUlid('assessment_id')->nullable()->references('uuid')->on('assessments')->onDelete('SET NULL');
+            $table->foreignUlid('user_id')->nullable()->references('uuid')->on('users')->onDelete('SET NULL');
             $table->json('options');
             $table->string('question_type');
             $table->string('correct_answer')->nullable();
-            $table->float('question_score')->default(0);
-            $table->foreignId('class_id')->nullable()->constrained();
-            $table->foreignId('subject_id')->nullable()->constrained();
+            $table->double('question_score')->default(0);
+            $table->foreignUlid('class_id')->nullable()->references('uuid')->on('classes')->onDelete('SET NULL');
+            $table->foreignUlid('subject_id')->nullable()->references('uuid')->on('subjects')->onDelete('SET NULL');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
        });

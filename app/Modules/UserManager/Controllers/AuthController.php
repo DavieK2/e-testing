@@ -43,7 +43,7 @@ class AuthController extends Controller
             ], 404);
         }
 
-        $checkIn = CheckInModel::where('student_profile_id', $student->id)->where('assessment_id', $assessment->id)->first();
+        $checkIn = CheckInModel::where('student_profile_id', $student->uuid)->where('assessment_id', $assessment->uuid)->first();
 
         if( ! $checkIn ){
             return response()->json([

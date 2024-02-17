@@ -16,7 +16,7 @@ class UnAssignQuestionFromAssessmentRequest extends FormRequest
     {
         return [
             'questionId' => 'required|exists:questions,uuid',
-            'subjectId'    =>  [ Rule::requiredIf( ! $this->route('assessment')->is_standalone ), 'exists:subjects,id' ],
+            'subjectId'    =>  [ Rule::requiredIf( ! $this->route('assessment')->is_standalone ), 'exists:subjects,uuid' ],
             'classId'      =>  [ Rule::requiredIf( ! $this->route('assessment')->is_standalone ), 'exists:classes,class_code' ],
         ];
     }

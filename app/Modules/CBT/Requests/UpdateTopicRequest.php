@@ -17,7 +17,7 @@ class UpdateTopicRequest extends FormRequest
             'topicId'               => 'required|exists:topics,uuid',
             'title'                 => 'required|string',
             'classes'               => 'required|array',
-            'subjectId'             => 'required|exists:subjects,id',
+            'subjectId'             => 'required|exists:subjects,uuid',
             'classes.*.classCode'   => 'required|exists:classes,class_code',
             'classes.*.classId'     => 'nullable',
         ];

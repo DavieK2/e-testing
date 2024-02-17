@@ -11,9 +11,9 @@ return new class extends Migration
     {
         Schema::create('user_class_subjects', function(Blueprint $table){
             $table->ulid('uuid');
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('class_id')->constrained();
-            $table->foreignId('subject_id')->constrained();
+            $table->foreignUlid('user_id')->constrained( table: 'users', column: 'uuid' );
+            $table->foreignUlid('class_id')->constrained( table: 'classes', column: 'uuid' );
+            $table->foreignUlid('subject_id')->constrained( table: 'subjects', column: 'uuid' );
             $table->boolean('is_synced')->default(false);
         });
     }

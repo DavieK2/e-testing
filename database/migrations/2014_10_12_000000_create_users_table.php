@@ -6,16 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+   
     public function up(): void
     {
         Schema::disableForeignKeyConstraints();
 
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->ulid('uuid')->unique();
+            $table->ulid('uuid')->unique()->index();
             $table->string('fullname');
             $table->string('email')->unique();
             $table->string('phone_no')->unique();
@@ -24,7 +21,7 @@ return new class extends Migration
             $table->string('two_factor_secret')->nullable();
             $table->timestamp('two_factor_created_at')->nullable();
             $table->timestamp('two_factor_expires_at')->nullable();
-            $table->foreignId('role_id')->constrained()->default();
+            $table->foreignUlid('role_id')->constrained('roles', 'uuid')->default();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->boolean('is_synced')->default(false);
@@ -32,11 +29,10 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');
     }
 };
+
+// php artisan migrate:fresh --seed

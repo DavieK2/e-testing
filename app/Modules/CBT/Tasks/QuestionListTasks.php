@@ -16,24 +16,24 @@ class QuestionListTasks extends BaseTasks{
         if( isset( $this->item['questionBankId'] ) ){
 
             $question_bank = QuestionBankModel::firstWhere( 'uuid', $this->item['questionBankId'] );
-            $questions = QuestionModel::where( 'questions.question_bank_id', $question_bank->id )
-                                        ->leftJoin('assessment_questions', 'questions.id', '=', 'assessment_questions.question_id')
+            $questions = QuestionModel::where( 'questions.question_bank_id', $question_bank->uuid )
+                                        ->leftJoin('assessment_questions', 'questions.uuid', '=', 'assessment_questions.question_id')
                                         ->select('questions.*', 'assessment_questions.assessment_id as assessmentId');
         }
 
         if( isset( $this->item['assessmentId'] ) && ! isset( $this->item['questionBankId'] )){
 
             $assessment = AssessmentModel::firstWhere('uuid', $this->item['assessmentId'] );
-            $questions = QuestionModel::where( 'questions.assessment_id', $assessment->id )
-                                        ->leftJoin('assessment_questions', 'questions.id', '=', 'assessment_questions.question_id')
+            $questions = QuestionModel::where( 'questions.assessment_id', $assessment->uuid )
+                                        ->leftJoin('assessment_questions', 'questions.uuid', '=', 'assessment_questions.question_id')
                                         ->select('questions.*', 'assessment_questions.assessment_id as assessmentId');
         }
         
         if( isset( $questions ) ){
 
             $questions = $questions->fromSub($questions, 'questions')
-                                    ->leftJoin('topics', 'topics.id', '=', 'questions.topic_id')
-                                    ->leftJoin('sections', 'sections.id', '=', 'questions.section_id')
+                                    ->leftJoin('topics', 'topics.uuid', '=', 'questions.topic_id')
+                                    ->leftJoin('sections', 'sections.uuid', '=', 'questions.section_id')
                                     ->select('questions.*', 'sections.uuid as sectionId', 'sections.title as sectionTitle', 'topics.uuid as topicId')
                                     ->whereNull('questions.assessmentId')
                                     ->orderBy('questions.created_at');
@@ -49,10 +49,10 @@ class QuestionListTasks extends BaseTasks{
             $question_bank = QuestionBankModel::firstWhere( 'uuid', $this->item['questionBankId'] );
 
             $questions = DB::table('assessment_questions')
-                            ->join('questions', 'questions.id', '=', 'assessment_questions.question_id')
-                            ->leftJoin('topics', 'topics.id', '=', 'questions.topic_id')
-                            ->leftJoin('sections', 'sections.id', '=', 'questions.section_id')
-                            ->where('questions.question_bank_id', $question_bank->id)
+                            ->join('questions', 'questions.uuid', '=', 'assessment_questions.question_id')
+                            ->leftJoin('topics', 'topics.uuid', '=', 'questions.topic_id')
+                            ->leftJoin('sections', 'sections.uuid', '=', 'questions.section_id')
+                            ->where('questions.question_bank_id', $question_bank->uuid)
                             ->orderBy('questions.created_at')
                             ->select('questions.*', 'sections.uuid as sectionId', 'sections.title as sectionTitle', 'topics.uuid as topicId');
 
@@ -63,9 +63,9 @@ class QuestionListTasks extends BaseTasks{
             $assessment = AssessmentModel::firstWhere('uuid', $this->item['assessmentId'] );
 
             $questions = DB::table('assessment_questions')
-                            ->join('questions', 'questions.id', '=', 'assessment_questions.question_id')
-                            ->join('topics', 'topics.id', '=', 'questions.topic_id')
-                            ->join('sections', 'sections.id', '=', 'questions.section_id')
+                            ->join('questions', 'questions.uuid', '=', 'assessment_questions.question_id')
+                            ->join('topics', 'topics.uuid', '=', 'questions.topic_id')
+                            ->join('sections', 'sections.uuid', '=', 'questions.section_id')
                             ->where('questions.question_bank_id', $assessment->id)
                             ->orderBy('questions.created_at')
                             ->select('questions.*', 'sections.uuid as sectionId', 'topics.uuid as topicId');

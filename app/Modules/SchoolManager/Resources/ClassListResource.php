@@ -9,7 +9,7 @@ class ClassListResource extends BaseResource
     public function toArray($request)
     {
         return [
-            'id'            => $this->id,
+            'id'            => $this->uuid,
             'class_name'    => $this->class_name,
             'class_code'    => $this->class_code,
         ];

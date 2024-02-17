@@ -10,6 +10,9 @@ class CreateTermTasks extends BaseTasks{
 
     public function storeToDatabase()
     {
+
+        // dd( $this->item );
+
         TermModel::create([
             'uuid'  =>  Str::ulid(),
             'term'  => $this->item['term']

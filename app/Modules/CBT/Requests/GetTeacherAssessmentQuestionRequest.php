@@ -15,7 +15,7 @@ class GetTeacherAssessmentQuestionRequest extends FormRequest
     {
         return [
             'classId'       => 'required|exists:classes,class_code',
-            'subjectId'     => 'required|exists:subjects,id',
+            'subjectId'     => 'required|exists:subjects,uuid',
             'assessmentId'  => 'required|exists:assessments,uuid',
         ];
     }

@@ -4,16 +4,18 @@ namespace App\Modules\CBT\Models;
 
 use App\Modules\SchoolManager\Models\ClassModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TopicModel extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUlids;
 
     protected $table = 'topics';
 
     protected $guarded = [];
+    protected $primaryKey = 'uuid';
 
     public function subjects()
     {

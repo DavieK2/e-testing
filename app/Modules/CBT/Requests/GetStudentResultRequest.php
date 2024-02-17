@@ -15,7 +15,7 @@ class GetStudentResultRequest extends FormRequest
     {
         return [
             'assessmentId'  => 'required|exists:assessments,uuid',
-            'studentId'     => 'required|exists:student_profiles,id',
+            'studentId'     => 'required|exists:student_profiles,uuid',
         ];
     }
 }

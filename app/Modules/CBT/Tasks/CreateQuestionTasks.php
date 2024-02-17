@@ -25,17 +25,17 @@ class CreateQuestionTasks extends BaseTasks{
         // }
 
         $questionBank = QuestionBankModel::firstWhere('uuid', $this->item['questionBankId'] ?? null );
-        $topicId = TopicModel::firstWhere('uuid', $this->item['topicId'] ?? null )?->id;
-        $sectionId = SectionModel::firstWhere('uuid', $this->item['sectionId'] ?? null )?->id;
+        $topicId = TopicModel::firstWhere('uuid', $this->item['topicId'] ?? null )?->uuid;
+        $sectionId = SectionModel::firstWhere('uuid', $this->item['sectionId'] ?? null )?->uuid;
 
         if( $questionBank ){
 
-            $question = $this->saveQuestionToDatabase( $questionData, $options, $questionBank->id, $questionBank->subject_id, $topicId, $sectionId );
+            $question = $this->saveQuestionToDatabase( $questionData, $options, $questionBank->uuid, $questionBank->subject_id, $topicId, $sectionId );
             
 
-            foreach (json_decode($questionBank->classes, true ) as $class) {
+            foreach ( json_decode($questionBank->classes, true ) as $class) {
 
-                $classId = ClassModel::firstWhere('class_code', $class)->id;
+                $classId = ClassModel::firstWhere('class_code', $class)->uuid;
 
                 $question->classes()->syncWithoutDetaching( [ $classId => [ 'uuid' => Str::ulid() ] ] );
             }
@@ -53,8 +53,8 @@ class CreateQuestionTasks extends BaseTasks{
     {
         return QuestionModel::create([
                     'uuid'              => Str::ulid(),
-                    'assessment_id'     => $this->item['assessment']->id,
-                    'user_id'           => request()->user()->id,
+                    'assessment_id'     => $this->item['assessment']->uuid,
+                    'user_id'           => request()->user()->uuid,
                     'question'          => $questionData,
                     'options'           => $options['options'],
                     'correct_answer'    => $options['correctAnswer'],

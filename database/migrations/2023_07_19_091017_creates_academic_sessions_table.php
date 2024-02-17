@@ -9,8 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('academic_sessions', function(Blueprint $table){
-            $table->id();
-            $table->ulid('uuid')->unique();
+            $table->ulid('uuid')->unique()->index();
             $table->string('session');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();

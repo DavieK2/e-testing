@@ -5,6 +5,7 @@ namespace App\Modules\SchoolManager\Models;
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Models\CheckInModel;
 use App\Modules\CBT\Models\ExamResultsModel;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,11 +15,13 @@ use Illuminate\Support\Str;
 
 class StudentProfileModel extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasUlids;
 
     protected $table = 'student_profiles';
 
-    protected $guarded = [];
+    protected $primaryKey = 'uuid';
+
+    protected $guarded = ['uuid'];
 
     public function class()
     {
@@ -37,7 +40,7 @@ class StudentProfileModel extends Authenticatable
 
         foreach( $subjects as $subject ){
 
-            DB::table('student_subjects')->insert( ['student_profile_id' => $this->id, 'subject_id' => $subject, 'uuid' => Str::ulid() ] );
+            DB::table('student_subjects')->insert( ['student_profile_id' => $this->uuid, 'subject_id' => $subject, 'uuid' => Str::ulid() ] );
         }
     }
 
@@ -48,10 +51,10 @@ class StudentProfileModel extends Authenticatable
 
     public function saveStudentResponse(AssessmentModel $assessment, $questionId, $studentAnswer, $markedForReview, $score, $subjectId = null )
     {
-        $subjectId = SubjectModel::firstWhere('subject_code', $subjectId)?->id;
+        $subjectId = SubjectModel::firstWhere('subject_code', $subjectId)?->uuid;
         
-        $session = DB::table('assessment_sessions')->where(fn($query) => $query->where('student_profile_id', $this->id)
-                                                                    ->where('assessment_id', $assessment->id)
+        $session = DB::table('assessment_sessions')->where(fn($query) => $query->where('student_profile_id', $this->uuid)
+                                                                    ->where('assessment_id', $assessment->uuid)
                                                                     ->where('question_id',$questionId)
                                                                     ->where('subject_id', $subjectId)
         );
@@ -69,8 +72,8 @@ class StudentProfileModel extends Authenticatable
             DB::table('assessment_sessions')->insert(
                 [
                     'uuid'              => Str::ulid(),
-                    'student_profile_id' => $this->id, 
-                    'assessment_id'     => $assessment->id, 
+                    'student_profile_id' => $this->uuid, 
+                    'assessment_id'     => $assessment->uuid, 
                     'question_id'       => $questionId,
                     'student_answer'    => $studentAnswer, 
                     'marked_for_review' => $markedForReview, 

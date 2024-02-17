@@ -14,7 +14,7 @@ class GetAssessmentSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'classId' => 'exists:classes,id'
+            'classId' => 'exists:classes,uuid'
         ];
     }
 }

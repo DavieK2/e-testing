@@ -9,7 +9,7 @@ class StudentListResource extends BaseResource
     public function toArray($request)
     {
         return [
-            'studentId'     => $this->id,
+            'studentId'     => $this->uuid,
             'studentCode'   => $this->student_code,
             'name'          => $this->first_name. " ". $this->surname,
             'firstName'      => $this->first_name,

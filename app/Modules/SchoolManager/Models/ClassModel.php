@@ -2,6 +2,8 @@
 
 namespace App\Modules\SchoolManager\Models;
 
+use App\Modules\CBT\Models\TopicModel;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -9,10 +11,11 @@ use Illuminate\Support\Str;
 
 class ClassModel extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUlids;
 
+    protected $primaryKey = 'uuid';
     protected $table = 'classes';
-    protected $guarded = ['id'];
+    protected $guarded = ['uuid'];
 
     public function subjects()
     {
@@ -24,7 +27,7 @@ class ClassModel extends Model
         $this->subjects()->detach();
 
         foreach ($subjectIds as $subjectId) {
-            DB::table('class_subjects')->insert(['class_id' => $this->id, 'subject_id' => $subjectId, 'uuid' => Str::ulid() ]);
+            DB::table('class_subjects')->insert(['class_id' => $this->uuid, 'subject_id' => $subjectId, 'uuid' => Str::ulid() ]);
         }
     }
 

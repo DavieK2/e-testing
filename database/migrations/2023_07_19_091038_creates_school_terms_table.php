@@ -10,8 +10,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('school_terms', function(Blueprint $table){
-            $table->id();
-            $table->ulid('uuid')->unique();
+            $table->ulid('uuid')->unique()->index();
             $table->string('term');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();

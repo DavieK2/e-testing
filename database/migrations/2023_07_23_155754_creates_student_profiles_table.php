@@ -10,18 +10,17 @@ return new class extends Migration
     public function up()
     {
         Schema::create('student_profiles', function(Blueprint $table){
-            $table->id();
-            $table->ulid('uuid')->unique();
+            $table->ulid('uuid')->unique()->index();
             $table->string('first_name')->nullable();
             $table->string('surname')->nullable();
             $table->string('student_code')->unique();
             $table->string('mat_no')->nullable();
             $table->string('reg_no')->nullable();
             $table->longText('profile_pic')->nullable();
-            $table->foreignId('class_id')->nullable()->constrained();
-            $table->foreignId('academic_session_id')->nullable()->constrained();
-            $table->foreignId('faculty_id')->nullable()->constrained();
-            $table->foreignId('department_id')->nullable()->constrained();
+            $table->foreignUlid('class_id')->nullable()->constrained(table: 'classes', column: 'uuid')->onDelete('SET NULL');
+            $table->foreignUlid('academic_session_id')->nullable()->constrained(table: 'academic_sessions',column: 'uuid')->onDelete('SET NULL');
+            $table->foreignUlid('faculty_id')->nullable()->constrained(table: 'faculties', column: 'uuid')->onDelete('SET NULL');
+            $table->foreignUlid('department_id')->nullable()->constrained(table: 'departments', column: 'uuid')->onDelete('SET NULL');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });

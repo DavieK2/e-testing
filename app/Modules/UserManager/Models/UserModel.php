@@ -4,6 +4,7 @@ namespace App\Modules\UserManager\Models;
 
 use App\Modules\SchoolManager\Models\ClassModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notifiable;
@@ -13,11 +14,13 @@ use Illuminate\Support\Str;
 
 class UserModel extends User
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasUlids;
+
+    protected $primaryKey = 'uuid';
 
     protected $table = "users";
 
-    protected $guarded = ['id'];
+    protected $guarded = ['uuid'];
 
     public function role()
     {
@@ -60,7 +63,7 @@ class UserModel extends User
        $this->subjects()->detach();
 
        foreach( $subjects as $subject ){
-            DB::table('user_subjects')->insert( ['user_id' => $this->id, 'subject_id' => $subject, 'uuid' => Str::ulid() ] );
+            DB::table('user_subjects')->insert( ['user_id' => $this->uuid, 'subject_id' => $subject, 'uuid' => Str::ulid() ] );
        }
     }
 
@@ -73,7 +76,7 @@ class UserModel extends User
 
           foreach( $classes as $class ){
 
-            DB::table('user_class_subjects')->insert( ['user_id' => $this->id, 'class_id' => ClassModel::firstWhere('class_code', $class)->id, 'subject_id' => SubjectModel::find($key)->id, 'uuid' => Str::ulid() ] );
+            DB::table('user_class_subjects')->insert( ['user_id' => $this->uuid, 'class_id' => ClassModel::firstWhere('class_code', $class)->uuid, 'subject_id' => SubjectModel::find($key)->uuid, 'uuid' => Str::ulid() ] );
 
           }
        }
@@ -84,17 +87,17 @@ class UserModel extends User
         $this->classes()->detach();
 
         foreach( $classes as $class ){
-            DB::table('user_classes')->insert( ['user_id' => $this->id, 'class_id' => $class, 'uuid' => Str::ulid() ] );
+            DB::table('user_classes')->insert( ['user_id' => $this->uuid, 'class_id' => $class, 'uuid' => Str::ulid() ] );
        }
     }
 
     public function scopeTeachers($query)
     {
-        return $query->where( 'role_id', RoleModel::firstWhere('role_name', 'teacher')->id );
+        return $query->where( 'role_id', RoleModel::firstWhere('role_name', 'teacher')->uuid );
     }
 
     public function scopeStudents($query)
     {
-        return $query->where( 'role_id', RoleModel::firstWhere('role_name', 'student')->id );
+        return $query->where( 'role_id', RoleModel::firstWhere('role_name', 'student')->uuid );
     }
 }

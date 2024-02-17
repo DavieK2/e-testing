@@ -8,18 +8,17 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('classes', function(Blueprint $table){
-            $table->id();
-            $table->ulid('uuid')->unique();
-            $table->string('class_name');
-            $table->string('class_code');
+        Schema::create('faculties', function(Blueprint $table){
+            $table->ulid('uuid')->unique()->index();
+            $table->string('faculty_name');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });
     }
 
+    
     public function down()
     {
-        Schema::dropIfExists('classes');
+        Schema::dropIfExists('faculties');
     }
 };

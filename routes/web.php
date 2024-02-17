@@ -41,6 +41,7 @@ require __DIR__ . '/auth.php';
 
 Route::get('/', function(){
     
+    Artisan::call('migrate', ['--path' => 'database/migrations/2023_11_08_085956_add_section_id_to_assessment_questions_table.php', '--force' => true ]);
     // DB::table('computed_assessment_results')
     //     ->join('student_profiles', 'student_profiles.id', '=', 'computed_assessment_results.student_profile_id')
     //     ->where(fn($query) => $query->where('computed_assessment_results.academic_session_id', 2)
@@ -135,10 +136,14 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/assessments/termly/schedule/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Assessment/termly/TermlyAssessmentSchedule', ['assessmentId' => $assessment->uuid, 'title' => $assessment->title ]) );
     Route::get('/assessments/termly/view/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Assessment/termly/View', ['assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title ]) );
     Route::get('/assessments/termly/question_bank/create/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Assessment/termly/question_bank/Create', ['assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title ]) );
-    Route::get('/assessments/termly/question_bank/sections/{question_bank:uuid}', function(QuestionBankModel $question_bank) {
-
+    
+    Route::get('/assessments/termly/question_bank/edit/{question_bank:uuid}', function(QuestionBankModel $question_bank){
         $assessment = AssessmentModel::find( $question_bank->assessment_id );
-        return Inertia::render('CBT/Assessment/termly/question_bank/CreateSection', ['assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title, 'questionBankId' => $question_bank->uuid ]);
+        return Inertia::render('CBT/Assessment/termly/question_bank/Edit', ['assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title, 'subjectId' => $question_bank->subject_id, 'questionBankId' => $question_bank->uuid  ]);
+    } );
+    Route::get('/assessments/termly/question_bank/sections/{question_bank:uuid}', function(QuestionBankModel $question_bank) {
+        $assessment = AssessmentModel::find( $question_bank->assessment_id );
+        return Inertia::render('CBT/Assessment/termly/question_bank/CreateSection', ['assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title, 'questionBankId' => $question_bank->uuid]);
     } );
 
 

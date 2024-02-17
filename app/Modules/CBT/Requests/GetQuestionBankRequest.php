@@ -15,7 +15,7 @@ class GetQuestionBankRequest extends FormRequest
     {
         return [
             'assessmentId'  => 'required|exists:assessments,uuid',
-            'subjectId'     => 'required|exists:subjects,id'
+            'subjectId'     => 'required|exists:subjects,uuid'
         ];
     }
 }

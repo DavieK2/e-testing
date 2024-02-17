@@ -6,6 +6,7 @@ use App\Modules\SchoolManager\Models\AcademicSessionModel;
 use App\Modules\SchoolManager\Models\ClassModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
 use App\Modules\SchoolManager\Models\TermModel;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -14,11 +15,13 @@ use Illuminate\Support\Facades\DB;
 
 class AssessmentModel extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUlids;
+
+    protected $primaryKey = 'uuid';
 
     protected $table = 'assessments';
 
-    protected $guarded = ['id'];
+    protected $guarded = ['uuid'];
 
     public function questions()
     {
@@ -27,16 +30,16 @@ class AssessmentModel extends Model
 
     public function assignQuestion($question_id, $subject_id = null, $class_id = null, $sectionId = null)
     {
-        $question_id = QuestionModel::firstWhere('uuid', $question_id)->id;
-        $class_id = ClassModel::firstWhere('class_code', $class_id)?->id;
-        $sectionId = SectionModel::firstWhere('uuid', $sectionId)?->id;
+        $question_id = QuestionModel::firstWhere('uuid', $question_id)->uuid;
+        $class_id = ClassModel::firstWhere('class_code', $class_id)?->uuid;
+        $sectionId = SectionModel::firstWhere('uuid', $sectionId)?->uuid;
         
         return $this->questions()->syncWithoutDetaching([ $question_id => [ 'subject_id' => $subject_id, 'class_id' => $class_id, 'uuid' => Str::ulid(), 'section_id' => $sectionId ]]);
     }
 
     public function unAssignQuestion($question_id, $class_id = null, $subject_id = null)
     {
-        $question_id = QuestionModel::firstWhere('uuid', $question_id)->id;
+        $question_id = QuestionModel::firstWhere('uuid', $question_id)->uuid;
        
         if( $this->is_standalone ){
 
@@ -44,7 +47,7 @@ class AssessmentModel extends Model
 
         }else{
 
-            $class_id = ClassModel::firstWhere('class_code', $class_id)->id;
+            $class_id = ClassModel::firstWhere('class_code', $class_id)->uuid;
 
             return DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id', $question_id)->where('assessment_questions.subject_id', $subject_id)->where('assessment_questions.class_id', $class_id) )->limit(1)->delete();
         }
@@ -60,7 +63,7 @@ class AssessmentModel extends Model
         $this->classes()->detach();
 
         foreach( $classes as $class ){
-            DB::table('assessment_classes')->insert(['uuid' => Str::ulid(), 'assessment_id' => $this->id, 'class_id' => $class ]);
+            DB::table('assessment_classes')->insert(['uuid' => Str::ulid(), 'assessment_id' => $this->uuid, 'class_id' => $class ]);
         }
     }
 
@@ -93,7 +96,7 @@ class AssessmentModel extends Model
                 ->insert(
                     [
                         'uuid'                  => $subject['id'] ?? Str::ulid(),
-                        'assessment_id'         => $this->id, 
+                        'assessment_id'         => $this->uuid, 
                         'subject_id'            => $key, 
                         'is_published'          => $subject['is_published'] === 'Published' ? true : false, 
                         'class_id'              => $subject['class_id'],
