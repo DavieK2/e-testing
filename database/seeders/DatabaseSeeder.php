@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@soncal.com',
             'password' => Hash::make('SONCALadmin1234!'),
             'phone_no' => '2345678900000',
-            'role_id' => $role3->id
+            'role_id' => $role3->uuid
         ]);
         UserModel::create([
             'fullname'  => 'Test Teacher',
