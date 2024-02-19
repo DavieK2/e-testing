@@ -30,7 +30,7 @@ class AssessmentResultController extends Controller
 
         $data = $request->validated();
 
-        $assessment = AssessmentModel::find( $data['assessmentId'] );
+        $assessment = AssessmentModel::firstWhere('uuid', $data['assessmentId'] );
         $subject = SubjectModel::find( $data['subjectId'] ); 
         $class = ClassModel::find( $data['classId'] );
 

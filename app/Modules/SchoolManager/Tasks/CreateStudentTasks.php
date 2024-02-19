@@ -10,8 +10,16 @@ class CreateStudentTasks extends BaseTasks{
 
     public function createStudent()
     {
-        $count = StudentProfileModel::count() + 1;
-        $student_code = 'JEPH-'.str_pad(strval($count), 4, '0', STR_PAD_LEFT).'-'.Str::random(4);
+        if( $this->item['studentCode'] ){
+
+            $student_code = $this->item['studentCode'];
+
+        }else{
+            
+            $count = StudentProfileModel::count() + 1;
+            $student_code = 'JEPH-'.str_pad(strval($count), 4, '0', STR_PAD_LEFT).'-'.Str::random(4);
+        }
+      
 
         $student = StudentProfileModel::create([
             'uuid'          =>  Str::ulid(),

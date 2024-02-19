@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\SchoolManager\Requests;
+namespace App\Modules\CBT\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateSubjectRequest extends FormRequest
+class GetAssessmentQuestionSectionRequest extends FormRequest
 {
     public function authorize()
     {
@@ -14,9 +14,8 @@ class UpdateSubjectRequest extends FormRequest
     public function rules()
     {
         return [
+            'classId'       => 'required|exists:classes,class_code',
             'subjectId'     => 'required|exists:subjects,uuid',
-            'subjectName'   => 'required',
-            'subjectCode'   => 'nullable'
         ];
     }
 }

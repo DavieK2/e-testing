@@ -143,18 +143,20 @@ class QuestionListResource extends JsonResource
        }
 
         return [
-            'questionId'    => $this->uuid,
-            'question'      => $question,
-            'correctAnswer' => $this->correct_answer,
-            'options'       => $options,
-            'source'        => $request->assigned ? 'assigned' : 'assessment',
-            'questionScore' => $this->question_score,
-            'questionType'  => $this->question_type,
+            'questionId'        => $this->uuid,
+            'questionBankId'    => $this->question_bank_id,
+            'question'          => $question,
+            'correctAnswer'     => $this->correct_answer,
+            'options'           => $options,
+            'source'            => $request->assigned ? 'assigned' : 'assessment',
+            'questionScore'     => $this->question_score,
+            'questionType'      => $this->question_type,
             // 'assessmentId'  => $this->assessmentId,
-            'topicId'       => $this->topicId,
-            'sectionId'     => $this->sectionId ?? 'No Section',
-            'sectionTitle'  => $this->sectionTitle ?? 'No Section',
-            'isVisible'     => true,
+            'topicId'           => $this->topicId,
+            'sectionId'         => $this->sectionId ?? 'No Section',
+            'sectionTitle'      => $this->sectionTitle ?? 'No Section',
+            'isVisible'         => true,
+            'isAssigned'        => isset($this->isAssigned) ? $this->isAssigned : null
         ];
     }
 }

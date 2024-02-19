@@ -18,9 +18,9 @@ class UpdateQuestionTask extends BaseTasks{
 
         $options = $task->formatQuestionOptions($this->item['options'], $this->item['correctAnswer']);
 
-        $questionBankId = QuestionBankModel::firstWhere('uuid', $this->item['questionBankId'] ?? null )?->id;
-        $topicId = TopicModel::firstWhere('uuid', $this->item['topicId'] ?? null )?->id;
-        $sectionId = SectionModel::firstWhere('uuid', $this->item['sectionId'] ?? null )?->id;
+        $questionBankId = QuestionBankModel::firstWhere('uuid', $this->item['questionBankId'] ?? null )?->uuid;
+        $topicId = TopicModel::firstWhere('uuid', $this->item['topicId'] ?? null )?->uuid;
+        $sectionId = SectionModel::firstWhere('uuid', $this->item['sectionId'] ?? null )?->uuid;
        
 
         $this->item['oldQuestion']->update([

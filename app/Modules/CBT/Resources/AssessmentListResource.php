@@ -13,6 +13,7 @@ class AssessmentListResource extends BaseResource
             'assessmentId' => $this->uuid,
             'isStandalone' => $this->is_standalone ? 'Quiz' : 'Exam',
             'title' => $this->title,
+            'assessment_code' => $this->assessment_code,
             'assessmentType' => $this->type,
             'session' => $this->session ? $this->session : '',
             'status' => $this->is_published ? 'Published' : 'Unpublished',
@@ -21,7 +22,7 @@ class AssessmentListResource extends BaseResource
             'endDate' => Carbon::parse($this->end_date)->format('D, M d Y h:i A'),
             'description' => $this->description,
             'duration' => $this->assessment_duration,
-            'assessmentLink' => url("/cbt/".$this->uuid)
+            'assessmentLink' => url("/cbt/".$this->assessment_code)
         ];
     }
 }

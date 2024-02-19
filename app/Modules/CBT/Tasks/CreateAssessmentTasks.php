@@ -24,7 +24,7 @@ class CreateAssessmentTasks extends BaseTasks {
 
         $assessment_id = Str::random(8);
 
-        $assessment = AssessmentModel::create(['uuid' =>  $assessment_id , ...$this->getAssessmentData() ]);
+        $assessment = AssessmentModel::create(['assessment_code' =>  $assessment_id , ...$this->getAssessmentData() ]);
 
         return new static([ ...$this->item, 'assessmentId' => $assessment->uuid, 'isStandalone' => $assessment->is_standalone ? true : false ]);
 

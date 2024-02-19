@@ -16,6 +16,7 @@ class UpdateStudentProfileRequest extends FormRequest
         return [
             'studentId'     => 'required|exists:student_profiles,uuid',
             'firstName'      => 'required|string',
+            'studentCode'   => 'nullable|string',
             'surname'       => 'required|string',
             'classId'       => 'required|exists:classes,uuid',
             'profilePic'     => 'nullable|string'

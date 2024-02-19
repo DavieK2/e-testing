@@ -16,6 +16,7 @@ class CreateStudentRequest extends FormRequest
         return [
             'firstName'      => 'required|string',
             'surname'       => 'required|string',
+            'studentCode'   => 'nullable|string',
             'classId'       => 'required|exists:classes,uuid',
             'profilePic'     => 'nullable|string'
         ];

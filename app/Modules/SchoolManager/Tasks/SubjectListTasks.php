@@ -9,7 +9,7 @@ class SubjectListTasks extends BaseTasks{
 
     public function getSubjects()
     {
-        return new static( [ ...$this->item, 'query' => SubjectModel::query()->select('uuid as subjectId', 'subject_name as subjectName') ]);
+        return new static( [ ...$this->item, 'query' => SubjectModel::query()->select('uuid as subjectId', 'subject_name as subjectName', 'subject_code as subjectCode') ]);
     }
     
 }

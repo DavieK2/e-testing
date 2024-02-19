@@ -14,6 +14,8 @@ class MassAssignUnQuestionsRequest extends FormRequest
     public function rules()
     {       
         return [
+            'subjectId'     => 'required|exists:subjects,uuid',
+            'classId'       => 'required|exists:classes,class_code',
             'questions'     => 'required|array',
             'questions.*'   => 'exists:questions,uuid'
         ];

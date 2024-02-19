@@ -13,16 +13,21 @@ use App\Modules\CBT\Features\GetPublishedAssessmentFeature;
 use App\Modules\CBT\Features\UpdateAssessmentFeature;
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Models\QuestionBankModel;
+use App\Modules\CBT\Models\SectionModel;
 use App\Modules\CBT\Requests\AssessmentListRequest;
 use App\Modules\CBT\Requests\AssignClassesToAssessmentRequest;
 use App\Modules\CBT\Requests\CompleteAssessmentRequest;
+use App\Modules\CBT\Requests\CreateAssessmentQuestionSectionRequest;
 use App\Modules\CBT\Requests\CreateAssessmentRequest;
+use App\Modules\CBT\Requests\GetAssessmentQuestionSectionRequest;
 use App\Modules\CBT\Requests\GetAssessmentSubjectRequest;
 use App\Modules\CBT\Requests\PublishAssessmentRequest;
 use App\Modules\CBT\Requests\PublishTermlyAssessmentRequest;
 use App\Modules\CBT\Requests\UpdateAssessmentRequest;
 use App\Modules\SchoolManager\Models\ClassModel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 
 class AssessmentController extends Controller
 {
@@ -87,9 +92,9 @@ class AssessmentController extends Controller
 
         $assessment = AssessmentModel::firstWhere('uuid', $data['assessmentId']);
 
-        $class = ClassModel::firstWhere('class_code', $data['classId'])->id;
+        $class = ClassModel::firstWhere('class_code', $data['classId'])->uuid;
 
-        DB::table('assessment_subjects')->where(fn($query) => $query->where('assessment_id', $assessment->id)->where('subject_id', $data['subjectId'])->where('class_id', $class))
+        DB::table('assessment_subjects')->where(fn($query) => $query->where('assessment_id', $assessment->uuid)->where('subject_id', $data['subjectId'])->where('class_id', $class))
             ->limit(1)
             ->update([ 'is_published' => $data['shouldPublish'] ]); 
 
@@ -107,6 +112,13 @@ class AssessmentController extends Controller
                                             ->select('question_banks.*', 'subjects.subject_name', 'subjects.subject_code', 'users.fullname')
                                             ->get();
 
+        $class = request('class');
+        $subject = request('subject');
+
+        if( $class && $subject ){
+            $question_banks = $question_banks->filter( fn( $question_bank ) => ( $question_bank->subject_id == $subject ) &&  ( in_array( $class, json_decode($question_bank->classes, true ) ?? [] ) ) );
+        }
+
         $question_banks = $question_banks->map(function($question_bank){
 
             return [
@@ -118,7 +130,9 @@ class AssessmentController extends Controller
                 'isVisible'      => true,
                 'classes'        => collect(json_decode($question_bank->classes, true))->flatMap( fn($class) => [ ClassModel::firstWhere('class_code', $class)->class_name ] )->toArray(),
             ];
-        });
+        })->values()->toArray();
+
+        
 
         return response()->json([
             'data' => $question_banks
@@ -131,5 +145,38 @@ class AssessmentController extends Controller
         
     }
 
-    
+    public function createAssessmentSection(AssessmentModel $assessment, CreateAssessmentQuestionSectionRequest $request)
+    {
+        $data = $request->validated();
+
+        SectionModel::create([
+            'class_id'          => ClassModel::firstWhere('class_code', $data['classId'])->uuid,
+            'subject_id'        => $data['subjectId'],
+            'title'             => $data['title'],
+            'assessment_id'     => $assessment->uuid,
+            'section_code'      => Str::random(6),
+            'question_type'     => $data['questionType'],
+            'description'       => $data['description']
+        ]);
+
+        return response()->json([
+            'message' => 'Section Successfully Created'
+        ]);
+    }
+
+    public function getAssessmentSections(AssessmentModel $assessment, GetAssessmentQuestionSectionRequest $request)
+    {
+        $data = $request->validated();
+
+        $sections = SectionModel::where('assessment_id', $assessment->uuid)
+                                ->where('subject_id', $data['subjectId'])
+                                ->where('class_id', ClassModel::firstWhere('class_code', $data['classId'])->uuid )
+                                ->select('uuid as sectionId', 'title  as sectionTitle', 'description as sectionDescription', 'question_type as questionType')
+                                ->get();
+
+        return response()->json([
+            'data' => $sections
+        ]);
+
+    }
 }

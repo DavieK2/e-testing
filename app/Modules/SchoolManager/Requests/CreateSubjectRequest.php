@@ -14,7 +14,8 @@ class CreateSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'subjectName' => 'required'
+            'subjectName' => 'required',
+            'subjectCode' => 'nullable',
         ];
     }
 }

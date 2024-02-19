@@ -41,7 +41,8 @@ require __DIR__ . '/auth.php';
 
 Route::get('/', function(){
     
-    Artisan::call('migrate', ['--path' => 'database/migrations/2023_11_08_085956_add_section_id_to_assessment_questions_table.php', '--force' => true ]);
+    dd(  DB::table('student_profiles')->where('class_id', "1")->get() );
+    // Artisan::call('migrate', ['--path' => 'database/migrations/2023_11_08_085956_add_section_id_to_assessment_questions_table.php', '--force' => true ]);
     // DB::table('computed_assessment_results')
     //     ->join('student_profiles', 'student_profiles.id', '=', 'computed_assessment_results.student_profile_id')
     //     ->where(fn($query) => $query->where('computed_assessment_results.academic_session_id', 2)
@@ -118,7 +119,7 @@ Route::get('/', function(){
 
 Route::middleware(['auth'])->group(function(){
 
-    Route::get('/students/check-in/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/CheckIn/Index', ['assessmentId' => $assessment->uuid]) );
+    Route::get('/students/check-in/{assessment:assessment_code}', fn(AssessmentModel $assessment) => Inertia::render('CBT/CheckIn/Index', ['assessmentId' => $assessment->uuid]) );
 
     Route::get('/dashboard', fn() => Inertia::render('Dashboard/Index') );
 
@@ -135,6 +136,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/assessments/termly/classes/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Assessment/termly/TermlyAssessmentClasses', ['assessmentId' => $assessment->uuid, 'title' => $assessment->title ]) );
     Route::get('/assessments/termly/schedule/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Assessment/termly/TermlyAssessmentSchedule', ['assessmentId' => $assessment->uuid, 'title' => $assessment->title ]) );
     Route::get('/assessments/termly/view/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Assessment/termly/View', ['assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title ]) );
+    Route::get('/assessments/termly/manage/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Assessment/termly/Manage', ['assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title ]) );
+    
     Route::get('/assessments/termly/question_bank/create/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Assessment/termly/question_bank/Create', ['assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title ]) );
     
     Route::get('/assessments/termly/question_bank/edit/{question_bank:uuid}', function(QuestionBankModel $question_bank){
@@ -173,6 +176,8 @@ Route::middleware(['auth'])->group(function(){
         return Inertia::render('CBT/Questions/Create', ['assessmentId' => $assessment->uuid, 'title' => $assessment->title ] );
     } );
 
+    Route::get('/questions/create/t/{assessment:uuid}/{subject}/{class}', fn(AssessmentModel $assessment, $subject, $class) => Inertia::render('CBT/Questions/Create', ['assessmentId' => $assessment->uuid, 'subjectId' => $subject, 'classId' => $class, 'assessmentTitle' => $assessment->title, 'subjectTitle' => SubjectModel::find($subject)->subject_name, 'questionBankClasses' => ClassModel::firstWhere('class_code', $class)->class_name  ]) );
+    
     Route::get('/assessment/questions/t/{question_bank:uuid}', function(QuestionBankModel $question_bank){
 
         $assessment = AssessmentModel::find( $question_bank->assessment_id );
@@ -185,7 +190,7 @@ Route::middleware(['auth'])->group(function(){
 
         $classes = implode(' | ', $classes);
 
-        return Inertia::render('CBT/Questions/Create', [ 'questionBankId' => $question_bank->uuid , 'assessmentId' => $assessment->uuid, 'questionBankClasses' => $classes, 'assessmentTitle' => $assessment->title, 'subjectTitle' => $subject->subject_name ] );
+        return Inertia::render('CBT/Assessment/termly/question_bank/Question', [ 'questionBankId' => $question_bank->uuid , 'assessmentId' => $assessment->uuid, 'questionBankClasses' => $classes, 'assessmentTitle' => $assessment->title, 'subjectTitle' => $subject->subject_name ] );
     } );
 
     //Classes
@@ -233,11 +238,11 @@ Route::middleware(['auth:student', 'cbt', 'cbt.session'])->group(function() {
 
     Route::get('/completed/cbt/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Exams/Complete', [ 'assessmentId' => $assessment->uuid ] ) );
 
-    Route::get('/cbt/{assessment:uuid}/s', fn(AssessmentModel $assessment) => Inertia::render('CBT/Exams/Standalone', [ 'assessmentId' => $assessment->uuid ]) ) ;
+    Route::get('/cbt/{assessment:assessment_code}/s', fn(AssessmentModel $assessment) => Inertia::render('CBT/Exams/Standalone', [ 'assessmentId' => $assessment->uuid ]) ) ;
    
     Route::get('/cbt/save-session/student/{assessment:uuid}', [ ExamController::class, 'examSessionTimer' ]);
     
-    Route::get('/cbt/{assessment:uuid}/t', fn(AssessmentModel $assessment) => Inertia::render('CBT/Exams/Termly/Index', [ 'assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title ]) ) ;
+    Route::get('/cbt/{assessment:assessment_code}/t', fn(AssessmentModel $assessment) => Inertia::render('CBT/Exams/Termly/Index', [ 'assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title ]) ) ;
 
     Route::get('/cbt/{assessment:uuid}/t/i', fn(AssessmentModel $assessment) => Inertia::render('CBT/Exams/Termly/Exam', [ 'assessmentId' => $assessment->uuid ]) ) ;  
 });

@@ -42,10 +42,16 @@ Route::middleware(['auth:sanctum'])->group(function(){
     //Assessment Question Creation
     Route::post('/question/create/{assessment:uuid}', [ QuestionController::class, 'create']);
     Route::post('/question/update/{question:uuid}', [ QuestionController::class, 'update']);
-
+    
+   
     Route::get('/question-types', [ QuestionController::class, 'getQuestionTypes']);
     
     Route::get('/assessment/question-banks/{assessment:uuid}', [ AssessmentController::class, 'getQuestionBanks']);
+
+    Route::post('/question/assessment/section/create/{assessment:uuid}', [ AssessmentController::class, 'createAssessmentSection']);
+    Route::get('/question/assessment/section/get/{assessment:uuid}', [ AssessmentController::class, 'getAssessmentSections']);
+
+
     Route::get('/assessment-subjects/{assessment:uuid}', [ AssessmentController::class, 'getAssessmentSubjects' ]);
     Route::get('/assessment-classes/{assessment:uuid}', [ AssessmentController::class, 'getAssessmentClasses' ]);
     
@@ -64,8 +70,8 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::post('/question/assign/{assessment:uuid}', [ QuestionController::class, 'assignQuestionToAssessment']);
     Route::post('/question/unassign/{assessment:uuid}', [ QuestionController::class, 'unAssignQuestionFromAssessment']);
 
-    Route::post('/question/mass-assign/{question_bank:uuid}', [ QuestionController::class, 'massAssignQuestions']);
-    Route::post('/question/mass-unassign/{question_bank:uuid}', [ QuestionController::class, 'massUnassignQuestions']);
+    Route::post('/question/mass-assign/{assessment:uuid}', [ QuestionController::class, 'massAssignQuestions']);
+    Route::post('/question/mass-unassign/{assessment:uuid}', [ QuestionController::class, 'massUnassignQuestions']);
 
 });
 
@@ -108,6 +114,7 @@ Route::post('/student-profile/create', [ StudentController::class, 'createStuden
 
 Route::post('/student/assign-subjects', [ StudentController::class, 'assignStudentToSubject']);
 Route::get('/student/assigned-subjects/{student}', [ StudentController::class, 'getStudentAssignedSubjects']);
+Route::post('/students/mass-assign-subjects', [ StudentController::class, 'massAssignSubjectsToStudents']);
 
 Route::get('/teachers', [ UserController::class, 'teachers']);
 Route::post('/teacher/create', [ UserController::class, 'createTeacher']);

@@ -26,6 +26,8 @@ class SyncOnlineDatabaseToLocalCommand extends Command
     
             if( ! $request->ok() ){
     
+                $this->info($request->json());
+
                 return ;
             }
     
@@ -66,12 +68,12 @@ class SyncOnlineDatabaseToLocalCommand extends Command
     
                             })->toArray();
     
+                            if( isset( $row['id'] ) ) unset( $row['id'] );
+
                             $row['is_synced'] = true;
 
-                            if( ! DB::table($table)->where('uuid', $row['uuid'] )->first() ){
-
-                                DB::table($table)->insert($row);  
-                            }
+                            DB::table($table)->updateOrInsert([ 'uuid' => $row['uuid'] ], $row);  
+                            
                             
                         });
                         

@@ -11,6 +11,7 @@ use App\Modules\SchoolManager\Models\StudentProfileModel;
 use App\Modules\SchoolManager\Requests\AssignSubjectToStudentRequest;
 use App\Modules\SchoolManager\Requests\CreateStudentRequest;
 use App\Modules\SchoolManager\Requests\CreateSudentProfileRequest;
+use App\Modules\SchoolManager\Requests\MassAssignSubjectsToStudentsRequest;
 use App\Modules\SchoolManager\Requests\StudentListRequest;
 use App\Modules\SchoolManager\Requests\UpdateStudentProfileRequest;
 use Illuminate\Support\Str;
@@ -33,7 +34,7 @@ class StudentController extends Controller
         
         $student = StudentProfileModel::firstWhere('uuid', $data['studentId']);
 
-        $student->update(['first_name' => $data['firstName'], 'surname' => $data['surname'], 'class_id' => $data['classId'], 'profile_pic' => $data['profilePic'] ?? null ]);
+        $student->update(['first_name' => $data['firstName'], 'surname' => $data['surname'], 'class_id' => $data['classId'], 'profile_pic' => $data['profilePic'] ?? null, 'student_code' => $data['studentCode'] ?? null ]);
 
         return response()->json(['message' => 'Success']);
     }
@@ -63,5 +64,18 @@ class StudentController extends Controller
         ]);
 
         return response()->json(['message' => 'Success']);
+    }
+
+    public function massAssignSubjectsToStudents(MassAssignSubjectsToStudentsRequest $request)
+    {
+        $data = $request->validated();
+
+        foreach ( $data['students'] as $student ) {
+            
+            StudentProfileModel::find( $student )->assignSubject( $data['subjects'] );
+        }
+
+        return response()->json(['message' => 'Success']);
+
     }
 }

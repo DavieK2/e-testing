@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('sections', function(Blueprint $table){
             $table->ulid('uuid')->unique()->index();
-            $table->foreignUlid('question_bank_id')->constrained( table: 'question_banks', column: 'uuid' );
+            $table->foreignUlid('question_bank_id')->nullable()->constrained( table: 'question_banks', column: 'uuid' );
             $table->string('section_code')->unique();
             $table->string('title');
             $table->longText('description');

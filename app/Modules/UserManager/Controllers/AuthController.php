@@ -61,7 +61,7 @@ class AuthController extends Controller
 
         $token = $student->createToken('student-exam')->plainTextToken;
 
-        $url = url("/cbt/{$assessment->uuid}/");
+        $url = url("/cbt/{$assessment->assessment_code}/");
         $url = $assessment->is_standalone ? "$url/s" : "$url/t";
 
         return response()->json([

@@ -4,16 +4,15 @@ namespace App\Console\Commands;
 
 use App\Modules\SchoolManager\Models\StudentProfileModel;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class MassAssignCourseToStudentCommand extends Command
 {
-    protected $signature = 'app:assign-course';
+    protected $signature = 'update:level';
     protected $description = 'Command description';
 
     public function handle()
     {
-        StudentProfileModel::where('class_id', 1)->get()->each(function($student){
-            $student->assignSubject([14,15,16,17,18,19,20]);
-        });
+        DB::table('student_profiles')->where('class_id', "1")->update(['class_id' => '01HPRNPJ9EHM1VPMHQQPCKAXM3']);
     }
 }

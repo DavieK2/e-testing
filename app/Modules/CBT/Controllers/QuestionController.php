@@ -13,8 +13,11 @@ use App\Modules\CBT\Features\UpdateQuestionFeature;
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Models\QuestionBankModel;
 use App\Modules\CBT\Models\QuestionModel;
+use App\Modules\CBT\Models\SectionModel;
 use App\Modules\CBT\Requests\AssignQuestionToAssessmentRequest;
+use App\Modules\CBT\Requests\CreateAssessmentQuestionSectionRequest;
 use App\Modules\CBT\Requests\CreateQuestionRequest;
+use App\Modules\CBT\Requests\GetAssessmentQuestionSectionRequest;
 use App\Modules\CBT\Requests\ImportQuestionsRequest;
 use App\Modules\CBT\Requests\MassAssignQuestionsRequest;
 use App\Modules\CBT\Requests\MassAssignUnQuestionsRequest;
@@ -68,42 +71,35 @@ class QuestionController extends Controller
         ]);
     }
 
-    public function massAssignQuestions(QuestionBankModel $question_bank, MassAssignQuestionsRequest $request)
+    public function massAssignQuestions(AssessmentModel $assessment, MassAssignQuestionsRequest $request)
     {
         $data = $request->validated();
 
-        $assessment = AssessmentModel::find( $question_bank->assessment_id );
-
         foreach ( $data['questions'] as $question ) {
 
-            foreach ( json_decode($question_bank->classes, true ) as $classId) {
-                
-                $assessment->assignQuestion( $question, $question_bank->subject_id, $classId, $data['sectionId'] );
-            }
+            $assessment->assignQuestion( $question, $data['subjectId'], $data['classId'], $data['sectionId'] );
+            
         }
 
         return response()->json([
-            'message' => 'Questions Successfully assigned'
+            'message' => 'Questions Successfully Assigned'
         ]);
 
     }
 
-    public function massUnassignQuestions(QuestionBankModel $question_bank, MassAssignUnQuestionsRequest $request)
+    public function massUnassignQuestions(AssessmentModel $assessment, MassAssignUnQuestionsRequest $request)
     {
         $data = $request->validated();
 
-        $assessment = AssessmentModel::find( $question_bank->assessment_id );
-
+      
         foreach ( $data['questions'] as $question ) {
-
-            foreach ( json_decode($question_bank->classes, true ) as $classId) {
                 
-                $assessment->unAssignQuestion( $question, $classId, $question_bank->subject_id );
-            }
+            $assessment->unAssignQuestion( $question, $data['classId'], $data['subjectId'] );
+            
         }
 
         return response()->json([
-            'message' => 'Questions Successfully assigned'
+            'message' => 'Questions Successfully Unassigned'
         ]);
 
     }

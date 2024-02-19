@@ -11,7 +11,7 @@ class UpdateSubjectTasks extends BaseTasks{
     {
         $subject = SubjectModel::find($this->item['subjectId']);
 
-        $subject->update(['subject_name' => $this->item['subjectName']]);
+        $subject->update(['subject_name' => $this->item['subjectName'], 'subject_code' => $this->item['subjectCode'] ?? null ]);
 
         return new static( $this->item );
     }
