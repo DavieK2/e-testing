@@ -18,7 +18,16 @@ class GetAssessmentSubjectsTasks extends BaseTasks{
             $subjects->where('assessment_subjects.class_id', $this->item['classId'] );
         }
         
-        $subjects = $subjects->get()->unique('subjectCode')->toArray();
+        $subjects = $subjects->get()->unique('subjectCode')->map( fn($subject) => [
+            'subjectId'     => $subject->subjectId,
+            'subjectName'   => $subject->subjectName,
+            'subjectCode'   => $subject->subjectCode,
+            'classId'       => $subject->classId,
+            'duration'      => ( $subject->duration ) / 60,
+            'startDate'     => $subject->startDate,
+            'endDate'       => $subject->endDate,
+            'published'     => $subject->published,
+        ])->toArray();
 
         return new static( $subjects );
     }
