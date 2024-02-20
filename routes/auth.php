@@ -14,7 +14,9 @@ Route::get('two-factor', fn() =>  Inertia::render(UserManagerConstants::TWO_FACT
 
 Route::post('adminer/login', [AuthController::class, 'login']);
 
-Route::get('/cbt/{assessment:assessment_code}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Student/Login', [ 'assessmentId' => $assessment->uuid ]) )->middleware('cbt') ;
+Route::post('user/logout', [AuthController::class, 'logout'])->middleware(['auth']);
+
+Route::get('/cbt/{assessment:assessment_code}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Student/Login', [ 'assessmentId' => $assessment->uuid, 'assessmentCode' => $assessment->assessment_code  ]) )->middleware('cbt') ;
 Route::post('/cbt/{assessment:uuid}', [ AuthController::class, 'CBTLogin'])->middleware('cbt');
 
 Route::post('/cbt/{assessment:assessment_code}/logout', [ AuthController::class, 'CBTLogout'])->middleware(['auth:student']);

@@ -21,6 +21,18 @@ class AuthController extends Controller
         return $this->serve(new LoginFeature(), $request->validated());
     }
 
+    public function logout()
+    {
+        $user = auth()->user();
+        
+        $user->tokens()->delete();
+
+        auth()->logout($user);
+
+        return response()->json(['message' => 'Success']);
+
+    }
+
     public function  get2FA()
     {
         return $this->serve(new TwoFactorAuthenticationFeature( request()->user() ));
