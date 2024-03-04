@@ -49,15 +49,15 @@ class QuestionBankTasks extends BaseTasks {
 
         }
 
-        if( isset( $this->item['classId'] ) ){
+        // if( isset( $this->item['classId'] ) ){
 
-            $classId = ClassModel::firstWhere( 'class_code', $this->item['classId'] )->uuid;
-            $questions = $questions->where( fn($query) => $query->where('questions.class_id', $classId ) );
+        //     $classId = ClassModel::firstWhere( 'class_code', $this->item['classId'] )->uuid;
+        //     $questions = $questions->where( fn($query) => $query->where('questions.class_id', $classId ) );
 
-        }
+        // }
 
         // if( isset( $this->item['assessmentId']) ){
-            $questions = $questions->where( fn($query) => $query->where('assessment_questions.assessment_id', AssessmentModel::first()?->uuid ) );
+        //     $questions = $questions->where( fn($query) => $query->where('assessment_questions.assessment_id', '!=', $this->item['assessmentId'] ) );
         // }
         
         if( isset( $questions ) ){
