@@ -40,15 +40,8 @@ class QuestionBankTasks extends BaseTasks {
         $questions = DB::table('assessment_questions')
                         ->join('questions', 'questions.uuid', '=', 'assessment_questions.question_id')
                         ->join('assessments', 'assessments.uuid', '=', 'questions.assessment_id')
-                        ->select('questions.question', 'questions.options', 'questions.correct_answer', 'questions.uuid', 'questions.subject_id', 'questions.question_score', 'assessments.uuid as assessmentId');
+                        ->select('questions.*');
 
-        if( isset( $this->item['assessmentId'] ) ){
-
-            $assessmentId = AssessmentModel::firstWhere('uuid', $this->item['assessmentId'])->id;
-
-            $questions = $questions->where( fn($query) => $query->where('assessment_questions.assessment_id', '!=', $assessmentId) );
-            
-        }
 
         if( isset( $this->item['subjectId'] ) ){
 
@@ -61,6 +54,20 @@ class QuestionBankTasks extends BaseTasks {
             $classId = ClassModel::firstWhere( 'class_code', $this->item['classId'] )->uuid;
             $questions = $questions->where( fn($query) => $query->where('questions.class_id', $classId ) );
 
+        }
+
+        if( isset( $this->item['assessmentId']) ){
+            $questions = $questions->where( fn($query) => $query->where('assessment_questions.assessment_id', '!=', $this->item['assessmentId'] ) );
+        }
+        
+        if( isset( $questions ) ){
+
+
+            $questions = $questions->leftJoin('topics', 'topics.uuid', '=', 'questions.topic_id')
+                                    ->leftJoin('sections', 'sections.uuid', '=', 'questions.section_id')
+                                    ->selectRaw("questions.*, sections.uuid as sectionId, sections.title as sectionTitle, topics.uuid as topicId")
+                                    // ->whereNull('questions.assessmentId')
+                                    ->orderBy('questions.created_at');
         }
 
         return new static([ ...$this->item, 'query' => $questions ]);

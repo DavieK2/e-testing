@@ -156,7 +156,7 @@ class QuestionListResource extends JsonResource
             'sectionId'         => $this->sectionId ?? 'No Section',
             'sectionTitle'      => $this->sectionTitle ?? 'No Section',
             'isVisible'         => true,
-            'isAssigned'        => isset($this->isAssigned) ? $this->isAssigned : null
+            'isAssigned'        => isset($this->isAssigned) ? $this->isAssigned : ($this->assessment_id == request('assessmentId') ? 'Assigned' : 'Not Assigned')
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Modules\CBT\Features;
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
 use App\Modules\CBT\Resources\QuestionBankCollection;
+use App\Modules\CBT\Resources\QuestionListCollection;
 use App\Modules\CBT\Tasks\QuestionBankTasks;
 
 class QuestionBankFeature extends FeatureContract {
@@ -23,7 +24,7 @@ class QuestionBankFeature extends FeatureContract {
                 $builder = $builder->$key();
             }
 
-            return $task::formatResponse( $builder, formatter: QuestionBankCollection::class );
+            return $task::formatResponse( $builder, formatter: QuestionListCollection::class );
 
         } catch (\Throwable $th) {
             throw $th;
