@@ -56,9 +56,9 @@ class QuestionBankTasks extends BaseTasks {
 
         }
 
-        if( isset( $this->item['assessmentId']) ){
-            $questions = $questions->where( fn($query) => $query->where('assessment_questions.assessment_id', '!=', $this->item['assessmentId'] ) );
-        }
+        // if( isset( $this->item['assessmentId']) ){
+            $questions = $questions->where( fn($query) => $query->where('assessment_questions.assessment_id', AssessmentModel::first()?->uuid ) );
+        // }
         
         if( isset( $questions ) ){
 
