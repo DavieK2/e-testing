@@ -38,11 +38,11 @@ class UpdateQuestionRequest extends FormRequest
                                     }
                                    
                                 }],
-            'questionScore'     => 'required|integer',
+            'questionScore'     => 'required|numeric',
             'questionType'      => 'required|in:'.implode(',', QuestionModel::QUESTION_TYPES),
             'questionBankId'    => [ Rule::requiredIf( fn() => ! $assessment?->is_standalone ), 'exists:question_banks,uuid'],
             'sectionId'         => [ Rule::requiredIf( fn() => ! $assessment?->is_standalone ), 'exists:sections,uuid'],
-            'topicId'           => [ Rule::requiredIf( fn() => ( ! $assessment?->is_standalone ) && request()->user()->is_teacher ),'nullable', 'exists:topics,uuid'],
+            'topicId'           => ['nullable', 'exists:topics,uuid'],
         ];
     }
 }
