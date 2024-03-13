@@ -54,3 +54,4 @@ volumes:
 networks:
   example-net:
     driver: bridge
+    name: example-net
