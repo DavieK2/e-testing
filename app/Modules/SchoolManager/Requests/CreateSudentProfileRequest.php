@@ -19,6 +19,9 @@ class CreateSudentProfileRequest extends FormRequest
             'regNo' => 'required',
             'profilePic' => 'required',
             'level' => 'required',
+            'session' => 'required',
+            'programOfStudy' => 'required',
+            'email' => 'required',
         ];
     }
 }

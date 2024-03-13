@@ -52,7 +52,7 @@ class StudentController extends Controller
     public function createStudentProfile(CreateSudentProfileRequest $request)
     {
         $data = $request->validated();
-
+        
         StudentProfileModel::create([
             'uuid' => Str::ulid(),
             'first_name' => $data['firstName'],
@@ -61,6 +61,10 @@ class StudentController extends Controller
             'reg_no' => $data['regNo'],
             'profile_pic' => $data['profilePic'],
             'class_id' => $data['level'],
+            'email' => $data['email'],
+            'session' => $data['session'],
+            'program_of_study' => $data['programOfStudy'],
+            'academic_session_id' => $data['session'],
         ]);
 
         return response()->json(['message' => 'Success']);

@@ -1,9 +1,9 @@
 /.phpunit.cache
 /node_modules
-# /resources/js/Pages
+/resources/js/Pages
 /public/hot
 /public/storage
-# /public/question_images/*
+/public/question_images/* 
 /public/syncs
 /public/sync_dl
 /public/imports
