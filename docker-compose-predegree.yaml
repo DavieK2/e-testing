@@ -55,3 +55,4 @@ networks:
   predegree-example-net:
     driver: bridge
     name: predegree-example-net
+    external: true
