@@ -20,6 +20,7 @@ class CreateSudentProfileRequest extends FormRequest
             'profilePic' => 'required',
             'level' => 'required',
             'session' => 'required',
+            'phoneNo' => 'required',
             'programOfStudy' => 'required',
             'email' => 'required',
         ];

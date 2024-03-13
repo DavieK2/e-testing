@@ -62,6 +62,7 @@ class StudentController extends Controller
             'profile_pic' => $data['profilePic'],
             'class_id' => $data['level'],
             'email' => $data['email'],
+            'phone_no' => $data['phoneNo'],
             'session' => $data['session'],
             'program_of_study' => $data['programOfStudy'],
             'academic_session_id' => $data['session'],
