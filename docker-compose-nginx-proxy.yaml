@@ -12,7 +12,7 @@ services:
       # Add any other Stream port you want to expose
       # - '21:21' # FTP
     networks:
-      - example-net
+      - predegree-example-net
     volumes:
       - ./:/var/www/html
       - ./data:/data
@@ -20,6 +20,6 @@ services:
 
 
 networks:
-  example-net:
+  predegree-example-net:
     driver: bridge
-    name: example-net
+    name: predegree-example-net

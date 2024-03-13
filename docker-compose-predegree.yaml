@@ -6,7 +6,7 @@ services:
           - ./public:/var/www/html/public
           - ./php/php.ini:/usr/local/etc/php/php.ini
         networks:
-          - example-net
+          - predegree-example-net
         restart: unless-stopped
         container_name: predegree_app
         tty: true
@@ -21,7 +21,7 @@ services:
         ports:
           - "3308:3306"
         networks:
-          - example-net
+          - predegree-example-net
         restart: unless-stopped
         command: --max_allowed_packet=325058560
         container_name: predegree_db
@@ -44,7 +44,7 @@ services:
         depends_on:
           - predegree_db
         networks:
-          - example-net
+          - predegree-example-net
 
         
 volumes:
@@ -52,6 +52,6 @@ volumes:
     letsencrypt:
 
 networks:
-  example-net:
+  predegree-example-net:
     driver: bridge
-    name: example-net
+    name: predegree-example-net
