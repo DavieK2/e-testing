@@ -1,23 +1,4 @@
 services:
-    predegree_web:
-        build:
-            dockerfile: nginx/Dockerfile
-        ports: 
-          - "80:80"
-          - "443:443"
-        restart: unless-stopped
-        tty: true
-        container_name: predegree_web
-        volumes: 
-          - ./public:/var/www/html/public
-          - letsencrypt:/etc/letsencrypt
-          - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-        networks:
-          - example-net
-        depends_on:
-          - predegree_app        
-    
-
     predegree_app:
         build:
             dockerfile: Dockerfile

@@ -1,0 +1,1 @@
+2024/03/13 17:15:41 [crit] 255#255: *69 realpath() "/var/www/html/public" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET / HTTP/1.1", host: "localhost"
