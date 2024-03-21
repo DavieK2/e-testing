@@ -3,7 +3,8 @@
 # /resources/js/Pages
 /public/hot
 /public/storage
-# /public/question_images/*
+/public/question_pics/*
+/public/question_images/*
 /public/syncs
 /public/sync_dl
 /public/imports

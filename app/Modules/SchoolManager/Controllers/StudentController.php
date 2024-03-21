@@ -6,14 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Modules\SchoolManager\Features\AssignSubjectToStudentFeature;
 use App\Modules\SchoolManager\Features\CreateStudentFeature;
 use App\Modules\SchoolManager\Features\GetStudentAssignedSubjectsFeature;
+use App\Modules\SchoolManager\Features\ImportStudentDataFromFileFeature;
 use App\Modules\SchoolManager\Features\StudentListFeature;
+use App\Modules\SchoolManager\Features\UploadStudentsFeature;
 use App\Modules\SchoolManager\Models\StudentProfileModel;
 use App\Modules\SchoolManager\Requests\AssignSubjectToStudentRequest;
 use App\Modules\SchoolManager\Requests\CreateStudentRequest;
 use App\Modules\SchoolManager\Requests\CreateSudentProfileRequest;
+use App\Modules\SchoolManager\Requests\ImportStudentDataFromFileRequest;
 use App\Modules\SchoolManager\Requests\MassAssignSubjectsToStudentsRequest;
 use App\Modules\SchoolManager\Requests\StudentListRequest;
 use App\Modules\SchoolManager\Requests\UpdateStudentProfileRequest;
+use App\Modules\SchoolManager\Requests\UploadStudentsRequest;
 use Illuminate\Support\Str;
 
 class StudentController extends Controller
@@ -47,6 +51,16 @@ class StudentController extends Controller
     public function getStudentAssignedSubjects(StudentProfileModel $student)
     {
         return $this->serve( new GetStudentAssignedSubjectsFeature($student) ) ;
+    }
+
+    public function upload( UploadStudentsRequest $request )
+    {
+        return $this->serve( new UploadStudentsFeature(), $request->validated() );
+    }
+
+    public function import ( ImportStudentDataFromFileRequest $request)
+    {
+        return $this->serve( new ImportStudentDataFromFileFeature(), $request->validated() );
     }
 
     public function createStudentProfile(CreateSudentProfileRequest $request)

@@ -4,6 +4,8 @@ namespace App\Modules\SchoolManager\Tasks;
 
 use App\Contracts\BaseTasks;
 use App\Modules\SchoolManager\Models\StudentProfileModel;
+use App\Modules\SchoolManager\Services\UploadCSVService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class CreateStudentTasks extends BaseTasks{
@@ -32,5 +34,19 @@ class CreateStudentTasks extends BaseTasks{
 
         return new static( [ ...$this->item, 'student' => $student ]);
     }
+
+    public function uploadCSV()
+    {
+        $upload = ( new UploadCSVService() )->saveFileToLocalDiskAndReturnFirstRowWithPath( 'imports/students', $this->item['file'] );
+
+        $key = Str::random(6);
+
+        Cache::put( $key, $upload['key'], now()->addMinutes(60) );
+
+        return new static( ['key' => $key, 'headings' => $upload['headings'] ]);
+
+    }
+
+    
     
 }

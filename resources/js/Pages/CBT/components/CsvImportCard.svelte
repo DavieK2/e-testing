@@ -27,9 +27,9 @@
 
 <div class="flex flex-col px-2.5 space-y-4">
     <div class="">
-        <h1 class="font-bold text-lg text-gray-800">Upload your Questions</h1>
+        <h1 class="font-bold text-lg text-gray-800">Upload File</h1>
         <p class="text-gray-500 text-xs mx-auto mt-3">
-            Click here to download the question template 
+            Click here to download the template 
         </p>
     </div>
     <div class="bg-red-50 border border-orange-300 p-5 rounded-lg">

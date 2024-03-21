@@ -9,6 +9,8 @@
     import SlidePanel from "../../components/slide_panel.svelte";
     import Layout from "../../layouts/Layout.svelte";
     import Dropdown from "../../components/dropdown.svelte";
+    import CsvImportCard from "../../CBT/components/CsvImportCard.svelte";
+    import Importmapper from "../../components/importmapper.svelte";
 
 
 
@@ -29,6 +31,8 @@
 
     let pic;
 
+    let zipFile;
+
     let selectedSubjects = [];
 
     let students = [];
@@ -38,6 +42,22 @@
     let slidePanelTitle;
 
     let showStudentForm
+
+    let importCard;
+
+    let importHeadings = []
+
+    let importOptions = [
+        { placeholder : "First Name", value: "firstName", isSelected: false },
+        { placeholder : "Last Name", value: "lastName", isSelected: false },
+        { placeholder : "Email", value: "email", isSelected: false },
+        { placeholder : "Phone Number", value: "phoneNo", isSelected: false },
+        { placeholder : "Student Reg No", value: "regNo", isSelected: false },
+        { placeholder : "Program of Study", value: "programOfStudy", isSelected: false },
+        { placeholder : "Passport", value: "passport", isSelected: false },
+        { placeholder : "Level", value: "level", isSelected: false },
+        { placeholder : "Session", value: "session", isSelected: false },
+    ];
 
     let studentData = {
         id : "",
@@ -70,6 +90,8 @@
 
     const panelState = {
         addNewStudent : "Add New Student",
+        upload : "Upload File",
+        importStudents : "Import Students Data",
         edit : "Edit Student Info",
         assignSubjects : "Assign Courses",
         massAssignCourses: "Assign Courses To Students"
@@ -158,6 +180,60 @@
         })
     }
 
+    const uploadStudents = () => {
+        
+        if( disabled ) return;
+
+        disabled = true;
+
+        let data = new FormData();
+
+        data.append('file', importCard.uploadFile);
+
+        router.postFormWithToken('/api/student/upload', data , {
+
+            onSuccess : (res) => {
+
+                // importKey = res.data.key;
+                importHeadings = res.data.headings;
+
+                slideFormState = panelState.importStudents
+                slidePanelTitle = panelState.importStudents
+
+                setTimeout(() => disabled = false, 2000 );
+            },
+            onError : () => {
+                setTimeout(() => disabled = false, 2000 );
+            }
+        })
+    }
+
+    const importStudents = (e) => {
+
+        // if( disabled ) return;
+
+        // disabled = true;
+
+        let data = new FormData();
+
+        data.append('file', zipFile[0]);
+       
+        data.append('mappings', JSON.stringify(e.detail) );
+
+
+        router.postFormWithToken('/api/student/import', data , {
+            onSuccess : (res) => {
+                
+            },
+            onError : (res) => {
+                
+            }
+        })
+
+        console.log();
+
+    }
+
     const deleteStudent = () => {
 
         router.post('/api/student/delete', { studentId: studentData.id }, {
@@ -186,6 +262,14 @@
 
         if(slideFormState === panelState.massAssignCourses){
             slidePanelTitle = panelState.massAssignCourses
+        }
+
+        if(slideFormState === panelState.upload){
+            slidePanelTitle = panelState.upload
+        }
+
+        if(slideFormState === panelState.importStudents){
+            slidePanelTitle = panelState.importStudents
         }
 
         showStudentForm = true
@@ -332,6 +416,7 @@
             </div>
             <div class="flex space-x-3">
                 <Button on:click={ () => showSheet(panelState.addNewStudent) } buttonText="Add New Student" className="text-sm min-w-max max-w-min" />
+                <Button on:click={ () => showSheet(panelState.upload) } buttonText="Import Students" className="text-sm min-w-max max-w-min" />
                 <Button on:click={ checkAll } buttonText={ checkedAll ? 'Uncheck All' : 'Check All'} className="text-sm min-w-max max-w-min" />
                 <Button on:click={ () => showSheet(panelState.massAssignCourses) } buttonText="Assign Courses" className="text-sm min-w-max max-w-min"  />
             </div>
@@ -431,5 +516,28 @@
             </div>
         </div>
     { /if }
+
+
+    { #if  slideFormState === panelState.upload }
+        <CsvImportCard { disabled } bind:this={ importCard } on:on-upload={ uploadStudents } />
+    {/if} 
+
+    { #if  slideFormState === panelState.importStudents }
+       <Importmapper
+        { disabled }
+
+        options={ importOptions }
+        headings={ importHeadings }
+        on:import={ importStudents }
+       >
+
+       <div class="py-8">
+            <input bind:files={ zipFile } type="file" accept=".zip" class="border border-gray-200 rounded-lg p-4">
+       </div>
+
+       </Importmapper>
+       
+      
+    {/if}
   
 </SlidePanel>
