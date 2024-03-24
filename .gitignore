@@ -5,6 +5,7 @@
 /public/storage
 /public/question_pics/*
 /public/question_images/*
+/public/profile_pics/*
 /public/syncs
 /public/sync_dl
 /public/imports

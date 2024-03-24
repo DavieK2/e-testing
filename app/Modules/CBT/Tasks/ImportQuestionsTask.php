@@ -101,7 +101,7 @@ class ImportQuestionsTask extends BaseTasks{
 
             $question = $data['question'];
 
-            $content = ( new Editor())->setContent("<p>$question</p>")->getDocument();
+            $content = ( new Editor() )->setContent("<p>$question</p>")->getDocument();
 
             $question = ['type' => 'html', 'content' => $content ];
 

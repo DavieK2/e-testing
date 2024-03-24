@@ -111,6 +111,7 @@ Route::post('/student/create', [ StudentController::class, 'create']);
 Route::post('/student/update', [ StudentController::class, 'update']);
 Route::post('/student/upload', [ StudentController::class, 'upload']);
 Route::post('/student/import', [ StudentController::class, 'import']);
+Route::post('/students/download', [ StudentController::class, 'downloadStudentData']);
 
 Route::post('/student-profile/create', [ StudentController::class, 'createStudentProfile']);
 

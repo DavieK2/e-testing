@@ -45,6 +45,7 @@
 
     let importCard;
 
+    let importKey;
     let importHeadings = []
 
     let importOptions = [
@@ -52,7 +53,8 @@
         { placeholder : "Last Name", value: "lastName", isSelected: false },
         { placeholder : "Email", value: "email", isSelected: false },
         { placeholder : "Phone Number", value: "phoneNo", isSelected: false },
-        { placeholder : "Student Reg No", value: "regNo", isSelected: false },
+        { placeholder : "Student Code", value: "studentCode", isSelected: false },
+        { placeholder : "Student ID", value: "studentId", isSelected: false },
         { placeholder : "Program of Study", value: "programOfStudy", isSelected: false },
         { placeholder : "Passport", value: "passport", isSelected: false },
         { placeholder : "Level", value: "level", isSelected: false },
@@ -194,11 +196,10 @@
 
             onSuccess : (res) => {
 
-                // importKey = res.data.key;
+                importKey = res.data.key;
                 importHeadings = res.data.headings;
 
-                slideFormState = panelState.importStudents
-                slidePanelTitle = panelState.importStudents
+                showSheet(panelState.importStudents)
 
                 setTimeout(() => disabled = false, 2000 );
             },
@@ -210,28 +211,47 @@
 
     const importStudents = (e) => {
 
-        // if( disabled ) return;
+        if( disabled ) return;
 
-        // disabled = true;
+        disabled = true;
 
         let data = new FormData();
 
-        data.append('file', zipFile[0]);
+        if( zipFile ) data.append('file', zipFile[0]);
+        
+        data.append('importKey', importKey);
        
         data.append('mappings', JSON.stringify(e.detail) );
 
 
         router.postFormWithToken('/api/student/import', data , {
             onSuccess : (res) => {
-                
+
+                getStudents();
+                closeSheet();
+                disabled = false ;
+
             },
             onError : (res) => {
-                
+
+                disabled = false ;
             }
         })
+    }
 
-        console.log();
 
+    const downloadStudentData = () => {
+
+        router.downloadExcel('/api/students/download',{}, {
+            onSuccess : (res) => {
+                const temp = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = temp;
+                link.setAttribute('download', `STUDENT_DATA.xlsx`);
+                document.body.appendChild(link);
+                link.click();
+            }
+        })
     }
 
     const deleteStudent = () => {
@@ -417,6 +437,7 @@
             <div class="flex space-x-3">
                 <Button on:click={ () => showSheet(panelState.addNewStudent) } buttonText="Add New Student" className="text-sm min-w-max max-w-min" />
                 <Button on:click={ () => showSheet(panelState.upload) } buttonText="Import Students" className="text-sm min-w-max max-w-min" />
+                <Button on:click={ downloadStudentData } buttonText="Download Students Data" className="text-sm min-w-max max-w-min" />
                 <Button on:click={ checkAll } buttonText={ checkedAll ? 'Uncheck All' : 'Check All'} className="text-sm min-w-max max-w-min" />
                 <Button on:click={ () => showSheet(panelState.massAssignCourses) } buttonText="Assign Courses" className="text-sm min-w-max max-w-min"  />
             </div>
