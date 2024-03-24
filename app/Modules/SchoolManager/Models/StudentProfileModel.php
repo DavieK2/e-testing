@@ -28,6 +28,11 @@ class StudentProfileModel extends Authenticatable
         return $this->belongsTo(ClassModel::class, 'class_id');
     }
 
+    public function session()
+    {
+        return $this->belongsTo(AcademicSessionModel::class, 'academic_session_id');
+    }
+
     public function subjects()
     {
         return $this->belongsToMany(SubjectModel::class, 'student_subjects', 'student_profile_id', 'subject_id');
