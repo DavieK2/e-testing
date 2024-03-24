@@ -4,13 +4,7 @@
 /resources/js/Pages
 /public/hot
 /public/storage
-<<<<<<< HEAD
 /public/question_images/* 
-=======
-/public/question_pics/*
-/public/question_images/*
-/public/profile_pics/*
->>>>>>> private-branch
 /public/syncs
 /public/sync_dl
 /public/imports
