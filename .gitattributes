@@ -6,7 +6,8 @@
 *.md diff=markdown
 *.php diff=php
 
-/resources/js/Pages merge=ours
+*.svelte merge=ours
+
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
