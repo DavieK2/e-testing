@@ -74,7 +74,7 @@
             <h1 class="font-bold text-2xl">Student Info</h1>
             <div class="space-y-6 mt-20">
               <div class="h-40 w-60 bg-gray-200 rounded-lg">
-                <img src={ studentData.studentPhoto } alt="" class="rounded-lg" >
+                <img src={ `/${studentData.studentPhoto}` } alt="" class="rounded-lg" >
               </div>
             </div>
             <div class="space-y-12 mt-12">
