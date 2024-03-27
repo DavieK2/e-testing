@@ -166,7 +166,7 @@
                             <small class="text-gray-400">Quiz Duration should be in minutes</small>
                         </div>
                         <div class="w-40">
-                            <Input value={ duration }  on:input={ (e) => assessmentTitle = e.detail.input } type="number" pattern="[0-9]+"  />
+                            <Input value={ duration }  on:input={ (e) => duration = e.detail.input } type="number" pattern="[0-9]+"  />
                         </div>
                     </div>
                     <div class="flex w-full items-center text-sm max-w-3xl">
