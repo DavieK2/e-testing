@@ -323,7 +323,7 @@
 
                 <div class="flex flex-col h-full w-full bg-gray-50 px-8 py-6 border-r">
                     <div class="flex flex-col w-full overflow-y-auto">
-                        <img src={ studentPhoto } alt="" class="rounded-lg" height="160" width="160" />
+                        <img src={ `/${studentPhoto}` } alt="" class="rounded-lg" height="160" width="160" />
                         <div class="flex flex-col space-y-5 mt-10">
                             <div class="space-y-1 text-sm">
                                 <p class="font-semibold">Student Name:</p>
