@@ -74,8 +74,8 @@
 
     let assessmentId = $page.props.assessmentId;
     let assessmentTitle = $page.props.assessmentTitle;
-    let subjectId = $page.props.subjectId;
-    let classId = $page.props.classId;
+    let subjectId = $page.props.subjectId ?? null;
+    let classId = $page.props.classId ?? null;
     let subjectTitle = $page.props.subjectTitle;
     let questionBankId = $page.props.questionBankId;
     let questionBankClasses = $page.props.questionBankClasses;
@@ -165,7 +165,10 @@
 
     const getQuestionBank = () => {
 
-        let url = `/api/question-bank?perPage=120&assessmentId=${assessmentId}&subjectId=${subjectId}&classId=${classId}`
+        let url = `/api/question-bank?perPage=120&assessmentId=${assessmentId}`
+
+        if( subjectId ) url += `&subjectId=${subjectId}`;
+        if( classId ) url += `&classId=${classId}`;
 
         router.getWithToken(url, {
             
@@ -182,7 +185,12 @@
 
     const getAssessmentQuestionBanks = () => {
 
-        router.getWithToken(`/api/assessment/question-banks/${assessmentId}?class=${classId}&subject=${subjectId}`, {
+        let url = `/api/assessment/question-banks/${assessmentId}?`;
+
+        if( subjectId ) url += `&subject=${subjectId}`;
+        if( classId ) url += `&class=${classId}`;
+
+        router.getWithToken(url, {
             onSuccess : (res) => {
                 assessmentQuestionBanks = res.data.flatMap((questionBank) => [{ placeholder: `${questionBank.subject}   |  ${questionBank.teacher}   |   ${questionBank.totalQuestions} Ques`, value: questionBank.questionBankId }])
             }
@@ -191,7 +199,13 @@
 
     const getAssignedQuestions = () => {
 
-        router.getWithToken(`/api/questions?assessmentId=${assessmentId}&classId=${classId}&subjectId=${subjectId}&perPage=20&assigned=1`, {
+        let url = `/api/questions?assessmentId=${assessmentId}&perPage=20&assigned=1`;
+
+        if( subjectId ) url += `&subject=${subjectId}`;
+        if( classId ) url += `&class=${classId}`;
+
+
+        router.getWithToken(url, {
             
             onSuccess : (response) => {
                 assignedQuestions =  response.data ;
@@ -352,7 +366,7 @@
 
         questionsToBeAssigned = questions;
 
-        router.postWithToken('/api/question/mass-assign/'+ assessmentId, { questions: questionsToBeAssigned, sectionId: selectedSection, classId, subjectId }, {
+        router.postWithToken('/api/question/mass-assign/' + assessmentId, { questions: questionsToBeAssigned, sectionId: selectedSection, classId, subjectId }, {
 
                 onSuccess : (res) => {
 
@@ -604,7 +618,12 @@
 
     const getAssessmentSections = () => {
 
-        router.getWithToken(`/api/question/assessment/section/get/${assessmentId}?classId=${classId}&subjectId=${subjectId}`, {
+        let url = `/api/question/assessment/section/get/${assessmentId}?`;
+
+        if( subjectId ) url += `&subject=${subjectId}`;
+        if( classId ) url += `&class=${classId}`;
+
+        router.getWithToken(url, {
             onSuccess : (res) => {
                 assessmentSections = res.data.flatMap( (section) => [ { placeholder: section.sectionTitle, value: section.sectionId, questionType: section.questionType } ]);
             }

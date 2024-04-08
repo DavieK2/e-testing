@@ -6,7 +6,7 @@
     import Table from "../../../../components/table.svelte";
     import SlidePanel from "../../../../components/slide_panel.svelte";
     import Input from "../../../../components/input.svelte";
-    import { router } from "../../../../../../js/util";
+    import { router } from "../../../../../util";
     import { page } from "@inertiajs/svelte";
     import { onMount } from "svelte";
 
@@ -72,7 +72,7 @@
 
     const addSectionsToQuestionBank = () => {
         
-        router.navigateTo(`http://localhost/assessment/questions/t/${questionBankId}`);
+        return router.navigateTo(`/assessment/questions/question-bank/${questionBankId }`);
 
     }
 

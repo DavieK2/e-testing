@@ -90,8 +90,8 @@
         
         getQuestions();
         getSections();
-        getQuestionTopics();
 
+        getQuestionTopics();
         getQuestionTypes();
 
     })

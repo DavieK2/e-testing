@@ -102,16 +102,21 @@
     const viewAssessmentQuestions = (assessment) => {
 
         if( assessment.isStandalone === "Quiz"){
-            router.navigateTo('/questions/create/s/'+ assessment.assessmentId);
+            router.navigateTo('/assessments/quiz/question-banks/'+ assessment.assessmentId);
             return;
         }
 
         router.navigateTo('/assessments/termly/view/' + assessment.assessmentId)
     }
 
-    const manageAssessments = (assessment) => {
+    const manageAssessments = (assessment, isStandalone) => {
 
-        router.navigateTo('/assessments/termly/manage/' + assessment.assessmentId)
+        if( isStandalone == 'Quiz' ){
+
+            return router.navigateTo('/questions/create/s/' + assessment.assessmentId);
+        }
+
+        return router.navigateTo('/assessments/termly/manage/' + assessment.assessmentId)
     }
 
     const editAssessment = (assessmentId, isStandalone) => {
@@ -207,7 +212,15 @@
                                         {/if}
 
                                         { #if auth.can(role, 'view', 'assessments')}
-                                            <button on:click={ () => manageAssessments(assessment) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Manage Assessments</button>
+                                            { #if assessment.isStandalone === 'Exam' }
+                                                <button on:click={ () => manageAssessments(assessment, assessment.isStandalone) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Manage Assessments</button>
+                                            { /if }
+                                        {/if}
+
+                                        { #if auth.can(role, 'view', 'assessments')}
+                                            { #if assessment.isStandalone === 'Quiz' }
+                                                <button on:click={ () => manageAssessments(assessment, assessment.isStandalone) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">View Questions</button>
+                                            { /if }
                                         {/if}
 
                                         { #if auth.can(role, 'edit', 'assessments')}

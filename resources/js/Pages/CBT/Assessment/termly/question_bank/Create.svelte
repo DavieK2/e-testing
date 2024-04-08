@@ -80,7 +80,7 @@
         router.postWithToken('/api/question-bank-create', { assessmentId, classes: classIds, subjectId }, {
             onSuccess : (res) => {
 
-                router.navigateTo(`/assessments/termly/question_bank/sections/${res.data.questionBankId}`);
+                router.navigateTo(`/assessments/question_bank/sections/${res.data.questionBankId}`);
             },
             onError : (res) => {
                 disabled = false;
