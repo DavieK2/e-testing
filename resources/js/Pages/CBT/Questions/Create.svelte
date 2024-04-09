@@ -201,8 +201,8 @@
 
         let url = `/api/questions?assessmentId=${assessmentId}&perPage=20&assigned=1`;
 
-        if( subjectId ) url += `&subject=${subjectId}`;
-        if( classId ) url += `&class=${classId}`;
+        if( subjectId ) url += `&subjectId=${subjectId}`;
+        if( classId ) url += `&classId=${classId}`;
 
 
         router.getWithToken(url, {
@@ -620,8 +620,8 @@
 
         let url = `/api/question/assessment/section/get/${assessmentId}?`;
 
-        if( subjectId ) url += `&subject=${subjectId}`;
-        if( classId ) url += `&class=${classId}`;
+        if( subjectId ) url += `&subjectId=${subjectId}`;
+        if( classId ) url += `&classId=${classId}`;
 
         router.getWithToken(url, {
             onSuccess : (res) => {
