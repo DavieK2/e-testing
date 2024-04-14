@@ -95,12 +95,19 @@ class ExamController extends Controller
 
     public function examSessionTimer(AssessmentModel $assessment, ExamSessionTimerRequest $request)
     {
+        set_time_limit(0);
+
         date_default_timezone_set('Africa/Lagos');
+
+        ignore_user_abort(true);
 
         header("Cache-Control: no-store");
         header("Content-Type: text/event-stream");
         header("X-Accel-Buffering: no");
+        header("Connection: keep-alive");
+        header("Access-Control-Allow-Origin: *");
 
+        ob_implicit_flush( true );
         
         $studentId = auth()->guard('student')->user()->uuid;
 
@@ -120,17 +127,19 @@ class ExamController extends Controller
         $end_time = $student_session->end_time;
         $start_time = now()->toDateTimeString();
 
-        $time_remaining = strtotime($end_time) - strtotime($start_time);
-
+        $time_remaining = strtotime($end_time) - strtotime($start_time);        
         
         while ($time_remaining > 0) {
        
+            $time_remaining = 15000;
+
             echo 'data: '. $time_remaining . "\n\n";
            
             $time_remaining -- ;
 
             $student_session->update(['time_remaining' => $time_remaining]);
             
+            // ob_flush();
             flush();
 
             if (connection_aborted()) break;

@@ -115,4 +115,20 @@ networks:
     name: vlan
 
 
-    
+
+    docker run -v ./step:/home/step \
+    --name=step-server \
+    -p 9000:9000 \
+    -e "DOCKER_STEPCA_INIT_NAME=Smallstep" \
+    -e "DOCKER_STEPCA_INIT_DNS_NAMES=step-server,$(hostname -f)" \
+    -e "DOCKER_STEPCA_INIT_REMOTE_MANAGEMENT=true" \
+    smallstep/step-ca
+
+CA_FINGERPRINT=$(docker run -v ./step:/home/step smallstep/step-ca step certificate fingerprint certs/root_ca.crt)
+
+step ca bootstrap --ca-url https://localhost:9000 --fingerprint $CA_FINGERPRINT --install
+
+CA_FINGERPRINT=$(docker run -v ./step:/home/step smallstep/step-ca step certificate fingerprint certs/root_ca.crt)
+
+    REQUESTS_CA_BUNDLE=/etc/nginx/certs/root_ca.crt certbot certonly --nginx -d localhost --server https://step-server:9000/acme/acme/directory
+certbot --nginx -d localhost --server https://ca_server:9000/acme/acme/directory

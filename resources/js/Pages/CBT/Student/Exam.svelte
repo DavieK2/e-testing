@@ -121,7 +121,7 @@
     
     const connectTimer = () => {
 
-        let timerUrl = `/cbt/save-session/student/${assessmentId}`
+        let timerUrl = `/sse/cbt/save-session/student/${assessmentId}`
 
         if( subjectId ) timerUrl += `?subjectId=${subjectId}`;
 
