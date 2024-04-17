@@ -20,6 +20,7 @@
     let studentName;
     let studentCode;
     let studentPhoto
+    let studentId
 
     onMount( () => {
         router.getWithToken('/api/cbt/session/student/' + assessmentId, {
@@ -35,6 +36,7 @@
                 studentName = res.data.studentName;
                 studentPhoto = res.data.studentPhoto;
                 studentName = res.data.studentName;
+                studentId = res.data.studentId;
             }
         })
     });
@@ -54,7 +56,7 @@
 <svelte:document on:contextmenu|preventDefault />
 
 { #if hasExamSession }
-    <Exam { studentCode } { studentPhoto } { studentName } { assessmentTitle } { assessmentId } { timeLeft } />
+    <Exam { studentCode } { studentPhoto } { studentName } { assessmentTitle } { assessmentId } { timeLeft }  { studentId }/>
 { :else }
     <ExamIntro { assessmentTitle } { assessmentDuration } { assessmentInstructions } { assessmentTotalMarks } { assessmentTotalQuestions } on:start-assessment={ startAssessment }/>
 {/if}

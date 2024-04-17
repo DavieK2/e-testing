@@ -31,3 +31,5 @@ todos
 /data
 /step
 /nginx/certs
+/sse/certs
+/sse/node_modules

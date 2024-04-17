@@ -14,7 +14,8 @@
     export let studentName
     export let studentPhoto
     export let studentCode
-    // export let studentTries;
+    export let studentId
+    export let subjectCode;
 
     let isLoading = true;
 
@@ -121,11 +122,14 @@
     
     const connectTimer = () => {
 
-        let timerUrl = `/sse/cbt/save-session/student/${assessmentId}`
+        const hostname = window.location.hostname;
 
-        if( subjectId ) timerUrl += `?subjectId=${subjectId}`;
+        
+        let timerUrl = `https://${hostname}:8080/sse?assessmentId=${assessmentId}&studentId=${studentId}`;
 
-        evtSource = new EventSource(timerUrl, { withCredentials: true});
+        if( subjectId ) timerUrl += `&subjectId=${subjectCode}`;
+       
+        evtSource = new EventSource(timerUrl);
 
         evtSource.addEventListener("message", (event) => {
 

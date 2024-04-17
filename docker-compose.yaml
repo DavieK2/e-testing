@@ -30,6 +30,20 @@ services:
         depends_on:
           - db
     
+    sse:
+        build:
+            dockerfile: sse/Dockerfile
+        volumes:
+          - ./sse:/home/node/app
+        networks:
+          - example-net
+        restart: unless-stopped
+        tty: true
+        depends_on:
+          - db
+        ports:
+          - 8080:8080
+
     redis:
         image: redis:latest
         container_name: redis
