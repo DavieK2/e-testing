@@ -26,11 +26,10 @@
                 return window.location.replace(res.data.url);
             },
             onError : (error) => {
+                isLoading = false
                 console.log(error);
             }
         });
-
-        isLoading = false
     }
 </script>
 

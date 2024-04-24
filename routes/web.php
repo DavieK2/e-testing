@@ -21,8 +21,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 use Laravel\Sanctum\PersonalAccessToken;
+use Maatwebsite\Excel\Facades\Excel;
 use PragmaRX\Google2FAQRCode\Google2FA;
 use PragmaRX\Google2FAQRCode\QRCode\Bacon;
+use Tiptap\Editor;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +44,71 @@ require __DIR__ . '/auth.php';
 Route::get('/', function(){
     
   
-    return $_SERVER['HOSTNAME'];
+    $alphabets = collect(range('A','Z'))->flatMap( fn($alphabet) => [ $alphabet ])->toArray();
+
+    $questions = QuestionModel::take(50)->get();
+
+    $questionData = [];
+    $maxOptionsCount = 0;
+
+    foreach ($questions as $index => $question) {
+
+        $fileWriter = new CSVWriter();
+
+        $questionContent = json_decode($question->question, true);
+        $questionText = ( new Editor())->setContent($questionContent['content'])->getText();
+
+        $options = [];
+        $correctOption = '';
+       
+
+        foreach ( is_array($question->options) ? $question->options : json_decode($question->options, true) as $key => $value ) {
+        
+            $options[$alphabets[$key]] = $value['content'];
+
+            if( $question->correct_answer === $value['content']) $correctOption =  $alphabets[$key];
+        }
+
+        $optionsCount = count($options);
+        $maxOptionsCount = $maxOptionsCount >  $optionsCount ? $maxOptionsCount : $optionsCount;
+
+        $questionData[] = [
+            'S/N'               =>  $index + 1,
+            'Question'          =>  $questionText,
+            'options'           =>  $options,
+            'Correct Answer'    =>  $correctOption,
+            'Score'             =>  $question->question_score
+        ];
+    }
+
+    $questionOptions =   array_slice($alphabets, 0, $maxOptionsCount );
+
+    $headings = ['S/N','Questions', ...$questionOptions, 'Correct Answer', 'Score'];
+          
+    
+    $newQuestionData = [];
+
+    foreach ( $questionData as $key => $value ) {
+       
+        $flippedQuestionOptions = array_flip($questionOptions);
+
+        $diff = array_diff_key($flippedQuestionOptions, $value['options']);
+
+        $addnOptions = collect($diff)->mapWithKeys( fn( $value, $key ) => [ $key => '' ] )->toArray();
+
+        $newQuestionData[] = [
+            'S/N'               =>  $key + 1,
+            'Question'          =>  $value['Question'],
+            ...$value['options'] + $addnOptions,
+            'Correct Answer'    =>  $value['Correct Answer'],
+            'Score'             =>  $value['Score'],
+        ];
+
+        dd( $newQuestionData );
+    }
+
+    return Excel::download( new Export( collect($questionData), $headings), "QUESTIONS.xlsx" );
+    // return $_SERVER['HOSTNAME'];
 
     // return $imgs;
     // Artisan::call('migrate', ['--path' => 'database/migrations/2023_11_08_085956_add_section_id_to_assessment_questions_table.php', '--force' => true ]);

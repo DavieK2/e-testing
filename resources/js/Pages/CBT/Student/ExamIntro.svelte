@@ -19,9 +19,9 @@
 <div class="w-full mx-auto flex flex-col md:px-0">
     <div class="bg-white z-10 shadow">
         <div class="max-w-3xl mx-auto">
-            <div class="py-4 w-full">
-                <h1 class="text-center text-lg font-semibold">
-                    Assessment Instructions
+            <div class="py-8 w-full">
+                <h1 class="text-center text-4xl text-gray-600 font-semibold">
+                    Exam Overview
                 </h1>
             </div>
         </div>
@@ -30,7 +30,7 @@
         <main class="max-w-2xl mx-auto mt-10">
             <div class="w-full lg:flex lg:ltr:flex-row lg:rtl:flex-row-reverse flex-wrap px-2 py-2">
                 <div class="py-4 w-full">
-                    <h1 class="text-2xl font-semibold text-gray-800 leading-normal py-2">
+                    <h1 class="text-2xl font-extrabold text-gray-800 leading-normal py-2">
                         { assessmentTitle }
                     </h1>
                     <div class="flex items-center mt-10">
@@ -82,7 +82,7 @@
                                 </label>
                             </div>
                             <div class="w-full block mt-10">
-                               <Button { disabled } on:click={ () => dispatch('start-assessment') } buttonText="Start Assessment" />
+                               <Button { disabled } on:click={ () => { disabled = true; dispatch('start-assessment') } } buttonText="Start Assessment" />
                             </div>
                         </div>
                     </div>

@@ -94,7 +94,7 @@
 </script>
 
 
-<div class="fixed px-8 z-50 w-[calc(100vw-50rem)] min-w-[36rem] h-16 border-b border-r border-gray-100 bg-white shrink-0">
+<div class="fixed px-8 z-[60] w-[calc(100vw-50rem)] min-w-[36rem] h-16 border-b border-r border-gray-100 bg-white shrink-0">
     <div class="flex space-x-8 items-center h-full justify-between">
         <div class="flex space-x-3 items-center w-full">
             <Select on:selected={ (e) => selectedSection = e.detail.value } on:deselected={ (e) => selectedSection = null } options={ sections } placeholder="All Sections" className="text-sm py-2.5"/>
@@ -107,7 +107,20 @@
     </div>
 </div>
 
-<div class="fixed w-[calc(100vw-50rem)] flex flex-col mt-16 h-[calc(100vh-17rem)] items-center bottom-0 pb-20 question overflow-y-auto bg-white">
+<div class="fixed px-8 z-50 w-[calc(100vw-50rem)] mt-16 min-w-[36rem] h-16 border-b border-r border-gray-100 bg-white shrink-0">
+    <div class="flex space-x-8 items-center h-full justify-between">
+       <div>
+            <p class="text-base font-bold">Total Questions: { initialQuestions.length }</p>
+       </div>
+       <div>
+            <button class="p-2 text-gray-800 rounded-lg border-2 border-gray-800">
+                <Icons className="h-7 w-7 fill-current" icon="excel" />
+            </button>
+       </div>
+    </div>
+</div>
+
+<div class="fixed w-[calc(100vw-50rem)] flex flex-col mt-16 h-[calc(100vh-21rem)] items-center bottom-0 pb-20 question overflow-y-auto bg-white">
 
     { #if initialQuestions.length == 0 }
         <div class="container h-[30rem]">

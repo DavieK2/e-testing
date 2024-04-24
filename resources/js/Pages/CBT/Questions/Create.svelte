@@ -364,6 +364,8 @@
 
     const massAssignQuestions = (questions) => {
 
+        disabled = true;
+
         questionsToBeAssigned = questions;
 
         router.postWithToken('/api/question/mass-assign/' + assessmentId, { questions: questionsToBeAssigned, sectionId: selectedSection, classId, subjectId }, {
@@ -378,6 +380,7 @@
 
                     showModal = false;
                     selectedSection = null
+                    disabled = false;
                 
                 },
                 onError : (res) => {
@@ -385,6 +388,8 @@
                     if( res.errors.sectionId ){
                         showModal = true;
                     }
+
+                    disabled = false;
                 }
             } )
 
@@ -392,7 +397,7 @@
 
     const unAssignQuestion = (question) => {
         
-        router.postWithToken('/api/question/unassign/'+ assessmentId, { questionId : question.questionId, subjectId }, {
+        router.postWithToken('/api/question/unassign/'+ assessmentId, { questionId : question.questionId, subjectId, classId }, {
 
             onSuccess : (response) => {
 
@@ -409,6 +414,8 @@
 
     const massUnassignQuestions = (questions) => {
 
+        disabled = true;
+
         router.postWithToken('/api/question/mass-unassign/'+ assessmentId, { questions, classId, subjectId }, {
 
                 onSuccess : (res) => {
@@ -417,6 +424,7 @@
 
                     if( selectedQuestionBankId ) getQuestions(selectedQuestionBankId);
                    
+                    disabled = false
                 
                 },
                 onError : (res) => {
@@ -712,7 +720,7 @@
                 </div>      
             </div>
             <div class="px-8 py-4 min-w-[36rem] flex items-center justify-between w-full">
-                <h3 class="text-gray-800 text-sm font-bold min-w-max">Assigned Questions ( { assignedQuestions.length } )</h3>
+                <h3 class="text-gray-800 text-lg font-bold min-w-max">Assigned Questions</h3>
                 <div class="flex items-center space-x-2">
                     <Button on:click={ openAddSection } buttonText="Add Section" className="min-w-max text-sm bg-green-600 hover:bg-green-500 focus:bg-green-600 focus:ring-green-300 py-3" />
                     <!-- <Button on:click={ openAddSection } buttonText="New Question" className="min-w-max text-sm py-3" /> -->
@@ -844,7 +852,7 @@
 
         <div class="flex items-center space-x-3 w-full">
             <button on:click={ () => { questionsToBeAssigned = []; showModal = false } } class="bg-gray-400 text-white hover:bg-gray-500 rounded-lg px-4 py-2.5 transition text-sm">Cancel</button>
-            <Button on:click={ () => massAssignQuestions(questionsToBeAssigned) } buttonText="Assign" className="text-sm"/>
+            <Button { disabled } on:click={ () => massAssignQuestions(questionsToBeAssigned) } buttonText="Assign" className="text-sm"/>
         </div>
        
     </div>

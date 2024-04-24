@@ -154,6 +154,11 @@
     <svg class={ cn("h-5 w-5", className) } xmlns="http://www.w3.org/2000/svg" viewBox="0 -683 722 683" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" style=""><defs><path id="MJX-8-TEX-N-3A3" d="M666 247Q664 244 652 126T638 4V0H351Q131 0 95 0T57 5V6Q54 12 57 17L73 36Q89 54 121 90T182 159L305 299L56 644L55 658Q55 677 60 681Q63 683 351 683H638V679Q640 674 652 564T666 447V443H626V447Q618 505 604 543T559 605Q529 626 478 631T333 637H294H189L293 494Q314 465 345 422Q400 346 400 340Q400 338 399 337L154 57Q407 57 428 58Q476 60 508 68T551 83T575 103Q595 125 608 162T624 225L626 251H666V247Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><use data-c="3A3" xlink:href="#MJX-8-TEX-N-3A3"></use></g></g></g></svg>
 {/if}
 
+{ #if icon === 'excel'}
+    <svg class={ cn("h-5 w-5", className) } xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
+        <path d="M30 26v9h-4.18c.12-.38.18-.78.18-1.2V26H30zM30 37v9H17c-1.65 0-3-1.35-3-3v-5h7.8c1.03 0 1.98-.37 2.71-1H30zM32 26H48V35H32zM32 37h16v6c0 1.65-1.35 3-3 3H32V37zM30 15v9h-4v-7.8c0-.42-.06-.82-.18-1.2H30zM32 15H48V24H32zM30 4v9h-5.49c-.73-.63-1.68-1-2.71-1H14V7c0-1.65 1.35-3 3-3H30zM48 7v6H32V4h13C46.65 4 48 5.35 48 7zM21.8 36H4.2C2.985 36 2 35.015 2 33.8V16.2C2 14.985 2.985 14 4.2 14h17.6c1.215 0 2.2.985 2.2 2.2v17.6C24 35.015 23.015 36 21.8 36zM7.968 19l3.494 5.978L7.631 31h2.863l2.521-4.716L15.548 31h2.821L14.6 25l3.685-6H15.61l-2.455 4.505L10.832 19H7.968z"></path>
+    </svg>
+{/if}
 <!-- <svg class="h-3 sort-a-z" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M2.13347 0.0999756H2.98516L5.01902 4.79058H3.86226L3.45549 3.79907H1.63772L1.24366 4.79058H0.0996094L2.13347 0.0999756ZM2.54025 1.46012L1.96822 2.92196H3.11227L2.54025 1.46012Z" fill="currentColor" stroke="currentColor" stroke-width="0.1" />
     <path d="M0.722656 9.60832L3.09974 6.78633H0.811638V5.87109H4.35819V6.78633L2.01925 9.60832H4.43446V10.5617H0.722656V9.60832Z" fill="currentColor" stroke="currentColor" stroke-width="0.1" />

@@ -30,11 +30,23 @@ class AssessmentModel extends Model
 
     public function assignQuestion($question_id, $subject_id = null, $class_id = null, $sectionId = null)
     {
-        $question_id = QuestionModel::firstWhere('uuid', $question_id)->uuid;
         $class_id = ClassModel::firstWhere('class_code', $class_id)?->uuid;
         $sectionId = SectionModel::firstWhere('uuid', $sectionId)?->uuid;
         
         return $this->questions()->syncWithoutDetaching([ $question_id => [ 'subject_id' => $subject_id, 'class_id' => $class_id, 'uuid' => Str::ulid(), 'section_id' => $sectionId ]]);
+    }
+
+    public function assignQuestions(array $question_ids, $subject_id = null, $class_id = null, $sectionId = null)
+    {
+        $class_id = ClassModel::firstWhere('class_code', $class_id)?->uuid;
+        $sectionId = SectionModel::firstWhere('uuid', $sectionId)?->uuid;
+        
+        $data = collect($question_ids)->map( fn($question_id) => ['question_id' => $question_id, 'subject_id' => $subject_id, 'class_id' => $class_id, 'uuid' => Str::ulid(), 'section_id' => $sectionId, 'assessment_id' => $this->uuid ])->toArray();
+
+        $que = DB::table('assessment_questions')->where( fn($query) => $query->whereIn('question_id', $question_ids)->where('class_id', $class_id)->where('assessment_id', $this->uuid)->where('subject_id', $subject_id)->where('section_id', $sectionId) )->delete();
+        
+        return DB::table('assessment_questions')->insert( $data );
+ 
     }
 
     public function unAssignQuestion($question_id, $class_id = null, $subject_id = null)

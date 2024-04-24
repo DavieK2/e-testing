@@ -298,6 +298,7 @@
     const closeSheet = () => {
 
         showStudentForm = false
+        selectedSubjects = [];
         reset()
 
     };
@@ -411,6 +412,12 @@
         selectedStudents = selectedStudents.filter( (student) => studentId != student );
     }
 
+    const checkStudent = (studentId) => {
+
+        selectedStudents.push(studentId);
+        selectedStudents = selectedStudents;
+    }
+
     const checkAll = () => {
 
         if( checkedAll ){
@@ -447,7 +454,7 @@
             { #each students as student, index }
                 <tr>
                     <td class="px-4">
-                        <input on:input={ (e) => e.target.checked ? uncheckStudent(student.studentId) : selectedStudents.push(student.studentId) } checked={ checked( student.studentId ) } type="checkbox" value={ student.studentId }  name="" id="">
+                        <input on:input={ (e) => e.target?.checked ?  checkStudent(student.studentId) : uncheckStudent(student.studentId) } checked={ checked( student.studentId ) } type="checkbox" value={ student.studentId }  name="" id="">
                     </td>
                     <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ student.name }</td>
                     <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ student.class }</td>

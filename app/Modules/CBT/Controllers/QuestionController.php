@@ -17,6 +17,7 @@ use App\Modules\CBT\Models\SectionModel;
 use App\Modules\CBT\Requests\AssignQuestionToAssessmentRequest;
 use App\Modules\CBT\Requests\CreateAssessmentQuestionSectionRequest;
 use App\Modules\CBT\Requests\CreateQuestionRequest;
+use App\Modules\CBT\Requests\DownloadQuestionsRequest;
 use App\Modules\CBT\Requests\GetAssessmentQuestionSectionRequest;
 use App\Modules\CBT\Requests\ImportQuestionsRequest;
 use App\Modules\CBT\Requests\MassAssignQuestionsRequest;
@@ -25,7 +26,11 @@ use App\Modules\CBT\Requests\QuestionBankRequest;
 use App\Modules\CBT\Requests\QuestionListRequest;
 use App\Modules\CBT\Requests\UnAssignQuestionFromAssessmentRequest;
 use App\Modules\CBT\Requests\UpdateQuestionRequest;
+use App\Modules\Excel\Export;
 use App\Modules\SchoolManager\Models\ClassModel;
+use App\Services\CSVWriter;
+use Maatwebsite\Excel\Facades\Excel;
+use Tiptap\Editor;
 
 class QuestionController extends Controller
 {
@@ -75,11 +80,7 @@ class QuestionController extends Controller
     {
         $data = $request->validated();
 
-        foreach ( $data['questions'] as $question ) {
-
-            $assessment->assignQuestion( $question, $data['subjectId'] ?? null, $data['classId'] ?? null, $data['sectionId'] ?? null );
-            
-        }
+        $assessment->assignQuestions( $data['questions'] , $data['subjectId'] ?? null, $data['classId'] ?? null, $data['sectionId'] ?? null );
 
         return response()->json([
             'message' => 'Questions Successfully Assigned'
@@ -104,4 +105,53 @@ class QuestionController extends Controller
 
     }
 
+    public function downloadQuestions(AssessmentModel $assessment, DownloadQuestionsRequest $request)
+    {
+        $data = $request->validated();
+        $fileWriter = new CSVWriter();
+
+        $alphabets = collect(range('A','Z'))->flatMap( fn($alphabet) => [ $alphabet ])->toArray();
+        $maxOptionsCount = 0;
+
+        $questions = QuestionModel::whereIn('uuid', $data['questions'])->get();
+        $questionData = [];
+
+        foreach ( $questions as $index => $question ) {
+
+            $questionContent = json_decode($question->question, true);
+            $questionText = ( new Editor())->setContent($questionContent['content'])->getText();
+
+            $options = [];
+            $correctOption = '';
+            
+            foreach ( is_array($question->options) ? $question->options : json_decode($question->options, true) as $key => $value ) {
+            
+                $options[$alphabets[$key]] = $value['content'];
+
+                if( $question->correct_answer === $value['content']) $correctOption =  $alphabets[$key];
+            }
+
+            $optionsCount = count($options);
+            $maxOptionsCount = $maxOptionsCount >  $optionsCount ? $maxOptionsCount : $optionsCount;
+
+            $questionData[] = [
+                'S/N'               =>  $index + 1,
+                'Question'          =>  $questionText,
+                ...$options,
+                'Correct Answer'    =>  $correctOption,
+                'Score'             =>  $question->question_score
+            ];
+         }
+       
+        $questionOptions =   array_slice($alphabets, 0, $maxOptionsCount );
+
+        foreach ($questionData as $key => $value) {
+            # code...
+        }
+
+        $headings = ['S/N','Questions', ...$questionOptions, 'Correct Answer', 'Score'];
+
+        return Excel::download( new Export( $questions, $headings), "STUDENTS_DATA.xlsx" );
+
+    }
 }

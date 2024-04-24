@@ -40,7 +40,7 @@
     <div class="pb-6">
         <div class="space-y-4 pb-3">
            <div class="flex items-center justify-between">
-                <p class="text-gray-800 font-bold text-lg">Question { questionNumber }</p>
+                <p class="text-gray-800 font-extrabold text-lg">Question { questionNumber }</p>
            </div>
             <p class="text-gray-800 text-base font-base pt-6">{ @html question.prompt }</p>
         </div>

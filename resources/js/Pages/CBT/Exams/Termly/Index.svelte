@@ -8,6 +8,7 @@
     let assessmentId = $page.props.assessmentId
     let assessmentCode = $page.props.assessmentCode
     let assessmentTitle = $page.props.assessmentTitle
+    let disabled = false;
 
     onMount(() => {
         router.getWithToken('/api/cbt/t/session/student/'+assessmentId, {
@@ -18,6 +19,7 @@
     })
 
     const startExam = (subjectCode) => {
+        disabled = true;
         sessionStorage.setItem('subject', subjectCode);
         window.location.replace(`/cbt/${assessmentId}/t/i`);
     }
@@ -58,7 +60,7 @@
                         <p class="text-gray-800">Duration: { assessment.duration / 60 } Mins</p>
                     </div>
                     <div class="absolute w-full bottom-0 inset-x-0 px-6 pb-6">
-                        <Button on:click={ () => startExam(assessment.subjectCode ) } buttonText="Start" />
+                        <Button { disabled } on:click={ () => startExam(assessment.subjectCode ) } buttonText="Start" />
                     </div>
                 </div>
             { /each }

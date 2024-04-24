@@ -12,8 +12,8 @@
 
     let submitModal = false;
 
-    let assessmentTitle;
-    let assessmentInstructions;
+    let assessmentTitle = '';
+    let assessmentInstructions = '';
     let assessmentDuration;
     let assessmentTotalQuestions;
     let assessmentTotalMarks;
@@ -21,17 +21,27 @@
     let studentName;
     let studentCode;
     let studentPhoto;
-    let subjectId
-    let studentId
-    let subjectCode
+    let subjectId;
+    let studentId;
+    let subjectCode;
+    let assessmentSession;
+    let programOfStudy;
+    let level;
+    let faculty;
+    let department;
+
+    let loading = true;
+
 
     onMount( () => {
-       
+    
+
         subjectId =  sessionStorage.getItem('subject'); 
 
         router.getWithToken(`/api/cbt/t/session/student/${assessmentId}/${subjectId}`, {
 
             onSuccess: (res) => {
+
                 studentCode = res.data.studentCode;
                 hasExamSession = res.data.hasStarted;
                 assessmentTitle = res.data.assessmentTitle;
@@ -44,6 +54,15 @@
                 studentPhoto = res.data.studentPhoto;
                 studentId = res.data.studentId;
                 subjectCode = res.data.subjectId;
+                assessmentSession = res.data.assessmentSession;
+                programOfStudy = res.data.programOfStudy;
+                level = res.data.level;
+                faculty = res.data.faculty;
+                department = res.data.department;
+
+                if( assessmentTitle ){
+                    setTimeout(() => loading = false, 1000);
+                }
             }
         })
     });
@@ -61,8 +80,22 @@
 
 <svelte:document on:contextmenu|preventDefault />
 
-{ #if hasExamSession }
-    <Exam { assessmentCode } { studentName } { assessmentTitle } { studentCode } { studentPhoto } { assessmentId } { timeLeft } { subjectId } { studentId } { subjectCode } />
+{ #if loading }
+
+    
+    <div class="flex flex-col p-12 items-center justify-center rounded w-full animate-pulse min-h-screen">
+      
+        <h1 class="max-w-4xl text-center font-extrabold text-5xl text-gray-800">{ assessmentTitle }</h1>
+       
+    </div>
+
 { :else }
-    <ExamIntro { assessmentTitle }  { assessmentDuration } { assessmentInstructions } { assessmentTotalMarks } { assessmentTotalQuestions } on:start-assessment={ startAssessment }/>
+
+    { #if hasExamSession }
+        <Exam { assessmentCode } { studentName } { assessmentTitle } { studentCode } { studentPhoto } { assessmentId } { timeLeft } { subjectId } { studentId } { subjectCode }  { programOfStudy } { assessmentSession } { level } { faculty } { department } />
+    { :else }
+        <ExamIntro { assessmentTitle }  { assessmentDuration } { assessmentInstructions } { assessmentTotalMarks } { assessmentTotalQuestions } on:start-assessment={ startAssessment }/>
+    {/if}
+
 {/if}
+

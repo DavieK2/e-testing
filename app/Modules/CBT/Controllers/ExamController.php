@@ -77,7 +77,7 @@ class ExamController extends Controller
         }
 
         return response()->json([
-            'studentName'           => $student->first_name." ".$student->surname,
+            'studentName'           => $student->surname ." ".$student->first_name,
             'studentCode'           => $student->student_code,
             'studentId'             => $student->uuid,
             'studentPhoto'          => $student->profile_pic,
@@ -285,6 +285,11 @@ class ExamController extends Controller
         $total_marks = $assessment->questions()->where(fn($query) => $query->where('assessment_questions.subject_id', $subject->uuid )->where('assessment_questions.class_id', $student->class_id))->sum('question_score');
         $duration = $assessment_subject->pivot->assessment_duration;
         $assessment_title = $assessment->title;
+        $session = $assessment->session?->session;
+        $program_of_study = $student->program_of_study;
+        $level = $student->class?->class_name;
+        $faculty = $student->faculty?->name;
+        $department = $student->department?->name;
 
         if( $student_result->has_started ){
 
@@ -300,9 +305,15 @@ class ExamController extends Controller
         }
 
         return response()->json([
-            'studentName'           => $student->first_name." ".$student->surname,
+            'studentName'           => $student->surname ." ".$student->first_name,
             'studentCode'           => $student->student_code,
             'studentId'             => $student->uuid,
+            'level'                 => $level,
+            'faculty'               => $faculty,
+            'department'            => $department,
+            'studentPhoto'          => $student->profile_pic,
+            'programOfStudy'        => $program_of_study,
+            'assessmentSession'     => $session,
             'studentPhoto'          => $student->profile_pic,
             'hasStarted'            => $student_result->has_started,
             'instructions'          => $instructions,

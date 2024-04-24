@@ -16,6 +16,11 @@
     export let studentCode
     export let studentId
     export let subjectCode;
+    export let programOfStudy;
+    export let assessmentSession;
+    export let level;
+    export let faculty;
+    export let department;
 
     let isLoading = true;
 
@@ -322,12 +327,12 @@
 
             <div class="relative flex flex-col w-64 shrink-0 bg-gray-50">
                 <div class="flex items-center shrink-0 w-full border-b border-r border-gray-300 h-16 bg-white px-8 font-semibold">
-                    Student Data
+                    Candidate Info
                 </div>
 
                 <div class="flex flex-col h-full w-full bg-gray-50 px-8 py-6 border-r">
                     <div class="flex flex-col w-full overflow-y-auto">
-                        <img src={ `/${studentPhoto}` } alt="" class="rounded-lg" height="160" width="160" />
+                        <img src={ `/${studentPhoto}` } alt="" class="rounded-lg" height="200" width="200" />
                         <div class="flex flex-col space-y-5 mt-10">
                             <div class="space-y-1 text-sm">
                                 <p class="font-semibold">Student Name:</p>
@@ -337,6 +342,39 @@
                                 <p class="font-semibold">Student Code:</p>
                                 <p>{ studentCode }</p>
                             </div>
+
+                            <div class="space-y-1 text-sm">
+                                <p class="font-semibold">Level:</p>
+                                <p>{ level }</p>
+                            </div>
+
+                            { #if programOfStudy }
+                                <div class="space-y-1 text-sm">
+                                    <p class="font-semibold">Program of Study:</p>
+                                    <p>{ programOfStudy }</p>
+                                </div>
+                            { /if }
+
+                            { #if faculty }
+                                <div class="space-y-1 text-sm">
+                                    <p class="font-semibold">Faculty:</p>
+                                    <p>{ faculty }</p>
+                                </div>
+                            { /if }
+
+                            { #if department }
+                                <div class="space-y-1 text-sm">
+                                    <p class="font-semibold">Department:</p>
+                                    <p>{ department }</p>
+                                </div>
+                            { /if }
+
+                            { #if assessmentSession }
+                                <div class="space-y-1 text-sm">
+                                    <p class="font-semibold">Session:</p>
+                                    <p>{ assessmentSession }</p>
+                                </div>
+                            { /if }
                         </div>
                     </div>                
                 </div> 
@@ -345,11 +383,18 @@
 
             <div class="relative flex flex-col flex-1 bg-white border-r">
 
-                <div class="flex items-center w-full shrink-0 border-b h-16 border-gray-300 px-8"></div>
+                <div class="flex items-center space-x-4 w-full shrink-0 border-b h-16 border-gray-300 px-8">
+                    <button class="min-w-max max-w-min text-white bg-gray-700 px-4 py-2 border-2 rounded-lg border-gray-700">Section 1</button>
+                    <button class="min-w-max max-w-min px-4 py-2 border-2 rounded-lg border-gray-700">Section 2</button>
+                    <button class="min-w-max max-w-min px-4 py-2 border-2 rounded-lg border-gray-700">Section 2</button>
+                </div>
 
                 <div class="flex flex-col w-full h-[calc(100vh-13rem)] px-8 py-6">
                     <div class="w-full h-full overflow-y-auto">
                         <div class="max-w-xl">
+                            <div class="py-6 text-gray-600 border-b">
+                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Asperiores eveniet facilis dolor iste illum cumque? Saepe eius aut soluta velit illo ab nam, magnam earum cum impedit, ipsam officia commodi!</p>
+                            </div>
                             { #each questions as question, index(question.questionId) }
                                 { #if currentQuestionNumber === ( index + 1)}    
                                     <QuestionCard on:selected={ (e) => selectAnswer(e.detail.option) } { question } questionNumber={ index + 1}  />
@@ -431,11 +476,11 @@
     <div class="fixed justify-center items-center flex flex-col inset-0 bg-gray-800/70">
         <div class="flex flex-col justify-center items-center h-96 w-[28rem] bg-white rounded-lg p-16">
             <div class="flex flex-col justify-center items-center space-y-12">
-                <h1 class="text-2xl font-medium text-gray-800 text-center">Are you sure you want to submit?</h1>
+                <h1 class="text-2xl text-gray-800 text-center font-extrabold">Are you sure you want to submit?</h1>
 
                 <div class="flex space-x-4 w-full">
-                    <Button on:click={ closeSubmitModal } buttonText="No" className="bg-gray-400 hover:bg-gray-500 focus:ring-gray-300 focus:bg-gray-400" />
-                    <Button on:click={ completeExam } buttonText="Yes" className="bg-green-500 text-white hover:bg-green-600 focus:bg-green-500 focus:ring-green-300" />
+                    <Button on:click={ closeSubmitModal } buttonText="No" className="bg-gray-400 hover:bg-gray-500 focus:ring-gray-300 focus:bg-gray-400 font-bold" />
+                    <Button on:click={ completeExam } buttonText="Yes" className="bg-green-500 text-white hover:bg-green-600 focus:bg-green-500 focus:ring-green-300 font-bold" />
                 </div>
             </div>
         </div>
