@@ -62,7 +62,7 @@ services:
         volumes:
           - redis_insight_volume:/db
         ports:
-          - 8001:8001
+          - 8001:5540
         networks:
           - example-net
        

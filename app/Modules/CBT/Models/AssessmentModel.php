@@ -2,6 +2,8 @@
 
 namespace App\Modules\CBT\Models;
 
+use App\Modules\CBT\Resources\QuestionListCollection;
+use App\Modules\CBT\Tasks\QuestionListTasks;
 use App\Modules\SchoolManager\Models\AcademicSessionModel;
 use App\Modules\SchoolManager\Models\ClassModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
@@ -10,6 +12,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
@@ -30,39 +33,65 @@ class AssessmentModel extends Model
 
     public function assignQuestion($question_id, $subject_id = null, $class_id = null, $sectionId = null)
     {
+        $class_code = $class_id;
         $class_id = ClassModel::firstWhere('class_code', $class_id)?->uuid;
         $sectionId = SectionModel::firstWhere('uuid', $sectionId)?->uuid;
         
-        return $this->questions()->syncWithoutDetaching([ $question_id => [ 'subject_id' => $subject_id, 'class_id' => $class_id, 'uuid' => Str::ulid(), 'section_id' => $sectionId ]]);
+        $this->questions()->syncWithoutDetaching([ $question_id => [ 'subject_id' => $subject_id, 'class_id' => $class_id, 'uuid' => Str::ulid(), 'section_id' => $sectionId ]]);
+
+        return $this->cacheAssessmentQuestions($subject_id, $class_code);
     }
 
     public function assignQuestions(array $question_ids, $subject_id = null, $class_id = null, $sectionId = null)
     {
+        $class_code = $class_id;
         $class_id = ClassModel::firstWhere('class_code', $class_id)?->uuid;
         $sectionId = SectionModel::firstWhere('uuid', $sectionId)?->uuid;
         
         $data = collect($question_ids)->map( fn($question_id) => ['question_id' => $question_id, 'subject_id' => $subject_id, 'class_id' => $class_id, 'uuid' => Str::ulid(), 'section_id' => $sectionId, 'assessment_id' => $this->uuid ])->toArray();
 
-        $que = DB::table('assessment_questions')->where( fn($query) => $query->whereIn('question_id', $question_ids)->where('class_id', $class_id)->where('assessment_id', $this->uuid)->where('subject_id', $subject_id)->where('section_id', $sectionId) )->delete();
+        DB::table('assessment_questions')->where( fn($query) => $query->whereIn('question_id', $question_ids)->where('class_id', $class_id)->where('assessment_id', $this->uuid)->where('subject_id', $subject_id)->where('section_id', $sectionId) )->delete();
         
-        return DB::table('assessment_questions')->insert( $data );
- 
+        DB::table('assessment_questions')->insert( $data );
+
+        return $this->cacheAssessmentQuestions($subject_id, $class_code);
+        
     }
 
     public function unAssignQuestion($question_id, $class_id = null, $subject_id = null)
     {
-        $question_id = QuestionModel::firstWhere('uuid', $question_id)->uuid;
+        $class_code = $class_id;
        
         if( $this->is_standalone ){
 
-            return $this->questions()->detach($question_id);
+            $this->questions()->detach($question_id);
 
         }else{
 
             $class_id = ClassModel::firstWhere('class_code', $class_id)->uuid;
 
-            return DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id', $question_id)->where('assessment_questions.subject_id', $subject_id)->where('assessment_questions.class_id', $class_id) )->limit(1)->delete();
+            DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id', $question_id)->where('assessment_questions.subject_id', $subject_id)->where('assessment_questions.class_id', $class_id)->where('assessment_questions.assessment_id', $this->uuid) )->limit(1)->delete();
         }
+
+        return $this->cacheAssessmentQuestions($subject_id, $class_code);
+    }
+
+    public function unAssignQuestions( array $question_ids, $class_id = null, $subject_id = null)
+    {
+        $class_code = $class_id;
+
+        if( $this->is_standalone ){
+
+            $this->questions()->detach($question_ids);
+
+        }else{
+
+            $class_id = ClassModel::firstWhere('class_code', $class_id)->uuid;
+
+            DB::table('assessment_questions')->where( fn($query) => $query->whereIn('assessment_questions.question_id', $question_ids)->where('assessment_questions.subject_id', $subject_id)->where('assessment_questions.class_id', $class_id)->where('assessment_questions.assessment_id', $this->uuid) )->delete();
+        }
+
+        return $this->cacheAssessmentQuestions($subject_id, $class_code);
     }
 
     public function classes()
@@ -119,5 +148,34 @@ class AssessmentModel extends Model
         });
 
         return ;
+    }
+
+    public function cacheAssessmentQuestions($subject_id, $class_code)
+    {
+        $questions = ( new QuestionListTasks() )->start([ 'assessmentId' => $this->uuid, 'subjectId' => $subject_id, 'classId' => $class_code ])->getAssignedQuestions()->all()->get();
+ 
+        $questions = ( new QuestionListCollection( $questions ) )->toArray( request() );
+
+
+        Cache::put("questions_{$this->assessment_code}_{$subject_id}_$class_code",  $questions );
+    }
+
+    public function hasCachedQuestions( $subject_id, $class_code )
+    {
+        return Cache::has("questions_{$this->assessment_code}_{$subject_id}_$class_code");
+    }
+
+    public function questionHasBeenAssigned( $question, $subject_id, $class_code )
+    {
+        if( $this->is_standalone ){
+
+            return DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id')->where('assessment_questions.assessment_id', $this->uuid) )->exists();
+
+        }else{
+
+            $class_id = ClassModel::firstWhere('class_code', $class_code)->uuid;
+
+            return DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id', $question)->where('assessment_questions.subject_id', $subject_id)->where('assessment_questions.class_id', $class_id)->where('assessment_questions.assessment_id', $this->uuid) )->exists();
+        }
     }
 }

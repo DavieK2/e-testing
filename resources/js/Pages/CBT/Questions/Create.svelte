@@ -16,6 +16,7 @@
     import Select from "../../components/select.svelte";
     import Modal from "../../components/modal.svelte";
     import Input from "../../components/input.svelte";
+    import moment from "moment";
 
     
     
@@ -31,6 +32,7 @@
     let edit = false;
     let disabled = false;
     let showModal = false;
+    let exportQuestionsModal = false;
     let hasImportError = false;
 
     let questionEdit = false;
@@ -65,6 +67,7 @@
     let questionsToBeAssigned = [];
     let newQuestions = [];
     let pushedQuestions = [];
+    let selectedQuestions = [];
 
     let questionBank = [];
     let assessmentQuestionBanks = [];
@@ -434,6 +437,60 @@
 
     }
 
+    const onSelectQuestion = (question) => {
+        
+        if( inArray(question, selectedQuestions) ) return;
+
+        selectedQuestions.push(question);
+        selectedQuestions = selectedQuestions;
+    }
+
+    const onDeSelectQuestion = (question) => {
+        
+        selectedQuestions = selectedQuestions.filter((selQuestion) => question != selQuestion );
+    }
+
+    const onCheckAllQuestions = (questions, checkAll) => {
+
+        if( checkAll === true ){
+
+            questions.forEach((question) => onDeSelectQuestion(question) );
+
+        }else{
+
+            questions.forEach((question) => onSelectQuestion(question) );
+        }
+       
+
+    }
+
+    const downloadQuestionsExcel = () => {
+        
+        if( selectedQuestions.length === 0 ) return;
+
+        if( ! exportQuestionsModal ) return exportQuestionsModal = true;
+
+        router.downloadExcelWithToken('/api/questions/download-excel', { questions: selectedQuestions }, {
+
+            onSuccess : (response) => {
+
+                const dataURL = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.setAttribute('download', 'questions_' + moment().format('Y_M_D_H_m_s') + '.xlsx');
+                document.body.appendChild(link);
+                link.click();
+
+                exportQuestionsModal = false
+
+            },
+            onError : (response) => {
+
+                console.log(response);
+            }
+        } )
+    }
+
     const openEditQuestionForm = (ques) => {
 
         let initEditQuestion = JSON.stringify(ques);
@@ -604,7 +661,8 @@
     }
 
     const arrayDiff = (array1, array2) => {
-        return array1.filter((arr) => ! array2.some( (arr2) => arr2.questionId === arr.questionId ));
+
+        return array1.filter((arr) => ! inArray(arr, array2) );
     }
 
     const addQuestion = (ques) => {
@@ -697,6 +755,10 @@
             }
         });
     }
+
+    const inArray = (value, array) => {
+          return  array.includes(value)
+    }
 </script>
 
 <Layout >
@@ -715,8 +777,8 @@
         <div class="fixed ml-56 mt-16 z-30 inset-x-0 flex border-b border-gray-100 items-center h-16 bg-white">
             <div class="px-8 w-[36rem] shrink-0 border-r border-gray-100 h-full">
                 <div class="flex items-center justify-center h-full">
-                    <button on:click={ () => setQuestionType(AssessmentQuestions) } type="button" class={`text-xs font-semibold py-2.5 px-8 ${questionType != AssessmentQuestions ? 'text-gray-400 bg-gray-100' : 'text-gray-600 border-2 border-gray-500' } rounded-s-lg transition w-full`}>Questions</button>
-                    <button on:click={ () => setQuestionType(QuestionBank) } type="button" class={`text-xs font-semibold py-2.5 px-8 ${questionType != QuestionBank ? 'text-gray-400 bg-gray-100' : 'text-gray-600 border-2 border-gray-500' } rounded-e-lg transition w-full`}>Question Bank</button> 
+                    <button on:click={ () => setQuestionType(AssessmentQuestions) } type="button" class={`text-sm font-semibold py-2.5 px-8 ${questionType != AssessmentQuestions ? 'text-gray-400 bg-gray-100' : 'text-gray-600 border-2 border-gray-500' } rounded-s-lg transition w-full`}>Questions</button>
+                    <button on:click={ () => setQuestionType(QuestionBank) } type="button" class={`text-sm font-semibold py-2.5 px-8 ${questionType != QuestionBank ? 'text-gray-400 bg-gray-100' : 'text-gray-600 border-2 border-gray-500' } rounded-e-lg transition w-full`}>Question Archive</button> 
                 </div>      
             </div>
             <div class="px-8 py-4 min-w-[36rem] flex items-center justify-between w-full">
@@ -746,14 +808,14 @@
                     </div>
                 </div>
                 <div class="absolute z-50 bg-white w-full">
-                    <svelte:component on:mass-assign={ (e) => massAssignQuestions(e.detail.selectedQuestions) } on:load-more-question-bank={ loadMoreQuestionBank } on:load-more-questions={ loadMoreQuestions } on:edit={ (e) => openEditQuestionForm(e.detail) } on:assign={ (e) => assignQuestion(e.detail) } on:get-question-bank={ (e) => getQuestionBankQuestions(e.detail.value) } this={ questionType } questions={ newQuestions } questionBank={ newQuestionBank } { questionCurrentPageNumber} { questionLastPageNumber } { classes } { assessmentCategories } { sessions } { terms } { assessmentTypes } { subjects } sections={ sectionsFilter } { assessmentQuestionBanks }  />
+                    <svelte:component on:mass-assign={ (e) => massAssignQuestions(e.detail.selectedQuestions) } on:load-more-question-bank={ loadMoreQuestionBank } on:load-more-questions={ loadMoreQuestions } on:edit={ (e) => openEditQuestionForm(e.detail) } on:assign={ (e) => assignQuestion(e.detail) } on:get-question-bank={ (e) => getQuestionBankQuestions(e.detail.value) } on:select-question={ (e) => onSelectQuestion(e.detail.questionId) } on:deselect-question={ (e) => onDeSelectQuestion(e.detail.questionId) } on:check-all={ (e) => onCheckAllQuestions(e.detail.questions, e.detail.checkedAll) } this={ questionType } questions={ newQuestions } questionBank={ newQuestionBank } { questionCurrentPageNumber} { questionLastPageNumber } { classes } { assessmentCategories } { sessions } { terms } { assessmentTypes } { subjects } sections={ sectionsFilter } { assessmentQuestionBanks }  />
                 </div>
             </div>
         </div>
         <div class="fixed bottom-0 h-[calc(100vh-13rem)] ml-[35rem] w-full bg-white overflow-auto">
             <div class="relative flex flex-col h-full">
                 <div class="pb-52 max-w-lg">
-                    <AssignedQuestions on:mass-unassign={ (e) => massUnassignQuestions(e.detail.selectedQuestions) } on:edit={ (e) => openEditQuestionForm(e.detail) } on:unassign={ (e) => unAssignQuestion(e.detail) } { assignedQuestions } sections={ assessmentSections } />   
+                    <AssignedQuestions on:mass-unassign={ (e) => massUnassignQuestions(e.detail.selectedQuestions) } on:edit={ (e) => openEditQuestionForm(e.detail) } on:unassign={ (e) => unAssignQuestion(e.detail) } { assignedQuestions } sections={ assessmentSections } on:download-excel={ downloadQuestionsExcel } on:select-question={ (e) => onSelectQuestion(e.detail.questionId) } on:deselect-question={ (e) => onDeSelectQuestion(e.detail.questionId) } on:check-all={ (e) => onCheckAllQuestions(e.detail.questions, e.detail.checkedAll) } />   
                 </div>
             </div>
         </div>
@@ -767,9 +829,12 @@
             on:saving={ () => disabled = true } 
             on:error={ () => disabled = false } 
             questionId={ question.questionId } 
-            { sections } 
+            { edit } 
             { topics } 
+            { sections } 
+            { disabled }
             { questionEdit } 
+            { subjectId }
             questionBankId={ question.questionBankId }
             question={ question.question } 
             correctAnswer={ question.correctAnswer } 
@@ -778,8 +843,6 @@
             questionType={ question.questionType } 
             selectedSection={ question.sectionId } 
             selectedTopic={ question.topicId }
-            { edit } 
-            { disabled }
             source={ question.source }  
             on:cancel={ closeSheet } 
             on:updated={ (e) => updateQuestion(e) } 
@@ -853,6 +916,21 @@
         <div class="flex items-center space-x-3 w-full">
             <button on:click={ () => { questionsToBeAssigned = []; showModal = false } } class="bg-gray-400 text-white hover:bg-gray-500 rounded-lg px-4 py-2.5 transition text-sm">Cancel</button>
             <Button { disabled } on:click={ () => massAssignQuestions(questionsToBeAssigned) } buttonText="Assign" className="text-sm"/>
+        </div>
+       
+    </div>
+</Modal>
+
+<Modal show={ exportQuestionsModal }>
+    <div class="flex flex-col space-y-8 justify-center items-center h-full">
+
+        <p class="font-bold text-gray-800 text-lg">Export Questions</p>
+
+        <p class="text-sm font-semibold">Total Questions: { selectedQuestions.length }</p>
+
+        <div class="flex items-center space-x-3 w-full">
+            <button on:click={ () => exportQuestionsModal = false } class="bg-gray-400 text-white hover:bg-gray-500 rounded-lg px-4 py-2.5 transition text-sm">Cancel</button>
+            <Button { disabled } on:click={ downloadQuestionsExcel } buttonText="Export" className="text-sm"/>
         </div>
        
     </div>

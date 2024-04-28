@@ -137,7 +137,7 @@
                         <Button on:click={ updateQuestionBankClasses } { disabled } buttonText="Update" />
                     </div>
                     <div>
-                        <a use:inertia class="border-2 border-blue-600 p-2.5 text-blue-600 rounded-lg" href={`/assessments/termly/question_bank/sections/${questionBankId}`}>Sections</a>
+                        <a use:inertia class="border-2 border-blue-600 p-2.5 text-blue-600 rounded-lg" href={`/assessments/question_bank/sections/${questionBankId}`}>Sections</a>
                     </div>
                 </div>
             </div>

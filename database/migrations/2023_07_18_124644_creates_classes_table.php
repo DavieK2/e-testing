@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('classes', function(Blueprint $table){
             $table->ulid('uuid')->unique()->index();
             $table->string('class_name');
-            $table->string('class_code');
+            $table->string('class_code')->unique();
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });

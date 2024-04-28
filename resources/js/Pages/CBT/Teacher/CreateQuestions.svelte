@@ -81,6 +81,8 @@
 
     onMount(() => {
         
+        console.log(subjectId);
+        
         getQuestions();
         getSections();
         getQuestionTopics();
@@ -309,6 +311,7 @@
             <div class="relative flex flex-col h-full">
                 <div class="max-w-xl px-6 pt-8">
                     <EditableQuestionCard 
+                        { subjectId }
                         { questionBankId }
                         { topics } 
                         { sections } 

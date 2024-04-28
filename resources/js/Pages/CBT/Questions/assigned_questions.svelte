@@ -29,18 +29,26 @@
         selectedQuestions.push(questionId);
         selectedQuestions = selectedQuestions
 
+        dispatch('select-question', { questionId });
+
     }
 
     const unselectQuestion = (questionId) => {
 
         selectedQuestions = selectedQuestions.filter((question) => question != questionId);
+
+        dispatch('deselect-question', { questionId });
     }
 
     $: disabled = selectedQuestions.length === 0 || initialQuestions.length === 0 
 
     const checkAll = () => {
 
+       
+
         if( checkedAll  ){
+
+            dispatch('check-all', { questions: selectedQuestions, checkedAll });
 
             selectedQuestions = selectedQuestions.filter((q) => ! initialQuestions.some( (s) => q === s.questionId ));
 
@@ -57,8 +65,10 @@
             
             selectedQuestions = selectedQuestions;
 
+            dispatch('check-all', { questions: selectedQuestions, checkedAll });
         }
 
+       
     }
 
     const massUnassign = () => {
@@ -113,8 +123,11 @@
             <p class="text-base font-bold">Total Questions: { initialQuestions.length }</p>
        </div>
        <div>
-            <button class="p-2 text-gray-800 rounded-lg border-2 border-gray-800">
-                <Icons className="h-7 w-7 fill-current" icon="excel" />
+            <button on:click={ () => dispatch('download-excel') } class="px-4 py-2 text-gray-800 rounded-lg border-2 border-gray-800">
+                <div class="flex space-x-2 items-center">
+                    <span class="text-sm">Export</span>
+                    <Icons className="h-6 w-6 fill-current" icon="excel" />
+                </div>
             </button>
        </div>
     </div>

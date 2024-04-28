@@ -124,25 +124,30 @@ class QuestionListResource extends JsonResource
         //     }
         // }
 
-       foreach ( is_array($this->options) ? $this->options : json_decode($this->options, true) as $option ) {
+        foreach ( is_array($this->options) ? $this->options : json_decode($this->options, true) as $option ) {
 
-            if($option['type'] === 'text'){
-                $content = $option['content'];
-                $option['htmlContent'] = "<p>$content</p>";
-            }
+                if($option['type'] === 'text'){
+                    $content = $option['content'];
+                    $option['htmlContent'] = "<p>$content</p>";
+                }
 
-            if($option['type'] === 'image'){
+                if($option['type'] === 'image'){
 
-                $content = $option['content'];
-                $alt = $option['alt'] ?? null;
+                    $content = $option['content'];
+                    $alt = $option['alt'] ?? null;
 
-                $option['htmlContent'] = "<img class='p-3 h-40 w-auto rounded-lg' alt='$alt' src='$content' />";
-            }
+                    $option['htmlContent'] = "<img class='p-3 h-40 w-auto rounded-lg' alt='$alt' src='$content' />";
+                }
 
-            $options[] = $option;
-       }
+                $options[] = $option;
+        }
 
-        return [
+        $extraData = [];
+
+        $extraData['isVisible' ] = true;
+        $extraData['isAssigned'] = isset($this->isAssigned) ? $this->isAssigned : ($this->assessment_id == request('assessmentId') ? 'Assigned' : 'Not Assigned');
+
+        $data = [
             'questionId'        => $this->uuid,
             'questionBankId'    => $this->question_bank_id,
             'question'          => $question,
@@ -155,8 +160,8 @@ class QuestionListResource extends JsonResource
             'topicId'           => $this->topicId,
             'sectionId'         => $this->sectionId ?? 'No Section',
             'sectionTitle'      => $this->sectionTitle ?? 'No Section',
-            'isVisible'         => true,
-            'isAssigned'        => isset($this->isAssigned) ? $this->isAssigned : ($this->assessment_id == request('assessmentId') ? 'Assigned' : 'Not Assigned')
         ];
+
+        return request()->user()->is_admin ? $data + $extraData : $data;
     }
 }

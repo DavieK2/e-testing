@@ -14,10 +14,9 @@
 
     export let correctAnswer = ""; 
     export let options = [];
-    export let initOptions;
     export let sections = [];
     export let topics = [];
-
+    
     export let questionScore = "1";
     export let questionType = "";
     export let question = "";
@@ -26,8 +25,10 @@
     export let questionId;
     export let questionBankId;
     export let questionImage = "";
+    export let subjectId = null;
     export let source;
-
+    
+    let initOptions;
     let image = [];
 
 
@@ -82,7 +83,8 @@
             sectionId: selectedSection, 
             topicId: selectedTopic, 
             questionBankId,
-            questionType: selectedQuestionType ?? questionType
+            questionType: selectedQuestionType ?? questionType,
+            subjectId
         }
 
         router.postWithToken('/api/question/update/' + questionId, data, {

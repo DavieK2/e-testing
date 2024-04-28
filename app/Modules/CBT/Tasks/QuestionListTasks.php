@@ -35,7 +35,7 @@ class QuestionListTasks extends BaseTasks{
                                     ->leftJoin('topics', 'topics.uuid', '=', 'questions.topic_id')
                                     ->leftJoin('sections', 'sections.uuid', '=', 'questions.section_id')
                                     ->selectRaw('questions.*, sections.uuid as sectionId, sections.title as sectionTitle, topics.uuid as topicId, IF(questions.assessmentId = questions.assessment_id, "Assigned", "Not Assigned") as isAssigned')
-                                    // ->whereNull('questions.assessmentId')
+                                    ->whereNull('questions.assessmentId')
                                     ->orderBy('questions.created_at');
         }
 
@@ -44,20 +44,20 @@ class QuestionListTasks extends BaseTasks{
 
     public function getAssignedQuestions()
     {   
-            $questions = DB::table('assessment_questions')
-                            ->join('questions', 'questions.uuid', '=', 'assessment_questions.question_id')
-                            ->leftJoin('topics', 'topics.uuid', '=', 'questions.topic_id')
-                            ->leftJoin('sections', 'sections.uuid', '=', 'assessment_questions.section_id')
-                            ->where( function($query) {
-                                
-                                $query->where('assessment_questions.assessment_id', $this->item['assessmentId']);
+        $questions = DB::table('assessment_questions')
+                        ->join('questions', 'questions.uuid', '=', 'assessment_questions.question_id')
+                        ->leftJoin('topics', 'topics.uuid', '=', 'questions.topic_id')
+                        ->leftJoin('sections', 'sections.uuid', '=', 'assessment_questions.section_id')
+                        ->where( function($query) {
+                            
+                            $query->where('assessment_questions.assessment_id', $this->item['assessmentId']);
 
-                                if( isset( $this->item['subjectId'] ) ) $query->where('assessment_questions.subject_id', $this->item['subjectId']);
-                                if( isset( $this->item['classId'] ) ) $query->where('assessment_questions.class_id', ClassModel::firstWhere('class_code', $this->item['classId'])->uuid);     
+                            if( isset( $this->item['subjectId'] ) ) $query->where('assessment_questions.subject_id', $this->item['subjectId']);
+                            if( isset( $this->item['classId'] ) ) $query->where('assessment_questions.class_id', ClassModel::firstWhere('class_code', $this->item['classId'])->uuid);     
 
-                            })
-                            ->orderBy('questions.created_at')
-                            ->select('questions.*', 'sections.uuid as sectionId', 'sections.title as sectionTitle', 'topics.uuid as topicId');
+                        })
+                        ->orderBy('questions.created_at')
+                        ->select('questions.*', 'sections.uuid as sectionId', 'sections.title as sectionTitle', 'topics.uuid as topicId');
 
 
         return new static( [ ...$this->item, 'query' => $questions ?? [] ] );

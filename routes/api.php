@@ -65,10 +65,12 @@ Route::middleware(['auth:sanctum'])->group(function(){
 
 
     Route::post('/question/import', [ QuestionController::class, 'import']);
+    
 
 
     Route::post('/question/assign/{assessment:uuid}', [ QuestionController::class, 'assignQuestionToAssessment']);
     Route::post('/question/unassign/{assessment:uuid}', [ QuestionController::class, 'unAssignQuestionFromAssessment']);
+    Route::post('/questions/download-excel', [ QuestionController::class, 'downloadExcel']);
 
     Route::post('/question/mass-assign/{assessment:uuid}', [ QuestionController::class, 'massAssignQuestions']);
     Route::post('/question/mass-unassign/{assessment:uuid}', [ QuestionController::class, 'massUnassignQuestions']);

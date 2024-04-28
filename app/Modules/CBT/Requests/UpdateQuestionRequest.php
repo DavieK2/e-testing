@@ -43,6 +43,7 @@ class UpdateQuestionRequest extends FormRequest
             'questionBankId'    => [ Rule::requiredIf( fn() => ! $assessment?->is_standalone ), 'exists:question_banks,uuid'],
             'sectionId'         => [ Rule::requiredIf( fn() => ! $assessment?->is_standalone ), 'exists:sections,uuid'],
             'topicId'           => ['nullable', 'exists:topics,uuid'],
+            'subjectId'         => 'required|exists:subjects,uuid'
         ];
     }
 }

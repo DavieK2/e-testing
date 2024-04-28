@@ -133,7 +133,29 @@ export const router  = {
             let response = await axios.post(url, data, {
                 headers: {
                     "Content-Type" : "application/json",
-                    "Content-Disposition" : "attachment; filename=results.xlsx"
+                    "Content-Disposition" : "attachment; filename=results.xlsx",
+                },
+                responseType: 'arraybuffer'
+            });  
+
+            return triggerSuccessEvent(response, events);
+
+        } catch (error) {
+
+            return triggerFailureEvent(error, events);
+            
+        }
+    },
+
+    downloadExcelWithToken : async (url, data, events = {}) => {
+
+        try {
+
+            let response = await axios.post(url, data, {
+                headers: {
+                    "Content-Type" : "application/json",
+                    "Content-Disposition" : "attachment; filename=results.xlsx",
+                    "Authorization" : "Bearer " + localStorage.getItem("token")
                 },
                 responseType: 'arraybuffer'
             });  

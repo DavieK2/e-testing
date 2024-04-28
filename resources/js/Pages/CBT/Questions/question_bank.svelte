@@ -41,11 +41,15 @@
 
         selectedQuestions.push(questionId);
         selectedQuestions = selectedQuestions
+
+        dispatch('select-question', { questionId });
     }
 
     const unselectQuestion = (questionId) => {
 
         selectedQuestions = selectedQuestions.filter((question) => question != questionId);
+
+        dispatch('deselect-question', { questionId });
     }
 
     $: disabled = selectedQuestions.length === 0 || initialQuestions.length === 0 
@@ -53,6 +57,8 @@
     const checkAll = () => {
 
         if( checkedAll  ){
+
+            dispatch('check-all', { questions: selectedQuestions, checkedAll });
 
             selectedQuestions = selectedQuestions.filter((q) => ! initialQuestions.some( (s) => q === s.questionId ));
 
@@ -69,8 +75,8 @@
             
             selectedQuestions = selectedQuestions;
 
+            dispatch('check-all', { questions: selectedQuestions, checkedAll });
         }
-
     }
 
     const massAssign = () => {

@@ -7,6 +7,7 @@ use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Models\QuestionModel;
 use App\Services\CSVWriter;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Spatie\SimpleExcel\SimpleExcelReader;
@@ -17,6 +18,7 @@ use Tiptap\Editor;
 class ImportQuestionsTask extends BaseTasks{
 
     protected ?CSVWriter $errorFileWriter = NULL;
+    protected $questions = [];
 
     public function saveFileToLocalDisk()
     {
@@ -39,11 +41,10 @@ class ImportQuestionsTask extends BaseTasks{
         $importFileKey = Cache::get($this->item['key']);
 
         $errors = [];
-        
-        SimpleExcelReader::create( storage_path("app/$importFileKey") )->trimHeaderRow()->getRows()->each(function($row){
+
+        SimpleExcelReader::create( storage_path("app/$importFileKey") )->trimHeaderRow()->getRows()->each(function($row) {
                
             $mapping = $this->item['mappings'];
-        
 
             $data = collect($mapping)->flatMap(function($map, $index) use($row) {
 
@@ -97,7 +98,7 @@ class ImportQuestionsTask extends BaseTasks{
 
             $data =  $validator->validated();
 
-            $data['options'] = collect( array_values( $data['options'] ?? [] ) )->map( fn($option) => ['type' => 'text', 'content' => $option ] )->toArray();
+            $data['options'] = json_encode( collect( array_values( $data['options'] ?? [] ) )->map( fn($option) => ['type' => 'text', 'content' => $option ] )->toArray() );
 
             $question = $data['question'];
 
@@ -107,16 +108,37 @@ class ImportQuestionsTask extends BaseTasks{
 
             $data['question'] = json_encode( $question );
 
-            $data['questionType'] = $this->item['questionType'];
+            $data['question_type'] = $this->item['questionType'];
 
-            $data['sectionId'] = $this->item['sectionId'] ?? null;
+            $data['section_id'] = $this->item['sectionId'] ?? null;
 
             $assessment = AssessmentModel::firstWhere('uuid', $this->item['assessmentId']);
 
-            ( new CreateQuestionTasks() )->start($data + ['assessment' => $assessment, 'questionBankId' => $this->item['questionBankId'] ?? null ])->createQuestion();
+            $correct_answer = $data['correctAnswer'];
+            $question_score = $data['questionScore'];
+            
+            unset($data['correctAnswer']);
+            unset($data['questionScore']);
+
+            $data =  $data + ['correct_answer' => $correct_answer, 'question_score' => $question_score, 'assessment_id' => $assessment->uuid, 'question_bank_id' => $this->item['questionBankId'] ?? null , 'uuid' => Str::ulid() ];
+
+            $this->questions[] = $data;
+
+            if( count( $this->questions ) > 500 ) {
+
+                DB::table('questions')->insert( $this->questions );
+                $this->questions = [];
+            }
             
         });
 
+        
+        if( count( $this->questions ) > 0 ) {
+
+            DB::table('questions')->insert( $this->questions );
+            $this->questions = [];
+
+        }
 
         if( $this->errorFileWriter ) {
 

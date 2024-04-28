@@ -16,7 +16,9 @@ use App\Services\CSVWriter;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
@@ -43,71 +45,21 @@ require __DIR__ . '/auth.php';
 
 Route::get('/', function(){
     
+    // $redis = Redis::connection();
   
+    // Cache::forget('questions');
+
+    dd( Cache::get('questions_xJcxDd3I_01htyjzz2nst0xxbkwbez2a5nk_100_001') );
+
     $alphabets = collect(range('A','Z'))->flatMap( fn($alphabet) => [ $alphabet ])->toArray();
 
-    $questions = QuestionModel::take(50)->get();
+    $questions = QuestionModel::get();
 
-    $questionData = [];
-    $maxOptionsCount = 0;
-
-    foreach ($questions as $index => $question) {
-
-        $fileWriter = new CSVWriter();
-
-        $questionContent = json_decode($question->question, true);
-        $questionText = ( new Editor())->setContent($questionContent['content'])->getText();
-
-        $options = [];
-        $correctOption = '';
-       
-
-        foreach ( is_array($question->options) ? $question->options : json_decode($question->options, true) as $key => $value ) {
-        
-            $options[$alphabets[$key]] = $value['content'];
-
-            if( $question->correct_answer === $value['content']) $correctOption =  $alphabets[$key];
-        }
-
-        $optionsCount = count($options);
-        $maxOptionsCount = $maxOptionsCount >  $optionsCount ? $maxOptionsCount : $optionsCount;
-
-        $questionData[] = [
-            'S/N'               =>  $index + 1,
-            'Question'          =>  $questionText,
-            'options'           =>  $options,
-            'Correct Answer'    =>  $correctOption,
-            'Score'             =>  $question->question_score
-        ];
-    }
-
-    $questionOptions =   array_slice($alphabets, 0, $maxOptionsCount );
-
-    $headings = ['S/N','Questions', ...$questionOptions, 'Correct Answer', 'Score'];
-          
     
-    $newQuestionData = [];
+    Cache::store('redis')->put( 'questions_1', $questions->toArray() );
 
-    foreach ( $questionData as $key => $value ) {
-       
-        $flippedQuestionOptions = array_flip($questionOptions);
+    return 'Pushed to cache';
 
-        $diff = array_diff_key($flippedQuestionOptions, $value['options']);
-
-        $addnOptions = collect($diff)->mapWithKeys( fn( $value, $key ) => [ $key => '' ] )->toArray();
-
-        $newQuestionData[] = [
-            'S/N'               =>  $key + 1,
-            'Question'          =>  $value['Question'],
-            ...$value['options'] + $addnOptions,
-            'Correct Answer'    =>  $value['Correct Answer'],
-            'Score'             =>  $value['Score'],
-        ];
-
-        dd( $newQuestionData );
-    }
-
-    return Excel::download( new Export( collect($questionData), $headings), "QUESTIONS.xlsx" );
     // return $_SERVER['HOSTNAME'];
 
     // return $imgs;
@@ -305,7 +257,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/teacher/create-question-bank/classes/{question_bank:uuid}', fn(QuestionBankModel $questionBank) => Inertia::render('CBT/Teacher/QuestionBankClasses', [ 'questionBankId' => $questionBank->uuid ]) );
     Route::get('/teacher/create-question-bank/sections/{question_bank:uuid}', fn(QuestionBankModel $questionBank) => Inertia::render('CBT/Teacher/QuestionBankSections', [ 'questionBankId' => $questionBank->uuid ]) );
    
-    Route::get('/teacher/questions/{question_bank:uuid}', fn(QuestionBankModel $questionBank) => Inertia::render('CBT/Teacher/CreateQuestions', [ 'questionBankId' => $questionBank->uuid, 'assessmentId' => AssessmentModel::find($questionBank->assessment_id)->uuid  ]) );
+    Route::get('/teacher/questions/{question_bank:uuid}', fn(QuestionBankModel $questionBank) => Inertia::render('CBT/Teacher/CreateQuestions', [ 'questionBankId' => $questionBank->uuid, 'assessmentId' => AssessmentModel::find($questionBank->assessment_id)->uuid, 'subjectId' => $questionBank->subject_id  ]) );
 
 });
 

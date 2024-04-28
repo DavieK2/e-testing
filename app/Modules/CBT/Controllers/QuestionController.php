@@ -91,13 +91,8 @@ class QuestionController extends Controller
     public function massUnassignQuestions(AssessmentModel $assessment, MassAssignUnQuestionsRequest $request)
     {
         $data = $request->validated();
-
-      
-        foreach ( $data['questions'] as $question ) {
                 
-            $assessment->unAssignQuestion( $question, $data['classId'], $data['subjectId'] );
-            
-        }
+        $assessment->unAssignQuestions( $data['questions'], $data['classId'], $data['subjectId'] );
 
         return response()->json([
             'message' => 'Questions Successfully Unassigned'
@@ -105,11 +100,10 @@ class QuestionController extends Controller
 
     }
 
-    public function downloadQuestions(AssessmentModel $assessment, DownloadQuestionsRequest $request)
+    public function downloadExcel(DownloadQuestionsRequest $request)
     {
         $data = $request->validated();
-        $fileWriter = new CSVWriter();
-
+        
         $alphabets = collect(range('A','Z'))->flatMap( fn($alphabet) => [ $alphabet ])->toArray();
         $maxOptionsCount = 0;
 
@@ -137,7 +131,7 @@ class QuestionController extends Controller
             $questionData[] = [
                 'S/N'               =>  $index + 1,
                 'Question'          =>  $questionText,
-                ...$options,
+                'options'           =>  $options,
                 'Correct Answer'    =>  $correctOption,
                 'Score'             =>  $question->question_score
             ];
@@ -145,13 +139,30 @@ class QuestionController extends Controller
        
         $questionOptions =   array_slice($alphabets, 0, $maxOptionsCount );
 
-        foreach ($questionData as $key => $value) {
-            # code...
-        }
-
         $headings = ['S/N','Questions', ...$questionOptions, 'Correct Answer', 'Score'];
 
-        return Excel::download( new Export( $questions, $headings), "STUDENTS_DATA.xlsx" );
+        $newQuestionData = [];
+
+        foreach ( $questionData as $key => $value ) {
+        
+            $flippedQuestionOptions = array_flip($questionOptions);
+
+            $diff = array_diff_key($flippedQuestionOptions, $value['options']);
+
+            $addnOptions = collect($diff)->mapWithKeys( fn( $value, $key ) => [ $key => '' ] )->toArray();
+
+            $newQuestionData[] = [
+                'S/N'               =>  $key + 1,
+                'Question'          =>  $value['Question'],
+                ...$value['options'] + $addnOptions,
+                'Correct Answer'    =>  $value['Correct Answer'],
+                'Score'             =>  $value['Score'],
+            ];
+
+            
+        }
+
+        return Excel::download( new Export( collect($newQuestionData), $headings), "questions_".now()->format('Y_m_d_H_i_s').".xlsx" );
 
     }
 }
