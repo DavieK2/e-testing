@@ -19,17 +19,22 @@
     
     export let questionScore = "1";
     export let questionType = "";
+    export let assigned = false;
     export let question = "";
     export let selectedTopic = "";
     export let selectedSection = "";
     export let questionId;
     export let questionBankId;
+    export let questionBank = false;
     export let questionImage = "";
     export let subjectId = null;
+    export let classId = null;
     export let source;
+    export let create = false;
     
     let initOptions;
     let image = [];
+    let userRole = $page.props.role
 
 
     let questionTypes = {
@@ -84,7 +89,10 @@
             topicId: selectedTopic, 
             questionBankId,
             questionType: selectedQuestionType ?? questionType,
-            subjectId
+            subjectId,
+            classId,
+            assigned,
+            questionBank
         }
 
         router.postWithToken('/api/question/update/' + questionId, data, {
@@ -149,6 +157,7 @@
     }
 
     $: {
+
         if( selectedSection ){
             selectedQuestionType = sections.filter((section) => section.value === selectedSection)[0]?.questionType;
         }
@@ -158,8 +167,7 @@
         }else{
             questionScore = "1";
             options = options
-        }
-        
+        }     
     }
     
 </script>
@@ -173,14 +181,16 @@
                 <Select options={ sections } on:selected={ (e) => selectedSection = e.detail.value } on:deselected={ (e) => selectedSection = null } value={ selectedSection } placeholder="Select Question Section" className="text-sm ring-2"/>
             {/key}
         </div>
-
-        <div class="space-y-4 pb-4 my-4">
-            <p class="text-gray-800 font-semibold text-sm">Select Question Topic</p>
-            { #key selectedTopic }
-                <Select options={ topics } on:selected={ (e) => selectedTopic = e.detail.value } on:deselected={ (e) => selectedTopic = null } value={ selectedTopic } placeholder="Select Question Topic" className="text-sm ring-2" />
-            { /key }
-        </div>
-
+        { #if create  && edit && ( ! assigned ) }
+            <div class="space-y-4 pb-4 my-4">
+                <p class="text-gray-800 font-semibold text-sm">Select Question Topic</p>
+                { #key selectedTopic }
+                
+                    <Select options={ topics } on:selected={ (e) => selectedTopic = e.detail.value } on:deselected={ (e) => selectedTopic = null } value={ selectedTopic } placeholder="Select Question Topic" className="text-sm ring-2" />
+                    
+                { /key }
+            </div>
+        { /if }
         <div class="space-y-4 my-4">
             <p class="text-gray-800 font-semibold text-sm">Question</p>
             { #key ( question && questionEdit) }

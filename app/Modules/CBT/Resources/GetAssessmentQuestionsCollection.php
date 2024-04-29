@@ -10,6 +10,9 @@ class GetAssessmentQuestionsCollection extends ResourceCollection
     
     public function toArray($request)
     {
+        // $data = $this->resource->groupBy('section_id');
+
+        // dd( $data );
         return parent::toArray($request);
     }
 }

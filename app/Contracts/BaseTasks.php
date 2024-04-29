@@ -151,7 +151,8 @@ abstract class BaseTasks {
         }
 
         if( empty($formatter) && $reponseType == ResponseType::JSON ){
-            return new class(empty($message) ? $builder->item : [...$builder->item, 'message' => $message], $status) extends BaseResource {};
+
+            return new class( empty($message) ? $builder->item : [...$builder->item, 'message' => $message], $status ) extends BaseResource {};
         }
 
         if(empty($formatter) && $reponseType == ResponseType::INERTIA){
@@ -162,9 +163,10 @@ abstract class BaseTasks {
             throw new Exception('Formatter class does not exist: '.$formatter);
         }
 
-        if($reponseType == ResponseType::JSON){
+        if( $reponseType == ResponseType::JSON ){
 
-            return  new $formatter($builder->item);
+            // dd( $builder->item );
+            return  new $formatter( $builder->item );
         }
 
         if($reponseType == ResponseType::INERTIA){

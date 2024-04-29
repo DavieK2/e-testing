@@ -51,7 +51,7 @@ RUN  chown -R www-data:www-data *
 
 RUN  composer install --ignore-platform-reqs --no-interaction
 
-RUN  php artisan optimize:clear && \
-     php artisan cache:clear && \
-     php artisan config:clear && \
-     php artisan config:cache
+# RUN  php artisan optimize:clear && \
+#      php artisan cache:clear && \
+#      php artisan config:clear && \
+#      php artisan config:cache

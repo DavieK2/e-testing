@@ -6,11 +6,20 @@ import knex from 'knex';
 import dotenv from 'dotenv';
 import moment from 'moment';
 import http2Express from 'http2-express-bridge';
+import redis from 'redis'
 
 
 dotenv.config();
 
 const app = http2Express(express);
+
+const redisClient = redis.createClient( {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+    
+});
+
+
 
 const sslServer = https.createSecureServer( {
     key: fs.readFileSync('./certs/localhost.key' ),
@@ -53,7 +62,8 @@ app.get('/sse', async (req, res) => {
 
         let timeRemaining = endTime - startTime;
 
-        let timer = setInterval(async () => {
+        
+        let timer = setInterval( async () => {
 
             timeRemaining --;
 

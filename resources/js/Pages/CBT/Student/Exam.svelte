@@ -32,9 +32,15 @@
 
     let evtSource;
 
+    let initialQuestions = []
     let questions = [];
+    let sections = [];
+    let studentResponses = [];
+    let currentSectionIndex = 0;
+    let currentSection = {};
     let currentQuestionNumber = 1;
     let currentQuestion;
+    let currentSectionQuestionNumber = {}
 
     let selectedColor = "rgb(74 222 128)";
     let notAnsweredColor = "rgb(248 113 113)";
@@ -51,17 +57,39 @@
 
     onMount( async () => {
 
-        let studentResponses;
-
         let studentResponsesUrl = `/api/cbt/get-responses/student/${assessmentId}`
 
         if( subjectId ) studentResponsesUrl += `?subjectId=${subjectId}`
 
         await router.getWithToken(studentResponsesUrl, {
+            
             onSuccess: (res) => {
                 studentResponses = res.data;
             }
         })
+
+        if(  sessionStorage.getItem('hasSetQuestions') ){
+
+            sections = JSON.parse( sessionStorage.getItem('sections' ) );
+
+            currentSection = sections[currentSectionIndex];
+
+            initialQuestions =  JSON.parse( sessionStorage.getItem('questions') );
+
+            getQuestions();
+
+            startTimer();
+
+            return; 
+        }
+
+        fetchQuestions();
+
+        startTimer();
+
+    });
+
+    const fetchQuestions = async () => {
 
         let questionsUrl = `/api/cbt/session/questions/${assessmentId}`
 
@@ -70,49 +98,66 @@
         await router.getWithToken(questionsUrl, {
 
             onSuccess : (response) => {
-                questions  = response.data.flatMap((question) => {
 
-                    studentResponses.forEach((ques) => {
+                sections = response.sections;
 
-                        let answer = ques.selectedAnswer;
+                sessionStorage.setItem('sections', JSON.stringify( sections ) );
 
+                currentSection = sections[currentSectionIndex];
 
-                        if( ques.questionId === question.questionId ){
-                            question.selectedAnswer =  ques.selectedAnswer
-                            question.notAnswered = ques.notAnswered
-                            question.markedForReview = ques.markedForReview
-                            question.submitted = true
-                        }
-                    });
+                initialQuestions = response.data;
 
-                    return [
-                        {
-                            prompt : question.prompt,
-                            choices : question.choices,
-                            questionId : question.questionId,
-                            selectedAnswer: question.selectedAnswer ?? "",
-                            notAnswered : question.notAnswered ?? false,
-                            markedForReview :  question.markedForReview ?? false,
-                            notVisited: true,
-                            submitted : question.submitted ?? false
-                        }
-                    ];
-                });
+                sessionStorage.setItem('questions', JSON.stringify( initialQuestions ) );
 
-                if(questions.length > 0){
-                    currentQuestion = questions[currentQuestionNumber - 1];
-                    
-                }
-                
-                questions = shuffle(questions);
+                sessionStorage.setItem('hasSetQuestions', '1');
 
-                isLoading = false;
+                getQuestions();
+
             }
         });
+    }
 
-        startTimer();
-    });
+    const getQuestions = () => {
 
+        questions  = initialQuestions[currentSection.sectionId].flatMap((question) => {
+
+                        studentResponses.forEach((ques) => {
+
+                            let answer = ques.selectedAnswer;
+
+                            if( ques.questionId === question.questionId ){
+                                question.selectedAnswer =  ques.selectedAnswer
+                                question.notAnswered = ques.notAnswered
+                                question.markedForReview = ques.markedForReview
+                                question.submitted = true
+                            }
+                        });
+
+                        return [
+                            {
+                                prompt : question.prompt,
+                                choices : question.choices,
+                                questionId : question.questionId,
+                                selectedAnswer: question.selectedAnswer ?? "",
+                                notAnswered : question.notAnswered ?? false,
+                                markedForReview :  question.markedForReview ?? false,
+                                notVisited: true,
+                                submitted : question.submitted ?? false
+                            }
+                        ];
+                });
+
+        if( questions.length > 0 ){
+
+            currentSectionQuestionNumber[currentSection.sectionId] = currentSectionQuestionNumber[currentSection.sectionId] ?? 1
+            currentQuestionNumber = currentSectionQuestionNumber[currentSection.sectionId];
+            currentQuestion = questions[currentQuestionNumber - 1];
+            
+        }
+        
+        isLoading = false;
+
+    }
 
     const shuffle = (array) => {
 
@@ -241,7 +286,8 @@
         
         checkIfQuestionHasBeenAnswered();
        
-        currentQuestionNumber = index + 1 ;
+        currentSectionQuestionNumber[currentSection.sectionId] = index + 1;
+        currentQuestionNumber = currentSectionQuestionNumber[currentSection.sectionId] ;
     }
 
     const checkIfQuestionHasBeenAnswered = () => {
@@ -284,7 +330,10 @@
                 }
 
                 if(currentQuestionNumber < questions.length){
-                    currentQuestionNumber ++ ;
+
+                    currentSectionQuestionNumber[currentSection.sectionId] ++ ;
+
+                    currentQuestionNumber = currentSectionQuestionNumber[currentSection.sectionId] ;
                 }
 
                 submitLoading = false
@@ -298,6 +347,14 @@
                 window.location.replace( res.data.url );
             }
         });
+    }
+
+    const setSection = (index) => {
+
+        currentSectionIndex = index;
+        currentSection = sections[index]
+
+        getQuestions();
     }
 
     const showSubmitModal = () => submitModal = true;
@@ -384,16 +441,20 @@
             <div class="relative flex flex-col flex-1 bg-white border-r">
 
                 <div class="flex items-center space-x-4 w-full shrink-0 border-b h-16 border-gray-300 px-8">
-                    <button class="min-w-max max-w-min text-white bg-gray-700 px-4 py-2 border-2 rounded-lg border-gray-700">Section 1</button>
-                    <button class="min-w-max max-w-min px-4 py-2 border-2 rounded-lg border-gray-700">Section 2</button>
-                    <button class="min-w-max max-w-min px-4 py-2 border-2 rounded-lg border-gray-700">Section 2</button>
+                    { #each sections as section, index }
+                        { #if currentSectionIndex === index }
+                            <button on:click={ () => setSection(index) } class="min-w-max max-w-min text-white bg-gray-700 px-4 py-2 border-2 rounded-lg border-gray-700">{ section.title }</button>
+                        { :else }
+                            <button on:click={ () => setSection(index) }  class="min-w-max max-w-min px-4 py-2 border-2 rounded-lg border-gray-700">{ section.title }</button>
+                        { /if }
+                    {/each}
                 </div>
 
                 <div class="flex flex-col w-full h-[calc(100vh-13rem)] px-8 py-6">
                     <div class="w-full h-full overflow-y-auto">
                         <div class="max-w-xl">
                             <div class="py-6 text-gray-600 border-b">
-                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Asperiores eveniet facilis dolor iste illum cumque? Saepe eius aut soluta velit illo ab nam, magnam earum cum impedit, ipsam officia commodi!</p>
+                                <p>{ currentSection.description }</p>
                             </div>
                             { #each questions as question, index(question.questionId) }
                                 { #if currentQuestionNumber === ( index + 1)}    

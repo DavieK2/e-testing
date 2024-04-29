@@ -38,7 +38,7 @@
 
     let importErrorsLink = '';
 
-    let edit = false;
+    let edit = true;
     let disabled = false;
     let questionEdit = false;
     let showModal = false;
@@ -48,7 +48,9 @@
 
     let classId = $page.props.classCode
     let assessmentId = $page.props.assessmentId
-    let subjectId = $page.props.subjectId
+    let subjectId = $page.props?.subjectId
+    let subjectTitle = $page.props?.subjectTitle
+    let classes = $page.props?.questionBankClasses
     let questionBankId = $page.props.questionBankId
 
     let questions = [];
@@ -163,7 +165,6 @@
     const updateQuestion = () => {
 
         disabled = false;
-        edit = false;
 
         questionEdit = ! questionEdit
 
@@ -294,6 +295,15 @@
                  <span class="mx-2 text-sm font-medium text-gray-700 uppercase">Assessments</span>
                  <Icons icon="chevron_right" className="h-4 w-4 fill-gray-700" />
                  <span class="text-sm font-medium text-gray-700 uppercase">Questions</span>
+                 { #if subjectTitle}
+                    <Icons icon="chevron_right" className="h-4 w-4 fill-gray-700" />
+                    <span class="text-sm font-medium text-gray-700 uppercase">{ subjectTitle }</span>
+                 {/if}
+                 { #if classes }
+                    <Icons icon="chevron_right" className="h-4 w-4 fill-gray-700" />
+                    <span class="text-sm font-medium text-gray-700 uppercase">{ classes }</span>
+                 {/if}
+                
              </div>
          </div>
  
@@ -321,15 +331,18 @@
                 <div class="max-w-xl px-6 pt-8">
                     <EditableQuestionCard 
                         { topics } 
+                        { edit } 
                         { sections } 
+                        { subjectId }
+                        { disabled } 
+                        { questionEdit } 
+                        { questionBankId }
                         on:saving={ () => disabled = true } 
                         on:error={ () => disabled = false } 
                         on:updated={ updateQuestion } 
-                        { disabled } 
-                        { edit } 
-                        { questionEdit } 
-                        { questionBankId }
                         on:saved={ (e) => createQuestion(e.detail.question) } 
+                        questionBank={ true }
+                        create={ true }
                         correctAnswer={ question.correctAnswer } 
                         question={ question.question } 
                         options={ question.options } 
@@ -378,20 +391,17 @@
 
     { #if (slidePanelState === slidePanelStates.importQuestions) }
 
-      <ImportMappingCard  
+        <ImportMappingCard  
             { sections } 
-            { questionTypes } 
             { disabled } 
             { headings }
             options={ getAvailableMappings() }  
             on:deselected={ (e) => mapFields(e.detail) }  
             on:selected={ (e) => mapFields(e.detail) } 
             on:import={ importQuestion } 
-            on:back-button={ () => slidePanelState = slidePanelStates.uploadQuestions } 
-            on:question-type={ (e) => selectedQuestionType = e.detail.value }
-            on:de-question-type={ (e) => selectedQuestionType = null }
-            on:section={ (e) => selectedSection = e.detail.value }
-            on:de-section={ (e) => selectedSection = null }
+            on:back-button={ () => slidePanelState = slidePanelStates.uploadQuestions }
+            on:section={ (e) => { selectedSection = e.detail.value; selectedQuestionType = e.detail.questionType } }
+            on:de-section={ (e) =>{ selectedSection = null; selectedQuestionType = null } }
         />
 
     { /if }

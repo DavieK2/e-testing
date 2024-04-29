@@ -5,7 +5,7 @@ namespace App\Modules\CBT\Features;
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
 use App\Modules\CBT\Models\AssessmentModel;
-use App\Modules\CBT\Resources\GetAssessmentQuestionsCollection;
+use App\Modules\CBT\Resources\GetAssessmentQuestionsFormatter;
 use App\Modules\CBT\Tasks\GetAssessmentQuestionsTasks;
 
 class GetAssessmentQuestionsFeature extends FeatureContract {
@@ -18,9 +18,9 @@ class GetAssessmentQuestionsFeature extends FeatureContract {
     {
         try {
 
-            $builder =  $task->start([ ...$args, 'assessment' => $this->assessment ] )->getAssessmentQuestions()->all();
+            $builder =  $task->start([ ...$args, 'assessment' => $this->assessment ] )->getAssessmentQuestions();
 
-            return $task::formatResponse( $builder, formatter: GetAssessmentQuestionsCollection::class );
+            return $task::formatResponse( $builder, formatter: GetAssessmentQuestionsFormatter::class );
 
 
         } catch (\Throwable $th) {

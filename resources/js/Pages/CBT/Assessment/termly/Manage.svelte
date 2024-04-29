@@ -91,7 +91,7 @@
                     <div class="space-y-6 mt-8">
                         { #each subjects as subject, index }
                              <div class={`flex items-center  space-x-10 ${ index != subjects.length - 1 ? 'border-b pb-6' : '' }`}>
-                                 <div class="text-gray-800 text-sm flex flex-row min-w-[20rem]  items-center">{ subject.subjectName } ( { subject.subjectCode })</div>
+                                 <div class="text-gray-800 text-sm flex flex-row min-w-[20rem]  items-center">{ subject.subjectName } ( { subject.subjectCode } )</div>
                                  <div class={`px-4 py-2 text-center rounded ${ subject.published  ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800' } w-28 text-sm`}>{ subject.published ? 'Published' : 'Unpublished' }</div>
                                  <Dropdown arrowColor="fill-gray-600" placeholder="Actions" className="bg-white border  border-gray-300 text-gray-600">
                                     <div class="flex flex-col space-y-2 items-start">

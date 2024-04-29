@@ -74,10 +74,15 @@
 
     const updateQuestionBankClasses = () => {
 
+        disabled = true;
+
         let classIds = selectedClasses.flatMap( (grade) => [ grade.class_code ]);
 
         router.postWithToken(`/api/question-bank-update`, { questionBankId, classes: classIds }, {
-            onSuccess : (res) => {}
+            onSuccess : (res) => {
+
+                disabled = false;
+            }
         })
     }
 

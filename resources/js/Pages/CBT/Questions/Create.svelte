@@ -30,6 +30,7 @@
 
     let showSlidePanel = false;
     let edit = false;
+    let create = false;
     let disabled = false;
     let showModal = false;
     let exportQuestionsModal = false;
@@ -51,6 +52,7 @@
 
     let sectionsFilter = [];
     let sections = [];
+    let questionFormSections = []
     let assessmentSections = []
     let topics = [];
 
@@ -93,7 +95,8 @@
         questionType: "",
         sectionId : "",
         topicId : "",
-        source : ""
+        source : "",
+        assigned : false,
     };
 
     let slidePanelStates = {
@@ -332,6 +335,8 @@
 
         question = JSON.parse(initQuestion);
         mappings = JSON.parse(resetMappings);
+        edit = false
+        create = false
         mappedFields = {}
 
     }
@@ -493,6 +498,7 @@
 
     const openEditQuestionForm = (ques) => {
 
+        console.log()
         let initEditQuestion = JSON.stringify(ques);
 
         edit = true
@@ -501,6 +507,13 @@
 
         question = JSON.parse(initEditQuestion);
 
+        if( ques.assigned ){
+            questionFormSections = assessmentSections 
+        }else{
+            create = true;
+            questionFormSections = sections
+        }
+
         showSheet(slidePanelStates.edit);
 
     }
@@ -508,6 +521,7 @@
     const openAddSection = () => {
        
         edit = false;
+        create = false;
         showSheet(slidePanelStates.addSection);
     }
 
@@ -654,7 +668,7 @@
 
         questionCurrentPageNumber = 1;
         
-        oldQuestions = [];
+        // oldQuestions = [];
         newQuestions = [];
 
         getQuestions();
@@ -830,11 +844,14 @@
             on:error={ () => disabled = false } 
             questionId={ question.questionId } 
             { edit } 
+            { create }
             { topics } 
-            { sections } 
             { disabled }
             { questionEdit } 
             { subjectId }
+            { classId }
+            assigned={ question.assigned }
+            sections={ questionFormSections }
             questionBankId={ question.questionBankId }
             question={ question.question } 
             correctAnswer={ question.correctAnswer } 
@@ -861,7 +878,6 @@
 
        <ImportMappingCard  
             { sections } 
-            { questionTypes } 
             { disabled } 
             { headings }
             options={ getAvailableMappings() }  

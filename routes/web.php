@@ -208,7 +208,7 @@ Route::middleware(['auth'])->group(function(){
 
         if( $assessment->is_standalone ) {
 
-            return Inertia::render('CBT/Assessment/shared/question_bank/Question', [ 'questionBankId' => $question_bank->uuid , 'assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title ] );
+            return Inertia::render('CBT/Assessment/shared/question_bank/Question', [ 'questionBankId' => $question_bank->uuid , 'assessmentId' => $assessment->uuid, 'assessmentTitle' => $assessment->title, 'subjectId' => $question_bank->subject_id ] );
 
         }
 
@@ -218,7 +218,7 @@ Route::middleware(['auth'])->group(function(){
 
         $classes = implode(' | ', $classes);
 
-        return Inertia::render('CBT/Assessment/shared/question_bank/Question', [ 'questionBankId' => $question_bank->uuid , 'assessmentId' => $assessment->uuid, 'questionBankClasses' => $classes, 'assessmentTitle' => $assessment->title, 'subjectTitle' => $subject->subject_name ] );
+        return Inertia::render('CBT/Assessment/shared/question_bank/Question', [ 'questionBankId' => $question_bank->uuid , 'assessmentId' => $assessment->uuid, 'questionBankClasses' => $classes, 'assessmentTitle' => $assessment->title, 'subjectTitle' => $subject->subject_name, 'subjectId' => $question_bank->subject_id ] );
     } );
 
     //Classes

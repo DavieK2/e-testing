@@ -6,6 +6,7 @@ use App\Contracts\BaseTasks;
 use App\Modules\CBT\Models\QuestionBankModel;
 use App\Modules\CBT\Models\SectionModel;
 use App\Modules\CBT\Models\TopicModel;
+use App\Modules\SchoolManager\Models\ClassModel;
 
 class UpdateQuestionTask extends BaseTasks{
 
@@ -18,39 +19,46 @@ class UpdateQuestionTask extends BaseTasks{
 
         $options = $task->formatQuestionOptions( $this->item['options'], $this->item['correctAnswer'] );
 
-        $questionBankId = QuestionBankModel::firstWhere('uuid', $this->item['questionBankId'] ?? null )?->uuid;
-        $topicId = TopicModel::firstWhere('uuid', $this->item['topicId'] ?? null )?->uuid;
-        $sectionId = SectionModel::firstWhere('uuid', $this->item['sectionId'] ?? null )?->uuid;
-       
+        $questionBank = QuestionBankModel::find( $this->item['questionBankId'] ?? null );
+        $questionBankId = $questionBank?->uuid;
+        $questionBankClasses = json_decode($questionBank?->classes, true) ?? [];
+        $topicId = TopicModel::find( $this->item['topicId'] ?? null )?->uuid;
+        $sectionId = SectionModel::find( $this->item['sectionId'] ?? null )?->uuid;
 
         $question = $this->item['oldQuestion'];
         
-        $question_bank = QuestionBankModel::find( $questionBankId );
         $assessment = $question->assessment;
-        $classes = json_decode( $question_bank->classes, true ) ?? [];
         $subjectId = $this->item['subjectId'];
         
-        $question->update([
-                            'question'          => $questionData,
-                            'options'           => $options['options'],
-                            'correct_answer'    => $options['correctAnswer'],
-                            'question_score'    => $this->item['questionScore'],
-                            'question_bank_id'  => $questionBankId,
-                            'topic_id'          => $topicId,
-                            'section_id'        => $sectionId,
-                        ]);
+        $data = [
+                    'question'          => $questionData,
+                    'options'           => $options['options'],
+                    'correct_answer'    => $options['correctAnswer'],
+                    'question_score'    => $this->item['questionScore'],
+                    'question_bank_id'  => $questionBankId,
+                    'topic_id'          => $topicId,
+                ];
+        
+        if( ! $this->item['assigned'] ) $data['section_id'] = $sectionId;
+        
+        $question->update($data);
 
-       
-        if( ! request()->user()->is_admin ){
+        if( ! request()->user()->is_admin ) return new static( $this->item );
 
-            return new static( $this->item );
+        if( $this->item['assigned'] ){
+
+            $assessment->getAssessmentQuestion($question->uuid, $subjectId, ( $this->item['classId'] ?? null ) )->update(['section_id' => $sectionId ]);
+
+            if( $assessment->hasCachedQuestions( $subjectId, ( $this->item['classId'] ?? null ) ) ) $assessment->cacheAssessmentQuestions( $subjectId, ( $this->item['classId'] ?? null ) );
+
         }
 
-        foreach ( $classes as $class ) {
-            
-            if( ! $assessment->questionHasBeenAssigned( $question->uuid, $subjectId, $class ) ) continue ;
+        if( $this->item['questionBank'] ){
 
-            if( $assessment->hasCachedQuestions( $subjectId, $class ) ) $assessment->cacheAssessmentQuestions( $subjectId, $class );
+            foreach ( $questionBankClasses as $class )  {
+
+                if( $assessment->hasCachedQuestions( $subjectId, $class ) ) $assessment->cacheAssessmentQuestions( $subjectId, $class );
+            }
         }
         
        

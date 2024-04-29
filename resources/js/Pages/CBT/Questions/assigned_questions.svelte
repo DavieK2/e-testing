@@ -168,7 +168,7 @@
                     on:unchecked={ (e) => unselectQuestion(e.detail.value) }
                 >
                     <div class="flex space-x-2 pt-5">
-                        <button on:click={ () => dispatch('edit', question) } class="px-4 py-2.5 bg-gray-200 text-gray-700 rounded-lg text-xs">Edit</button>
+                        <button on:click={ () => dispatch('edit', { ...question, assigned: true }) } class="px-4 py-2.5 bg-gray-200 text-gray-700 rounded-lg text-xs">Edit</button>
                         <button on:click={ () => dispatch('unassign', question) } class="px-4 py-2.5 bg-red-500 text-red-50 rounded-lg text-xs">Remove</button>
                     </div>
                 </QuestionCard>  

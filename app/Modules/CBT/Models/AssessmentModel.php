@@ -165,17 +165,31 @@ class AssessmentModel extends Model
         return Cache::has("questions_{$this->assessment_code}_{$subject_id}_$class_code");
     }
 
-    public function questionHasBeenAssigned( $question, $subject_id, $class_code )
+    public function questionHasBeenAssigned( $question_id, $subject_id = null, $class_code = null )
     {
         if( $this->is_standalone ){
 
-            return DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id')->where('assessment_questions.assessment_id', $this->uuid) )->exists();
+            return DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id', $question_id)->where('assessment_questions.assessment_id', $this->uuid) )->exists();
 
         }else{
 
             $class_id = ClassModel::firstWhere('class_code', $class_code)->uuid;
 
-            return DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id', $question)->where('assessment_questions.subject_id', $subject_id)->where('assessment_questions.class_id', $class_id)->where('assessment_questions.assessment_id', $this->uuid) )->exists();
+            return DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id', $question_id)->where('assessment_questions.subject_id', $subject_id)->where('assessment_questions.class_id', $class_id)->where('assessment_questions.assessment_id', $this->uuid) )->exists();
+        }
+    }
+
+    public function getAssessmentQuestion( $question_id, $subject_id = null, $class_code = null )
+    {
+        if( $this->is_standalone ){
+
+            return DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id', $question_id)->where('assessment_questions.assessment_id', $this->uuid) )->limit(1);
+
+        }else{
+
+            $class_id = ClassModel::firstWhere('class_code', $class_code)->uuid;
+
+            return DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.question_id', $question_id)->where('assessment_questions.subject_id', $subject_id)->where('assessment_questions.class_id', $class_id)->where('assessment_questions.assessment_id', $this->uuid) )->limit(1);
         }
     }
 }

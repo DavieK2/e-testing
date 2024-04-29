@@ -27,7 +27,7 @@
 
     let importCard;
 
-    let edit = false;
+    let edit = true;
     let disabled = false;
     let questionEdit = false;
     let hasImportError = false;
@@ -156,8 +156,7 @@
     const updateQuestion = () => {
 
         disabled = false;
-        edit = false;
-
+        
         questionEdit = ! questionEdit
 
         question = JSON.parse(initQuestion);
@@ -315,6 +314,7 @@
                         { questionBankId }
                         { topics } 
                         { sections } 
+                        create={ true }
                         on:saving={ () => disabled = true } 
                         on:error={ () => disabled = false } 
                         on:updated={ updateQuestion } 
