@@ -58,7 +58,11 @@
         { placeholder : "Program of Study", value: "programOfStudy", isSelected: false },
         { placeholder : "Passport", value: "passport", isSelected: false },
         { placeholder : "Level", value: "level", isSelected: false },
+        { placeholder : "Department", value: "department", isSelected: false },
+        { placeholder : "Faculty", value: "faculty", isSelected: false },
+        { placeholder : "Program Type", value: "programType", isSelected: false },
         { placeholder : "Session", value: "session", isSelected: false },
+        { placeholder : "Courses", value: "courses", isSelected: false },
     ];
 
     let studentData = {

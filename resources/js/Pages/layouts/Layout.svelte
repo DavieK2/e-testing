@@ -8,14 +8,16 @@
 
     let role_menus = {
         admin : ['Home', 'Classes', 'Students', 'Teachers', 'Subjects', 'Assessment Types', 'Assessments', 'Terms', 'Academic Sessions', 'Users', 'Settings'],
+        checkin : ['Students', 'Assessments'],
         editor : ['Assessments'],
     }
 
 
 
     const displayMenu = (role, menu) => {
-                
+               
         let menus = role_menus[role];
+
         return menus?.some((display) => menu === display );
     }
 
@@ -64,7 +66,7 @@
                 { /if }
                
 
-                { #if displayMenu(role, 'Classes') }
+                <!-- { #if displayMenu(role, 'Classes') } -->
 
                     <div class="relative">
                         <div class="flex items-center justify-between  hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700 cursor-pointer  transition-colors duration-300 transform rounded-lg px-3 py-2">
@@ -76,32 +78,44 @@
                         </div>
                        
                         <div class="ml-5">
-                            <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform" href="/classes" use:inertia>   
-                                <span class="mx-2 text-xs text-gray-500">Levels</span>
-                            </a>
-                            <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300" href="/subjects" use:inertia>
-                                <span class="mx-2 text-xs text-gray-500">Courses</span>
-                            </a>
-                            <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300" href="/students" use:inertia>
-                                <span class="mx-2 text-xs text-gray-500">Students</span>
-                            </a>
-                            <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300" href="/teachers" use:inertia>
-                                <span class="mx-2 text-xs text-gray-500">Lecturers</span>
-                            </a>
-                            <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/terms" use:inertia>
-                                <span class="mx-2 text-xs text-gray-500">Semesters</span>
-                            </a>
-                            <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/academic-sessions" use:inertia>
-                                <span class="mx-2 text-xs text-gray-500">Sessions</span>
-                            </a>
+                            { #if displayMenu(role, 'Classes') }
+                                <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform" href="/classes" use:inertia>   
+                                    <span class="mx-2 text-xs text-gray-500">Levels</span>
+                                </a>
+                            { /if }
+                            { #if displayMenu(role, 'Courses') }
+                                <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300" href="/subjects" use:inertia>
+                                    <span class="mx-2 text-xs text-gray-500">Courses</span>
+                                </a>
+                            { /if }
+                            { #if displayMenu(role, 'Students') }
+                                <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300" href="/students" use:inertia>
+                                    <span class="mx-2 text-xs text-gray-500">Students</span>
+                                </a>
+                            { /if }
+                            { #if displayMenu(role, 'Lecturers') }
+                                <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300" href="/teachers" use:inertia>
+                                    <span class="mx-2 text-xs text-gray-500">Lecturers</span>
+                                </a>
+                            { /if }
+                            { #if displayMenu(role, 'Semesters') }
+                                <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/terms" use:inertia>
+                                    <span class="mx-2 text-xs text-gray-500">Semesters</span>
+                                </a>
+                            {/if}
+                            {#if displayMenu(role, 'Sessions') }
+                                <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/academic-sessions" use:inertia>
+                                    <span class="mx-2 text-xs text-gray-500">Sessions</span>
+                                </a>
+                            { /if }
                         </div>
 
 
                     </div>
 
-                { /if }
+                <!-- { /if } -->
     
-                { #if displayMenu(role, 'Assessment Types') }
+                <!-- { #if displayMenu(role, 'Assessment Types') } -->
 
                     <div class="relative">
                         <div class="flex items-center justify-between  hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700 cursor-pointer  transition-colors duration-300 transform rounded-lg px-3 py-2">
@@ -113,16 +127,20 @@
                         </div>
                     
                         <div class="ml-5">
-                            <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/assessment-types" use:inertia>
-                                <span class="mx-2 text-xs text-gray-500">Assessment Types</span>
-                            </a>
-                            <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/assessments" use:inertia>
-                                <span class="mx-2 text-xs text-gray-500">Assessments</span>
-                            </a>
+                            { #if displayMenu(role, 'Assessment Types') }
+                                <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/assessment-types" use:inertia>
+                                    <span class="mx-2 text-xs text-gray-500">Assessment Types</span>
+                                </a>
+                            { /if }
+                            { #if displayMenu(role, 'Assessments') }
+                                <a class="flex items-center px-3 py-2 text-gray-800 transition-colors duration-300 transform rounded-lg dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" href="/assessments" use:inertia>
+                                    <span class="mx-2 text-xs text-gray-500">Assessments</span>
+                                </a>
+                            { /if }
                         </div>
                     </div>
                    
-                { /if }
+                <!-- { /if } -->
 
     
                 { #if displayMenu(role, 'Users') }
