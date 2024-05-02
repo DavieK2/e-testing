@@ -165,7 +165,7 @@
             questionScore = "0";
             options = options
         }else{
-            questionScore = "1";
+            questionScore = questionScore;
             options = options
         }     
     }

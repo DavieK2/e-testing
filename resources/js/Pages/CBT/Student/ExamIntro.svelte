@@ -68,9 +68,6 @@
                     <div class="prose text-gray-800 mb-2">
                         { assessmentInstructions }
                     </div>
-                    <div class="prose text-gray-800 my-2 ">
-                        Please do not refresh page or your assessment will be marked as submitted
-                    </div>
                 </div>
                 <div class="py-4 w-full" >
                     <div>

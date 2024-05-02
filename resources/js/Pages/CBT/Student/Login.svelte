@@ -13,6 +13,8 @@
 
     onMount(() => {
         localStorage.removeItem('token');
+        localStorage.clear();
+        sessionStorage.clear()
     });
 
     const login = async () => {

@@ -36,23 +36,23 @@
 
 </script>
 
-<div class="flex flex-col px-8 pt-8 pb-4">
+<div class="flex flex-col px-8">
     <div class="pb-6">
         <div class="space-y-4 pb-3">
            <div class="flex items-center justify-between">
-                <p class="text-gray-800 font-extrabold text-lg">Question { questionNumber }</p>
+                <p class="text-gray-800 font-extrabold text-lg uppercase">Question { questionNumber }</p>
            </div>
-            <p class="text-gray-800 text-base font-base pt-6">{ @html question.prompt }</p>
+            <p class="text-gray-800 text-base font-base pt-6 font-medium">{ @html question.prompt }</p>
         </div>
-        <ul class="flex flex-col w-full space-y-2 text-sm text-gray-600 pt-8">
+        <ul class="flex flex-col w-full space-y-2.5 text-sm text-gray-700 pt-8">
             { #each options as option, index }
-                <div class="flex space-x-2 items-center w-full text-base">
+                <div class="flex space-x-2 items-center w-full text-sm">
                     <button  on:click={ () => dispatch('selected', { questionId : question.questionId, option: option.content }) } class={`flex items-center shrink-0 justify-center h-[3.2rem] w-[3.2rem] border-2 ${ option.content == question.selectedAnswer ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
-                        <span class={`${ option.content == question.selectedAnswer ? "text-green-700" : "text-gray-500" } font-medium`} > { getAlphabetsOptions()[index] }</span>
+                        <span class={`${ option.content == question.selectedAnswer ? "text-green-700" : "text-gray-700" } font-medium`} > { getAlphabetsOptions()[index] }</span>
                     </button>
                     <div class="w-full">
-                        <button type="button" class={`flex p-3 border-2 ${ option.content == question.selectedAnswer ? 'border-green-700' : 'border-gray-300' }  w-full rounded-lg items-center justify-between space-x-2`}>
-                            <span class={`${ option.content == question.selectedAnswer ? "text-green-700" : "text-gray-500" } text-left`} >  { @html option.htmlContent} </span>
+                        <button type="button" class={`flex p-[0.85rem] border-2 ${ option.content == question.selectedAnswer ? 'border-green-700' : 'border-gray-300' }  w-full rounded-lg items-center justify-between space-x-2`}>
+                            <span class={`${ option.content == question.selectedAnswer ? "text-green-700" : "text-gray-700" } text-left`} >  { @html option.htmlContent} </span>
                         </button>
                     </div>
                 </div>

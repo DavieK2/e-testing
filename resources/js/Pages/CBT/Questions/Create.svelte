@@ -115,6 +115,8 @@
         sectionTitle : "",
         sectionDescription : "",
         sectionId : "",
+        sectionScore: "",
+        sectionTotalQuestions: "",
         questionType : ""
     }
 
@@ -498,7 +500,7 @@
 
     const openEditQuestionForm = (ques) => {
 
-        console.log()
+        console.log(ques)
         let initEditQuestion = JSON.stringify(ques);
 
         edit = true
@@ -723,7 +725,7 @@
         
         disabled = true;
 
-        router.postWithToken(`/api/question/assessment/section/create/${assessmentId}`, { subjectId, classId, title: sectionData.sectionTitle, description: sectionData.sectionDescription, questionType: sectionData.questionType }, {
+        router.postWithToken(`/api/question/assessment/section/create/${assessmentId}`, { subjectId, classId, title: sectionData.sectionTitle, description: sectionData.sectionDescription, questionType: sectionData.questionType, sectionScore: sectionData.sectionScore, totalQuestions: sectionData.sectionTotalQuestions }, {
             onSuccess: (res) => {
                 getAssessmentSections();
                 closeSheet();
@@ -906,6 +908,14 @@
 
             <div>
                 <Input on:input={ (e) => sectionData.sectionDescription = e.detail.input }  value={ sectionData.sectionDescription } label="Enter Section Description"  labelStyle="font-semibold" />
+            </div>
+
+            <div>
+                <Input type="number" on:input={ (e) => sectionData.sectionTotalQuestions = e.detail.input }  value={ sectionData.sectionTotalQuestions } label="Enter Total Questions"  labelStyle="font-semibold" />
+            </div>
+
+            <div>
+                <Input type="number" on:input={ (e) => sectionData.sectionScore = e.detail.input }  value={ sectionData.sectionScore } label="Enter Section Score"  labelStyle="font-semibold" />
             </div>
 
             <div class="w-20">

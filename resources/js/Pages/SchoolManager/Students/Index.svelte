@@ -76,6 +76,8 @@
         photo: ""
     }
 
+    let initialMapping = JSON.stringify(importOptions)
+
     let selectedStudents = [];
 
     let uploadPic = '';
@@ -233,6 +235,9 @@
 
                 getStudents();
                 closeSheet();
+
+                importOptions = JSON.parse(initialMapping);
+                
                 disabled = false ;
 
             },

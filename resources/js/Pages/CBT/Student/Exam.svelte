@@ -52,6 +52,8 @@
 
     let submitLoading = false;
 
+    let hasCompletedSection = false;
+
     $: disabled = submitLoading
 
 
@@ -62,7 +64,7 @@
         if( subjectId ) studentResponsesUrl += `?subjectId=${subjectId}`
 
         await router.getWithToken(studentResponsesUrl, {
-            
+
             onSuccess: (res) => {
                 studentResponses = res.data;
             }
@@ -126,9 +128,9 @@
                             let answer = ques.selectedAnswer;
 
                             if( ques.questionId === question.questionId ){
-                                question.selectedAnswer =  ques.selectedAnswer
-                                question.notAnswered = ques.notAnswered
-                                question.markedForReview = ques.markedForReview
+                                question.selectedAnswer =  question.selectedAnswer ?? ques.selectedAnswer
+                                question.notAnswered =  question.notAnswered ?? ques.notAnswered
+                                question.markedForReview = question.markedForReview ?? ques.markedForReview
                                 question.submitted = true
                             }
                         });
@@ -238,7 +240,7 @@
             status = "answered"
         }
 
-        if( (! submitted ) && ( question.notAnswered == true ) && (! question.markedForReview) ){
+        if( ( ! submitted ) && ( question.notAnswered == true ) && (! question.markedForReview) ){
             color = notAnsweredColor
             status = "notAnswered"
         }
@@ -267,6 +269,7 @@
     }
 
     const markForReview = () => {
+
         questions[ currentQuestionNumber - 1 ].markedForReview =  ! ( questions[ currentQuestionNumber - 1 ].markedForReview ) ;
     }
 
@@ -274,7 +277,12 @@
         
         let notSubmitted = ( questions[ currentQuestionNumber - 1 ].selectedAnswer.length > 0 ) && ( ! questions[ currentQuestionNumber - 1 ].submitted );
         
-        if( currentQuestionNumber === index + 1 ) return ;
+        if( currentQuestionNumber === index + 1 ) {
+
+            hasCompletedSection = true;
+
+            return;
+        } 
 
         if( notSubmitted ) return ;
 
@@ -283,32 +291,47 @@
         if( questions[ currentQuestionNumber - 1 ].updated ) return ;
 
         questions[ currentQuestionNumber - 1 ].notVisited = false
+        initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].notVisited = false; 
         
         checkIfQuestionHasBeenAnswered();
        
         currentSectionQuestionNumber[currentSection.sectionId] = index + 1;
         currentQuestionNumber = currentSectionQuestionNumber[currentSection.sectionId] ;
+
+        
     }
 
     const checkIfQuestionHasBeenAnswered = () => {
 
        if( questions[ currentQuestionNumber - 1 ].selectedAnswer.length > 0 ){
-            questions[ currentQuestionNumber - 1 ].notAnswered = false;        
+            questions[ currentQuestionNumber - 1 ].notAnswered = false;   
+            initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].notAnswered = false;      
        }else {
             questions[ currentQuestionNumber - 1 ].notAnswered = true
+            initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].notAnswered = true; 
        }
     }
 
     const selectAnswer = ( answer ) => {
+        
         questions[ currentQuestionNumber - 1 ].selectedAnswer = answer
         questions[ currentQuestionNumber - 1 ].submitted = false;
         questions[ currentQuestionNumber - 1 ].notAnswered = true;
+
+        initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].selectedAnswer  = answer ;
+        initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].submitted  = answer ;
+        initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].notAnswered  = answer ;
     }
 
     const clearAnswer = () => {
+
         questions[ currentQuestionNumber - 1 ].selectedAnswer = "";
         questions[ currentQuestionNumber - 1 ].updated = true;
         questions[ currentQuestionNumber - 1 ].submitted = false;
+
+        initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].selectedAnswer = "";
+        initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].updated = true; 
+        initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].submitted = false; 
     }
 
     const submitAnswer = () => {
@@ -317,24 +340,40 @@
 
         let question =  questions[ currentQuestionNumber - 1 ];
 
-        router.postWithToken('/api/cbt/save-answer/student/' + assessmentId, { questionId: question.questionId, studentAnswer : question.selectedAnswer, markedForReview : question.markedForReview, subjectId }, {
+        router.postWithToken('/api/cbt/save-answer/student/' + assessmentId, { questionId: question.questionId, studentAnswer : question.selectedAnswer, markedForReview : question.markedForReview, subjectId, sectionId: currentSection.sectionId, sectionTitle: currentSection.title }, {
+
             onSuccess : (res) => {
 
                 questions[ currentQuestionNumber - 1 ].submitted = true;
                 questions[ currentQuestionNumber - 1 ].updated = false;
 
+                initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].submitted = true; 
+                initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].updated = false; 
+
                 if( questions[ currentQuestionNumber - 1 ].selectedAnswer.length > 0 ){
+
                     questions[ currentQuestionNumber - 1 ].notAnswered = false
+                    initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].notAnswered = false; 
+
                 }else{
+
                     questions[ currentQuestionNumber - 1 ].notAnswered = true
+                    initialQuestions[currentSection.sectionId].filter( (question) => question.questionId == questions[ currentQuestionNumber - 1 ].questionId )[0].notAnswered = true; 
+
                 }
 
-                if(currentQuestionNumber < questions.length){
+                if( currentQuestionNumber < questions.length ){
 
                     currentSectionQuestionNumber[currentSection.sectionId] ++ ;
 
                     currentQuestionNumber = currentSectionQuestionNumber[currentSection.sectionId] ;
                 }
+
+                if( hasCompletedSection && ( currentSectionIndex < ( sections.length - 1 ) ) )  {
+
+                    setSection( currentSectionIndex + 1 )
+                }
+                    
 
                 submitLoading = false
             }
@@ -342,7 +381,9 @@
     }
 
     const completeExam = () => {
+
         router.postWithToken('/api/cbt/complete/student/' + assessmentId, { subjectId }, {
+
             onSuccess : (res) => {
                 window.location.replace( res.data.url );
             }
@@ -351,10 +392,25 @@
 
     const setSection = (index) => {
 
+        hasCompletedSection = false;
+
         currentSectionIndex = index;
         currentSection = sections[index]
 
         getQuestions();
+
+    }
+
+    $ : {
+
+        if( ( currentQuestionNumber === (questions.length ) ) ){
+
+            hasCompletedSection = true;
+
+        }else{
+
+            hasCompletedSection = false;
+        }
     }
 
     const showSubmitModal = () => submitModal = true;
@@ -374,16 +430,16 @@
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-white">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <p class="text-white font-mono">{ `${hours} : ${minutes} : ${seconds}`}</p>
+                    <p class="text-white font-mono font-extrabold">{ `${hours} : ${minutes} : ${seconds}`}</p>
                 </div>
             </div>
         </div>
 
         
-        <div class="fixed inset-0 pt-16 flex w-full min-h-screen ">
+        <div class="fixed inset-0 pt-16 flex w-full min-h-screen">
 
             <div class="relative flex flex-col w-64 shrink-0 bg-gray-50">
-                <div class="flex items-center shrink-0 w-full border-b border-r border-gray-300 h-16 bg-white px-8 font-semibold">
+                <div class="flex items-center shrink-0 w-full border-b border-r border-gray-300 h-16 bg-white px-8 font-semibold uppercase">
                     Candidate Info
                 </div>
 
@@ -443,19 +499,22 @@
                 <div class="flex items-center space-x-4 w-full shrink-0 border-b h-16 border-gray-300 px-8">
                     { #each sections as section, index }
                         { #if currentSectionIndex === index }
-                            <button on:click={ () => setSection(index) } class="min-w-max max-w-min text-white bg-gray-700 px-4 py-2 border-2 rounded-lg border-gray-700">{ section.title }</button>
+                            <button on:click={ () => setSection(index) } class="min-w-max max-w-min text-white bg-purple-500 px-4 py-2 border-2 rounded-lg border-purple-500 text-sm font-bold">{ section.title }</button>
                         { :else }
-                            <button on:click={ () => setSection(index) }  class="min-w-max max-w-min px-4 py-2 border-2 rounded-lg border-gray-700">{ section.title }</button>
+                            <button on:click={ () => setSection(index) }  class="min-w-max max-w-min px-4 py-2 border-2 rounded-lg border-purple-500 text-purple-500 text-sm font-bold">{ section.title }</button>
                         { /if }
                     {/each}
                 </div>
 
-                <div class="flex flex-col w-full h-[calc(100vh-13rem)] px-8 py-6">
+                <div class="flex flex-col justify-center h-48 border-b border-gray-300 bg-gray-50/50 overflow-y-auto">
+                    
+                    <p class="p-8 text-sm">{ currentSection.description }</p>
+                 
+                </div>
+
+                <div class="flex flex-col w-full h-[calc(100vh-25rem)] px-8 py-6">
                     <div class="w-full h-full overflow-y-auto">
                         <div class="max-w-xl">
-                            <div class="py-6 text-gray-600 border-b">
-                                <p>{ currentSection.description }</p>
-                            </div>
                             { #each questions as question, index(question.questionId) }
                                 { #if currentQuestionNumber === ( index + 1)}    
                                     <QuestionCard on:selected={ (e) => selectAnswer(e.detail.option) } { question } questionNumber={ index + 1}  />
