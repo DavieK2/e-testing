@@ -10,7 +10,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('student_checkins', function (Blueprint $table) {
-            $table->json('subject_ids');
+            $table->json('subject_ids')->nullable();
         });
     }
 

@@ -4,7 +4,10 @@ namespace App\Modules\CBT\Tasks;
 
 use App\Contracts\BaseTasks;
 use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\QuestionBankModel;
 use App\Modules\CBT\Models\QuestionModel;
+use App\Modules\CBT\Models\SectionModel;
+use App\Modules\SchoolManager\Models\ClassModel;
 use App\Services\CSVWriter;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +22,7 @@ class ImportQuestionsTask extends BaseTasks{
 
     protected ?CSVWriter $errorFileWriter = NULL;
     protected $questions = [];
+    protected $assessment_questions = [];
 
     public function saveFileToLocalDisk()
     {
@@ -42,7 +46,9 @@ class ImportQuestionsTask extends BaseTasks{
 
         $errors = [];
 
-        SimpleExcelReader::create( storage_path("app/$importFileKey") )->trimHeaderRow()->getRows()->each(function($row) {
+        $assessment = AssessmentModel::firstWhere('uuid', $this->item['assessmentId']);
+
+        SimpleExcelReader::create( storage_path("app/$importFileKey") )->trimHeaderRow()->getRows()->each(function($row) use($assessment) {
                
             $mapping = $this->item['mappings'];
 
@@ -98,6 +104,8 @@ class ImportQuestionsTask extends BaseTasks{
 
             $data =  $validator->validated();
 
+            $data['options'] = collect( $data['options'] )->filter( fn($option) => ! empty( $option ) )->toArray();
+
             $data['options'] = json_encode( collect( array_values( $data['options'] ?? [] ) )->map( fn($option) => ['type' => 'text', 'content' => $option ] )->toArray() );
 
             $question = $data['question'];
@@ -112,7 +120,6 @@ class ImportQuestionsTask extends BaseTasks{
 
             $data['section_id'] = $this->item['sectionId'] ?? null;
 
-            $assessment = AssessmentModel::firstWhere('uuid', $this->item['assessmentId']);
 
             $correct_answer = $data['correctAnswer'];
             $question_score = $data['questionScore'];
@@ -120,25 +127,59 @@ class ImportQuestionsTask extends BaseTasks{
             unset($data['correctAnswer']);
             unset($data['questionScore']);
 
+
+
             $data =  $data + ['correct_answer' => $correct_answer, 'question_score' => $question_score, 'assessment_id' => $assessment->uuid, 'question_bank_id' => $this->item['questionBankId'] ?? null , 'uuid' => Str::ulid() ];
 
             $this->questions[] = $data;
 
-            if( count( $this->questions ) > 500 ) {
+            // if( count( $this->questions ) > 500 ) {
 
-                DB::table('questions')->insert( $this->questions );
-                $this->questions = [];
-            }
+                // DB::table('questions')->insert( $this->questions );
+                // $this->questions = [];
+
+                // $this->assessment_questions = $this->questions;
+            // }
             
         });
 
         
-        if( count( $this->questions ) > 0 ) {
+        // if( count( $this->questions ) > 0 ) {
 
-            DB::table('questions')->insert( $this->questions );
-            $this->questions = [];
+        DB::table('questions')->insert( $this->questions );
+        //     $this->questions = [];
 
+        // }
+
+        $question_bank = QuestionBankModel::find( $this->item['questionBankId']);
+       
+
+        $classes = json_decode($question_bank->classes, true);
+
+        foreach( $classes as $class){
+
+            $classId = ClassModel::firstWhere('class_code', $class)->uuid;
+          
+            $this->assessment_questions[] = collect($this->questions)->map( function($question) use($question_bank, $classId){
+
+                return [
+                    'uuid' => Str::ulid(),
+                    'section_id' => $question['section_id'],
+                    'assessment_id' => $question['assessment_id'],
+                    'question_id' => $question['uuid'],
+                    'subject_id' => $question_bank->subject_id,
+                    'class_id' => $classId
+
+                ];
+
+            })->toArray(); 
         }
+        
+        collect($this->assessment_questions)->each( function($question){
+           
+            DB::table('assessment_questions')->insert($question);
+
+        });
 
         if( $this->errorFileWriter ) {
 

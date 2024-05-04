@@ -34,6 +34,7 @@ Route::get('/add-more-time', function(){
     if( $time && is_null( $student ) ){
 
         $addn_time = (intval($time) * 60);
+
         Redis::publish('add-time', $addn_time); 
 
         return "An additional time of {$time} minutes has been added to all students";
@@ -60,7 +61,6 @@ Route::get('/add-more-time', function(){
 
 Route::get('/', function(){
 
-   
     $assessment = AssessmentModel::latest()->first();
 
     return redirect("/cbt/$assessment->assessment_code"); 

@@ -14,7 +14,7 @@ return new class extends Migration
            
             $table->foreignUlid('assessment_id')->nullable()->constrained( table: 'assessments', column: 'uuid' );
             $table->foreignUlid('subject_id')->nullable()->constrained( table: 'subjects', column: 'uuid' );
-            $table->foreignUlid('class_id')->nullable()->constrained( table: 'classes', column: 'uuid' );
+            $table->json('classes')->nullable();
             
         });
     }

@@ -211,7 +211,10 @@
             onSuccess : (res) => {
 
                 getQuestions();
+                selectedSection = null;
                 closeSheet();
+
+
 
                 setTimeout(() => disabled = false, 2000 );
 
@@ -283,6 +286,18 @@
         }
 
         mappings = mappings;
+    }
+
+    const deleteQuestions = (questionIds) => {
+
+        router.postWithToken('/api/questions/delete', { questionIds, assessmentId }, {
+            
+            onSuccess: (res) => { 
+
+                getQuestions();
+            }
+        })
+
     }
 
 </script>
@@ -374,7 +389,7 @@
                 </div>
                 
                 <div class="absolute z-50 bg-white w-full">
-                    <svelte:component on:edit={ (e) => editQuestion(e.detail) } this={ questionType } { sections } { questions }   />                        
+                    <svelte:component on:edit={ (e) => editQuestion(e.detail) } this={ questionType } { sections } { questions } on:delete-questions={ (e) => deleteQuestions(e.detail.selectedQuestions) }   />                        
                 </div>
             </div>
          </div>

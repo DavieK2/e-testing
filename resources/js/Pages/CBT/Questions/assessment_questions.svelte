@@ -29,7 +29,7 @@
 
     const dispatch = createEventDispatcher();
 
-    const selectQuestion = (questionId) => {
+    const selectQuestion = ( questionId ) => {
 
         selectedQuestions.push(questionId);
         selectedQuestions = selectedQuestions

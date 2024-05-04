@@ -51,6 +51,7 @@ class CreateAssessmentTasks extends BaseTasks {
 
         $data = collect($this->item['subjects'])->groupBy('classId');
         
+        dd( $data );
         $assessment->subjects()->detach();
 
         $data->each(function($subject) use($assessment) {

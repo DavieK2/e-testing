@@ -66,7 +66,7 @@ class QuestionBankController extends Controller
 
         $subjects = $user_subjects->intersect($assessment_subjects)->toArray();
 
-        $subjects = SubjectModel::whereIn('uuid', $subjects)->select('subject_name as subjectName', 'uuid as subjectId')->get();
+        $subjects = SubjectModel::whereIn('uuid', $subjects)->select('subject_name as subjectName', 'uuid as subjectId', 'subject_code as subjectCode')->get();
 
         return response()->json([
              'data' => $subjects
@@ -128,14 +128,20 @@ class QuestionBankController extends Controller
         $question_bank = QuestionBankModel::firstWhere('uuid', $data['questionBankId']);
 
         $section = SectionModel::create([
-            'uuid' => Str::ulid(),
-            'section_code' => Str::random(5),
-            'question_type' => $data['questionType'],
-            'question_bank_id' => $question_bank->uuid,
-            'title' => $data['title'],
-            'description' => $data['description']
+            'uuid'                  => Str::ulid(),
+            'section_code'          => Str::random(5),
+            'question_type'         => $data['questionType'],
+            'question_bank_id'      => $question_bank->uuid,
+            'title'                 => $data['title'],
+            'description'           => $data['description'],
+            'total_questions'       => $data['totalQuestions'],
+            'section_score'         => $data['sectionScore'],
+            'assessment_id'         => $question_bank->assessment_id,
+            'subject_id'            => $question_bank->subject_id,
+            'classes'               => $question_bank->classes
         ]);
-
+                
+        // dd($section);
         $question_bank_sections = [ ...json_decode($question_bank->section_ids, true) ?? [], $section->uuid ];
 
         $question_bank->update(['section_ids' => json_encode( $question_bank_sections )]);
@@ -162,7 +168,7 @@ class QuestionBankController extends Controller
     public function getSections(QuestionBankModel $question_bank)
     {
         $sections = SectionModel::where('question_bank_id', $question_bank->uuid)
-                                ->select('uuid as sectionId', 'title  as sectionTitle', 'description as sectionDescription', 'question_type as questionType')
+                                ->select('uuid as sectionId', 'title  as sectionTitle', 'description as sectionDescription', 'question_type as questionType', 'total_questions as sectionTotalQuestions', 'section_score as sectionScore')
                                 ->get();
 
         return response()->json([
@@ -174,7 +180,7 @@ class QuestionBankController extends Controller
     {
         $data = $request->validated();
 
-        $section->update(['title' => $data['sectionTitle'], 'description' => $data['sectionDescription'], 'question_type' => $data['questionType'] ]);
+        $section->update(['title' => $data['sectionTitle'], 'description' => $data['sectionDescription'], 'question_type' => $data['questionType'], 'total_questions' => $data['totalQuestions'], 'section_score' => $data['sectionScore'] ]);
     }
 
     public function deleteSection(SectionModel $section, DeleteSectionRequest $request)

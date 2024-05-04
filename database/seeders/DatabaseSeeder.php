@@ -4,12 +4,16 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Modules\CBT\Models\AssessmentModel;
+use App\Modules\CBT\Models\AssessmentTypeModel;
 use App\Modules\SchoolManager\Models\AcademicSessionModel;
 use App\Modules\SchoolManager\Models\ClassModel;
-use App\Modules\SchoolManager\Models\DepartmentModel;
+use App\Modules\SchoolManager\Models\SubjectModel;
+use App\Modules\SchoolManager\Models\TermModel;
 use App\Modules\UserManager\Models\RoleModel;
 use App\Modules\UserManager\Models\UserModel;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
@@ -22,6 +26,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        Cache::flush();
+
         $role1 = RoleModel::create([
             'role_name' => 'teacher'
         ]);
@@ -129,14 +136,103 @@ class DatabaseSeeder extends Seeder
         DB::unprepared( file_get_contents(base_path('subjects.sql')) );
         DB::unprepared( file_get_contents(base_path('departments.sql')) );
         
-        DB::unprepared( file_get_contents(base_path('student_profiles_newer.sql')) );
+        DB::unprepared( file_get_contents(base_path('student_profiles_latest.sql')) );
+        DB::unprepared( file_get_contents(base_path('student_subjects_latest.sql')) );
 
-        
-        DB::table('departments_old')->get()->each( fn($dep) => DepartmentModel::create(['department_name' => $dep->name ]));
-        
-        Schema::dropIfExists('departments_old');
 
-        AcademicSessionModel::create(['session' => '2022/2023', 'uuid' => Str::ulid()]);
-        AcademicSessionModel::create(['session' => '2023/2024', 'uuid' => Str::ulid()]);
+        $academic_session_1 = AcademicSessionModel::create(['session' => '2022/2023', 'uuid' => Str::ulid()]);
+        $academic_session_2 = AcademicSessionModel::create(['session' => '2023/2024', 'uuid' => Str::ulid()]);
+
+        $semester_1 = TermModel::create(['term' => 'First Semester']);
+        $semester_2 = TermModel::create(['term' => 'Second Semester']);
+
+
+        $first_semester_courses = ['GSS101','GSS131','GSS121','GSS111','GSS211','GST111','GSS123'];
+        $second_semester_courses = ['GSS102','GSS132','GSS122','GSS112','GST112'];
+
+        $first_semester_courses = collect( $first_semester_courses )->map( function($course) use($semester_1) {
+
+            $course = SubjectModel::firstWhere('subject_code', $course);
+
+            return [
+                'uuid'          => Str::ulid(),
+                'term_id'       => $semester_1->uuid,
+                'subject_id'    => $course->uuid,
+            ];
+        })->toArray();
+
+        $second_semester_courses = collect( $second_semester_courses )->map( function($course) use($semester_2) {
+
+            $course = SubjectModel::firstWhere('subject_code', $course);
+
+            return [
+                'uuid'          => Str::ulid(),
+                'term_id'       => $semester_2->uuid,
+                'subject_id'    => $course->uuid,
+            ];
+        })->toArray();
+
+        DB::table('term_subjects')->insert([ ...$first_semester_courses, ...$second_semester_courses ]);
+
+        $assessment_type = AssessmentTypeModel::create(['type' => 'Exam', 'max_score' => 90]);
+
+        ClassModel::get()->map( function( $class ){
+
+            $subjects = SubjectModel::get()->map( function( $subject ) use( $class ) {
+    
+                return [
+                    'uuid'          => Str::ulid(),
+                    'subject_id'    => $subject->uuid,
+                    'class_id'      => $class->uuid
+                ];
+            });
+    
+            return $subjects;
+    
+        })->each( fn( $class ) => DB::table('class_subjects')->insert( $class->toArray() ) );
+
+
+        $assessment = AssessmentModel::create([
+            'uuid'                  => Str::ulid(),
+            'title'                 => 'GSS FIRST SEMESTER EXAMS',
+            'description'           => 'Please read all questions carefully before answering. This exam has two section. You are to finish both sections before submitting the exam.',
+            'is_standalone'         => false,
+            'is_published'          => false,
+            'assessment_type_id'    => $assessment_type->uuid,
+            'academic_session_id'   => $academic_session_2->uuid,
+            'school_term_id'        => $semester_1->uuid,
+            'assessment_code'       => Str::random(6)   
+        ]);
+
+        ClassModel::get()->map( function( $class )use( $assessment ){
+
+            DB::table('assessment_classes')->insert( ['uuid' => Str::ulid(), 'assessment_id' => $assessment->uuid, 'class_id' => $class->uuid ] );
+
+        });
+
+        $class = ClassModel::get()->map( function( $class )use( $assessment ){
+
+
+            return SubjectModel::get()->map( function( $sub ) use( $assessment, $class ){
+                
+                return [
+                    'uuid'                  => Str::ulid() ,
+                    'assessment_id'         => $assessment->uuid, 
+                    'subject_id'            => $sub->uuid, 
+                    'is_published'          => false, 
+                    'class_id'              => $class->uuid,
+                    'assessment_duration'   => ( 30 * 60 ),
+                    'start_date'            => now()->startOfDay()->toDateTimeString(),
+                    'end_date'              => now()->addDay()->startOfDay()->toDateTimeString(),
+                    'is_published'          => true
+                ];
+            });
+        });
+
+        $class->each( function($cls) {
+            
+            DB::table('assessment_subjects')->insert( $cls->toArray() );
+
+        } );
     }
 }

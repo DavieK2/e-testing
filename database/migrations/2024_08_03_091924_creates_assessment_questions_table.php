@@ -11,11 +11,11 @@ return new class extends Migration
     {
         Schema::create('assessment_questions', function(Blueprint $table){
             $table->ulid('uuid')->unique()->index();
-            $table->foreignUlid('assessment_id')->constrained( table: 'assessments', column: 'uuid' );
-            $table->foreignUlid('question_id')->constrained( table: 'questions', column: 'uuid' );
-            $table->foreignUlid('subject_id')->nullable()->constrained( table: 'subjects', column: 'uuid' );
-            $table->foreignUlid('class_id')->nullable()->constrained( table: 'classes', column: 'uuid' );
-            $table->foreignUlid('section_id')->nullable()->constrained( table: 'sections', column: 'uuid' );
+            $table->foreignUlid('assessment_id')->nullable()->constrained( table: 'assessments', column: 'uuid' )->onDelete('set null');
+            $table->foreignUlid('question_id')->nullable()->constrained( table: 'questions', column: 'uuid' )->onDelete('set null');
+            $table->foreignUlid('subject_id')->nullable()->constrained( table: 'subjects', column: 'uuid' )->onDelete('set null');
+            $table->foreignUlid('class_id')->nullable()->constrained( table: 'classes', column: 'uuid' )->onDelete('set null');
+            $table->foreignUlid('section_id')->nullable()->constrained( table: 'sections', column: 'uuid' )->onDelete('set null');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });

@@ -27,7 +27,7 @@
 
         router.getWithToken('/api/question-bank-subjects/' + assessmentId, {
             onSuccess : (res) => {
-                subjects = res.data.flatMap((subject) => [ { placeholder: subject.subjectName, value: subject.subjectId } ])
+                subjects = res.data.flatMap((subject) => [ { placeholder: `${subject.subjectName} ( ${subject.subjectCode} )`, value: subject.subjectId } ])
             }
         });
     }

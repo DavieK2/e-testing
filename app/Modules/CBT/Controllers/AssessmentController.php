@@ -176,15 +176,19 @@ class AssessmentController extends Controller
     {
         $data = $request->validated();
 
-        $sections = SectionModel::where('assessment_id', $assessment->uuid)
-                                ->select('uuid as sectionId', 'title  as sectionTitle', 'description as sectionDescription', 'question_type as questionType');
+        $sections = SectionModel::where('assessment_id', $assessment->uuid);
                                
         if( isset( $data['subjectId'] ) )  $sections->where('subject_id', $data['subjectId']);
-        if( isset( $data['classId'] ) )  $sections->where('class_id', ClassModel::firstWhere('class_code', $data['classId'])->uuid );
-      
+        
+        $sections = $sections->get();
+        
+        if( isset( $data['classId'] ) ) {
 
+            $sections = $sections->filter( fn($section) => in_array( $data['classId'], json_decode( ( $section->classes ?? '' ), true ) ) );
+        }
+      
         return response()->json([
-            'data' => $sections ->get()
+            'data' => $sections->map( fn($section) => ['sectionId' => $section->uuid, 'sectionTitle' => $section->title, 'sectionDescription' => $section->description, 'questionType' => $section->question_type ])
         ]);
 
     }

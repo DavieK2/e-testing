@@ -18,6 +18,8 @@ class UpdateSectionRequest extends FormRequest
             'sectionTitle'          => 'required',
             'questionType'          => 'required|string|in:'.implode(',', QuestionModel::QUESTION_TYPES),
             'sectionDescription'    => 'required',
+            'totalQuestions'        => 'nullable|string',
+            'sectionScore'          => 'nullable|string',
         ];
     }
 }

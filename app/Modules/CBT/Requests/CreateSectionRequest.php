@@ -18,7 +18,9 @@ class CreateSectionRequest extends FormRequest
             'questionBankId'    => 'required|exists:question_banks,uuid',
             'title'             => 'required|string',
             'questionType'      => 'required|string|in:'.implode(',', QuestionModel::QUESTION_TYPES),
-            'description'       => 'required|string'
+            'description'       => 'required|string',
+            'totalQuestions'    => 'nullable|string',
+            'sectionScore'      => 'nullable|string',
         ];
     }
 }

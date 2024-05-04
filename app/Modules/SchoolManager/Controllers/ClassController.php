@@ -3,6 +3,7 @@
 namespace App\Modules\SchoolManager\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\CBT\Requests\GetClassSubjectsRequest;
 use App\Modules\SchoolManager\Features\AssignSubjectToClassFeature;
 use App\Modules\SchoolManager\Features\ClassListFeature;
 use App\Modules\SchoolManager\Features\CreateClassFeature;
@@ -31,9 +32,9 @@ class ClassController extends Controller
         return $this->serve( new UpdateClassFeature(), $request->validated() );
     }
 
-    public function subjects(ClassModel $class)
+    public function subjects(GetClassSubjectsRequest $request)
     {
-        return $this->serve( new GetClassSubjectsFeature($class) );
+        return $this->serve( new GetClassSubjectsFeature(), $request->validated() );
     }
 
     public function assignSubjects(AssignSubjectToClassRequest $request)

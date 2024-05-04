@@ -9,7 +9,7 @@ use App\Modules\SchoolManager\Tasks\ClassListTasks;
 
 class GetClassSubjectsFeature extends FeatureContract {
 
-    public function __construct(protected ClassModel $class){
+    public function __construct(){
         $this->tasks = new ClassListTasks();
     }
     
@@ -17,7 +17,7 @@ class GetClassSubjectsFeature extends FeatureContract {
     {
         try {
             
-            $builder = $task->start( $this->class )->getClassSubjects()->all()->toArray()->except(['pivot'], true);
+            $builder = $task->start( [...$args ] )->getClassSubjects();
 
             return $task::formatResponse( $builder );
 

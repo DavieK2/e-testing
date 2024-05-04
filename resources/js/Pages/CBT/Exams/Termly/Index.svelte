@@ -38,7 +38,7 @@
 
 <svelte:document on:contextmenu|preventDefault />
 
-<div class="flex flex-col items-center justify-center min-h-screen container">
+<div class="flex flex-col items-center justify-center min-h-screen container p-20">
 
     <div class=" text-5xl font-black mb-20 max-w-2xl text-center">{ assessmentTitle }</div>
 

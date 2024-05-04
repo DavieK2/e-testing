@@ -146,7 +146,7 @@ class CreateStudentTasks extends BaseTasks{
             }
 
             $validated_data['class_id'] = ( ( ClassModel::firstWhere('class_name', $class_level) ?? ClassModel::firstWhere('uuid', $class_level) )?->uuid ) ?? "";
-            $validated_data['academic_session_id'] = ( ( AcademicSessionModel::firstWhere('session', $data['session'] ?? null ) ?? AcademicSessionModel::firstWhere('uuid', $data['session'] ?? null ) )?->uuid ) ?? "";
+            $validated_data['academic_session_id'] = ( ( AcademicSessionModel::firstWhere('session', $data['session'] ?? null ) ?? AcademicSessionModel::firstWhere('uuid', $data['session'] ?? null ) )?->session ) ?? "";
             $validated_data['department_id'] =  ( ( DepartmentModel::firstWhere('department_name', $data['department'] ?? null ) ?? DepartmentModel::firstWhere('uuid', $data['department'] ?? null ) )?->uuid ) ?? "";
             $validated_data['faculty_id'] = ( ( FacultyModel::firstWhere('faculty_name', $data['faculty'] ?? null ) ?? FacultyModel::firstWhere('uuid', $data['faculty'] ?? null ) )?->uuid ) ?? "";
             

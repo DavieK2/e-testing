@@ -12,8 +12,8 @@ return new class extends Migration
         Schema::create('assessment_users', function(Blueprint $table){
 
             $table->ulid('uuid');
-            $table->foreignUlid('user_id')->constrained('users', 'uuid');
-            $table->foreignUlid('assessment_id')->constrained('assessments', 'uuid');
+            $table->foreignUlid('user_id')->nullable()->constrained('users', 'uuid')->onDelete('set null');
+            $table->foreignUlid('assessment_id')->nullable()->constrained('assessments', 'uuid')->onDelete('set null');
         });
     }
 

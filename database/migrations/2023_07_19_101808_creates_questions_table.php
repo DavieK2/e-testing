@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignUlid('subject_id')->nullable()->references('uuid')->on('subjects')->onDelete('SET NULL');
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
+            $table->softDeletes();
        });
     }
 

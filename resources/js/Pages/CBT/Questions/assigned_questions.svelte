@@ -17,7 +17,7 @@
 
 
     onMount(() => {
-
+        
         initialQuestions = assignedQuestions;
         
     });

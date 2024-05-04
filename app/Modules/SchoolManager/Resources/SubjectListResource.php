@@ -11,6 +11,7 @@ class SubjectListResource extends BaseResource
         return [
             'subjectId'     => $this->uuid,
             'subjectName'   => $this->subject_name,
+            'subjectCode'   => $this->subject_code,
         ];
     }
 }

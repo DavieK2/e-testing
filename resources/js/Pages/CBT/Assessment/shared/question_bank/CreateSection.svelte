@@ -32,13 +32,15 @@
         sectionTitle : "",
         sectionDescription : "",
         sectionId : "",
+        sectionScore: "",
+        sectionTotalQuestions: "",
         questionType : ""
     }
 
     let initSectionData  = JSON.stringify(sectionData);
 
 
-    let headings = ['S|N', 'Title', 'Description', 'Action']
+    let headings = ['S|N', 'Title', 'Description','Total Questions', 'Section Score', 'Action']
 
     let questionBankId = $page.props.questionBankId;
     let assessmentTitle = $page.props.assessmentTitle;
@@ -80,7 +82,7 @@
         
         disabled = true;
 
-        router.postWithToken('/api/question-bank/create/section', { questionBankId, title: sectionData.sectionTitle, description: sectionData.sectionDescription, questionType: sectionData.questionType }, {
+        router.postWithToken('/api/question-bank/create/section', { questionBankId, title: sectionData.sectionTitle, description: sectionData.sectionDescription, questionType: sectionData.questionType, sectionScore: sectionData.sectionScore, totalQuestions: sectionData.sectionTotalQuestions }, {
             onSuccess: (res) => {
                 getSections();
                 closeSheet();
@@ -103,7 +105,7 @@
         
         disabled = true;
 
-        router.postWithToken(`/api/question-bank/update/section/${sectionData.sectionId}`, { sectionTitle: sectionData.sectionTitle, sectionDescription: sectionData.sectionDescription, questionType: sectionData.questionType }, {
+        router.postWithToken(`/api/question-bank/update/section/${sectionData.sectionId}`, { sectionTitle: sectionData.sectionTitle, sectionDescription: sectionData.sectionDescription, questionType: sectionData.questionType, sectionScore: sectionData.sectionScore, totalQuestions: sectionData.sectionTotalQuestions }, {
 
             onSuccess : (res) => {
                 getSections();
@@ -154,7 +156,7 @@
     </div>
 
     <div class="w-full mx-auto h-full"> 
-        <div class="container max-w-4xl my-12 space-x-10">
+        <div class="container my-12 space-x-10">
             <div class="border bg-white p-8 rounded-lg max-w-8xl">
                 <div class="flex items-center justify-between my-2 border-b pb-8">
                     <div>
@@ -170,7 +172,9 @@
                     <tr>
                         <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ index + 1 }</td>
                         <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ section.sectionTitle }</td>
-                        <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ section.sectionDescription }</td>
+                        <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300">{ section.sectionDescription }</td>
+                        <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300">{ section.sectionTotalQuestions ?? 0 }</td>
+                        <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300">{ section.sectionScore ?? 0 }</td>
                         <td class="px-4 py-4 flex space-x-2 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
                             <Button on:click={ () => editSection(section) } buttonText="Edit" className="text-xs" />
                             <Button on:click={ () => deleteSection(section.sectionId) } buttonText="Delete" className="text-xs bg-red-500 focus:ring-red-200 hover:bg-red-600 focus:bg-red-500" />
@@ -203,6 +207,14 @@
 
         <div>
             <Input on:input={ (e) => sectionData.sectionDescription = e.detail.input }  value={ sectionData.sectionDescription } label="Enter Section Description"  labelStyle="font-semibold" />
+        </div>
+
+        <div>
+            <Input type="number" on:input={ (e) => sectionData.sectionTotalQuestions = e.detail.input }  value={ sectionData.sectionTotalQuestions } label="Enter Total Questions"  labelStyle="font-semibold" />
+        </div>
+
+        <div>
+            <Input type="number" on:input={ (e) => sectionData.sectionScore = e.detail.input }  value={ sectionData.sectionScore } label="Enter Section Score"  labelStyle="font-semibold" />
         </div>
 
         <div class="w-20">

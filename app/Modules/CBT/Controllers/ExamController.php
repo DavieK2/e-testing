@@ -16,9 +16,11 @@ use App\Modules\CBT\Requests\SaveStudentExamSessionResponsesRequest;
 use App\Modules\CBT\Requests\StartStudentExamSessionRequest;
 use App\Modules\CBT\Requests\SubmitStudentExamRequest;
 use App\Modules\CBT\Tasks\GetAssessmentQuestionsTasks;
+use App\Modules\SchoolManager\Models\AcademicSessionModel;
 use App\Modules\SchoolManager\Models\DepartmentModel;
 use App\Modules\SchoolManager\Models\StudentProfileModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
+use App\Modules\SchoolManager\Models\TermModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -245,13 +247,22 @@ class ExamController extends Controller
                                 ->get()
                                 ->toArray();
 
-        $checked_in_subjects = CheckInModel::where('student_profile_id', $student->uuid)->where('assessment_id', $assessment->uuid)->first()->subject_ids;
+        $student_academic_session = $student->academic_session_id;
+
+        $semester = match(true){
+
+            ($student_academic_session == '2022/2023') => TermModel::firstWhere('term', 'Second Semester')->uuid,
+            ($student_academic_session == '2023/2024') => TermModel::firstWhere('term', 'First Semester')->uuid,
+
+        };
         
+        $semester_subjects = DB::table('term_subjects')->where('term_id', $semester)->get()->pluck('subject_id')->toArray();
+
         $newAvailableSubjects = [];
 
         foreach ( $available_subjects as $key => $subject ) {
            
-            if( ! in_array( $subject->subId, json_decode($checked_in_subjects, true) ) ) continue;
+            if( ! in_array( $subject->subId, $semester_subjects ) ) continue;
 
             $data = [
                 'duration'      =>  $subject->duration,
@@ -263,7 +274,7 @@ class ExamController extends Controller
         }
        
         return response()->json([
-                'data' => $newAvailableSubjects
+            'data' => $newAvailableSubjects
         ]);
 
     }
@@ -387,17 +398,25 @@ class ExamController extends Controller
     public function checkInStudentData()
     {        
         $data = request()->validate([
-            'studentId' => 'required|exists:student_profiles,student_code',
+            'studentId' => 'required|min:6',
+        ],[
+            'studentId.required' => 'Please enter the Student Registration Number',
+            'studentId.min'      => 'Please enter a minimum of six characters',
         ]);
+
+        $student = StudentProfileModel::where( fn( $query ) => $query->where('student_code', $data['studentId'])->orWhereRaw("RIGHT(student_code, 6) = '{$data['studentId']}'"))->first();
+
+        if( is_null( $student) ){
+
+            return response()->json([
+                'errors'    => true,
+                'message'   => 'The Registration Code Provided is invalid'
+            ], 422);
+        }
 
         $assessment = AssessmentModel::find( request('assessmentId') );
 
-
-        $student = StudentProfileModel::firstWhere('student_code', $data['studentId']);
-
         $subjects = $assessment->subjects()->where( 'class_id', $student->class_id )->get()->intersect( $student->subjects()->get() );
-
-        $student = StudentProfileModel::firstWhere('student_code', $data['studentId']);
 
         return response()->json([
             'studentName'       =>     $student->first_name. " ". $student->surname,
@@ -414,50 +433,57 @@ class ExamController extends Controller
         date_default_timezone_set('Africa/Lagos');
 
         $data = request()->validate([
-            'studentId' => 'required|exists:student_profiles,student_code',
-            'subjects'  => 'required|array'
+            'studentId' => 'required',
         ]);
 
-        $student = StudentProfileModel::firstWhere('student_code', $data['studentId']);
+        $student = StudentProfileModel::firstWhere('student_code', 'like' ,"%{$data['studentId']}%");
 
-        $schedule = DB::table('assessment_schedules')->where('assessment_id' , $assessment->uuid )->where('department', $student->department_id)->first();
+        if( is_null( $student) ){
 
-        if( is_null( $schedule ) ){
-
-            return response([
-                'error' => 'No Schedule found for your department today'
-            ]);
+            return response()->json([
+                'errors' => 'The Registration Code Provided is invalid'
+            ], 422);
         }
+        
+
+        // $schedule = DB::table('assessment_schedules')->where('assessment_id' , $assessment->uuid )->where('department', $student->department_id)->first();
+
+        // if( is_null( $schedule ) ){
+
+        //     return response([
+        //         'error' => 'No Schedule found for your department today'
+        //     ]);
+        // }
 
        
-        if( Carbon::parse($schedule->start_time)->gt( now() ) ){
+        // if( Carbon::parse($schedule->start_time)->gt( now() ) ){
 
-            return response([
-                'error' => 'Sorry, your department is not scheduled to partake for the exams at this time'
-            ]);
+        //     return response([
+        //         'error' => 'Sorry, your department is not scheduled to partake for the exams at this time'
+        //     ]);
 
-        }
+        // }
 
-        if( Carbon::parse($schedule->end_time)->lt( now() ) ){
+        // if( Carbon::parse($schedule->end_time)->lt( now() ) ){
 
-            return response([
-                'error' => 'Sorry, the time for your department to take this exam has elapsed'
-            ]);
+        //     return response([
+        //         'error' => 'Sorry, the time for your department to take this exam has elapsed'
+        //     ]);
 
-        }
+        // }
 
-        if( CheckInModel::where('assessment_id', $assessment->uuid)->where('student_profile_id', $student->uuid)->first() ){
+        // if( CheckInModel::where('assessment_id', $assessment->uuid)->where('student_profile_id', $student->uuid)->first() ){
 
-            return response([
-                'error' => 'Sorry, you have already been checked in'
-            ]);
+        //     return response([
+        //         'error' => 'Sorry, you have already been checked in'
+        //     ]);
 
-        }
+        // }
         
         CheckInModel::updateOrCreate([ 'assessment_id' => $assessment->uuid, 'student_profile_id' => $student ], [
             'uuid'                  => Str::ulid(),
             'assessment_id'         => $assessment->uuid,
-            'subject_ids'           => json_encode($data['subjects']),
+            // 'subject_ids'           => json_encode($data['subjects']),
             'student_profile_id'     => $student->uuid,
             'checked_in_at'         => now(),
             'checked_in_by'         => request()->user()->fullname,

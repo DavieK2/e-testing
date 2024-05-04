@@ -707,7 +707,9 @@
 
         router.getWithToken(url, {
             onSuccess : (res) => {
+
                 assessmentSections = res.data.flatMap( (section) => [ { placeholder: section.sectionTitle, value: section.sectionId, questionType: section.questionType } ]);
+
             }
         })
     }

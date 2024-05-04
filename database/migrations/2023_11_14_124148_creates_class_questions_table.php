@@ -11,8 +11,8 @@ return new class extends Migration
     {
         Schema::create('class_questions', function(Blueprint $table){
             $table->ulid('uuid')->unique()->index();
-            $table->foreignUlid('class_id')->constrained( table: 'classes', column: 'uuid' );
-            $table->foreignUlid('question_id')->constrained( table: 'questions', column: 'uuid' );
+            $table->foreignUlid('class_id')->nullable()->constrained( table: 'classes', column: 'uuid' )->onDelete('set null');
+            $table->foreignUlid('question_id')->nullable()->constrained( table: 'questions', column: 'uuid' )->onDelete('set null');
         });
     }
 

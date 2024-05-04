@@ -12,6 +12,7 @@
     let assessmentClasses = [];
     let classSubjects = [];
     let selectedSubjects = [];
+    let currentClassSubjects = []
     let assessmentId = $page.props.assessmentId;
     let selectedClassId;
     let selectedClassName;
@@ -21,59 +22,73 @@
 
     onMount(() => {
 
+        // sessionStorage.clear()
         router.getWithToken('/api/assessment-subjects/' + assessmentId, {
+
             onSuccess : (res) => {
+
                selectedSubjects = res.data
+
+                // if( sessionStorage.getItem('selectedSubjects') ){
+
+                //     let savedSubjects =  new Set( JSON.parse( sessionStorage.getItem('selectedSubjects') ) );
+
+                //     let selectedSubjectsSet = new Set(selectedSubjects);
+
+                //     let merge_array = [];
+
+                //     for( let element of savedSubjects ){
+
+                //         if( !  selectedSubjects.has(element) ){
+
+                //             merge_array.push(element);
+                //         }
+                //     }
+
+                //     selectedSubjects = [...merge_array]
+                // }
+
+                console.log(selectedSubjects);
             }
         });
 
-        // if( sessionStorage.getItem('selectedSubjects') && sessionStorage.getItem('assessmentId') == assessmentId ){
-            
-        //     let data = sessionStorage.getItem('selectedSubjects')
-        //     selectedSubjects = JSON.parse(data);
-            
-        //     selectedClassId = sessionStorage.getItem('classId');
-        //     selectedClassName = sessionStorage.getItem('className');
-
-        //     getClassSubjects(selectedClassId, selectedClassName);
-        // }
-
-        // sessionStorage.setItem('assessmentId', assessmentId);
-
         router.getWithToken('/api/assessment-classes/' + assessmentId, {
+
             onSuccess : (res) => {
+
                 assessmentClasses = res.data.flatMap((grade) => [{ placeholder : grade.class_name, value: grade.id }] );
+
+                let classIds = assessmentClasses.flatMap((grade => [grade.value]));
+
+                getClassSubjects( classIds );
             }
         });
     })
 
-    const getClassSubjects = (id, className) => {
-        
-        selectedClassId = id;
-        selectedClassName = className;
+    const getClassSubjects = ( classIds ) => {
 
-        sessionStorage.setItem('classId', selectedClassId);
-        sessionStorage.setItem('className', selectedClassName);
-
-        router.getWithToken('/api/class/subject/' + id, {
+        router.postWithToken('/api/class/subject/', { classes: classIds }, {
 
             onSuccess: (response) => {
 
                 classSubjects = response.data;
+
+                console.log( classSubjects )
                 
-                let filteredSubjects = selectedSubjects.filter( (subject) => ( subject.classId  == selectedClassId  ) );
-
-                classSubjects.forEach((subject) => {
-                    filteredSubjects = filteredSubjects.filter((sub) => sub.subjectId != subject.subjectId)
-                })
-              
-                classSubjects = [ ...classSubjects, ...filteredSubjects ];
-
             },
             onError: (response) => {
+
                 console.log(response)
             }
         })
+    }
+
+    const getCurrenClassSubjects = ( classId, className )=>{
+
+        currentClassSubjects = classSubjects[classId];
+        selectedClassId = classId;
+        selectedClassName = className;
+
     }
 
     $: isSelected = (subjectId) => {
@@ -82,13 +97,14 @@
 
     const selectSubject = (subject) => {
 
-        if( isSelected(subject.subjectId) ){
+        if( isSelected( subject.subjectId )  ){
             selectedSubjects = selectedSubjects.filter((selected) => ( ! ( (selected.classId == selectedClassId )  && ( selected.subjectId == subject.subjectId ) ) ) );
             return ;
         }
 
         selectedSubjects.push(subject);
         selectedSubjects = selectedSubjects;
+
     }
 
     $: getSelectedClassSubjects = () => {
@@ -130,6 +146,7 @@
 
         router.postWithToken('/api/assessment/termly/complete', { assessmentId, subjects: selectedSubjects, step : "complete_assessment" }, {
             onSuccess : (res) => {
+
                 sessionStorage.removeItem('selectedSubjects');
                 router.navigateTo('/assessments' );
             },
@@ -161,26 +178,26 @@
     <div class="flex bg-white h-full w-full rounded-lg shadow">
         <div class="w-[24rem] shrink-0 h-full py-8 border-r">
             <div class="flex items-center w-full px-6 text-sm text-gray-600">
-                <Select on:deselected={ () => selectedSubjects = [] } value={ selectedClassId } isSelected={ selectedClassId ? true : false } on:selected={ (e) => getClassSubjects(e.detail.value, e.detail.placeholder) } options={ assessmentClasses } placeholder={ selectedClassId ? selectedClassName : "Select a Level" } className="text-sm py-2.5"/>
+                <Select on:deselected={ () => selectedSubjects = [] } value={ selectedClassId } isSelected={ selectedClassId ? true : false } on:selected={ (e) => getCurrenClassSubjects(e.detail.value, e.detail.placeholder) } options={ assessmentClasses } placeholder={ selectedClassId ? selectedClassName : "Select a Level" } className="text-sm py-2.5"/>
             </div>
             <div class="p-6 w-full">
                <div class="w-full mt-4">
                     <h3 class="text-gray-800 font-bold pb-4">Courses</h3>
                     <div class="space-y-2">
-                        { #if classSubjects.length == 0 }
+                        { #if currentClassSubjects.length == 0 }
                             <p class="text-gray-500 italic">No Course Available</p>
                         { :else }
                             <!-- <button  on:click={ selectAllSubjects } class={`flex items-center shrink-0 justify-center h-12 w-12 border-2 ${ selectAll ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
                                 <Icons icon="check" className={`${ selectAll ? "stroke-green-700" : "stroke-gray-300" }`} />
                             </button> -->
-                          { #each classSubjects as subject, index }
+                          { #each currentClassSubjects as subject, index }
                                 <div class="flex space-x-2 items-center w-full">
                                     <button  on:click={ () => selectSubject(subject) } class={`flex items-center shrink-0 justify-center h-12 w-12 border-2 ${ isSelected(subject.subjectId) ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
                                         <Icons icon="check" className={`${ isSelected(subject.subjectId) ? "stroke-green-700" : "stroke-gray-300" }`} />
                                     </button>
                                     <div class="w-full">
-                                        <button type="button" class={`flex p-3 border-2 ${ isSelected(subject.subjectId) ? 'border-green-700' : 'border-gray-300' }  w-full rounded-lg items-center justify-between space-x-2`}>
-                                            <span class={`text-sm ${ isSelected(subject.subjectId) ? "text-green-700" : "text-gray-400" }`} >{ subject.subjectName }</span>
+                                        <button type="button" class={ `flex p-3 border-2 ${ isSelected(subject.subjectId) ? 'border-green-700' : 'border-gray-300' }  w-full rounded-lg items-center justify-between space-x-2`}>
+                                            <span class={ `text-sm ${ isSelected(subject.subjectId) ? "text-green-700" : "text-gray-400" }` } >{ subject.subjectName }</span>
                                         </button>
                                     </div>
                                 </div>

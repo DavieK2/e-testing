@@ -17,6 +17,7 @@ use App\Modules\CBT\Models\SectionModel;
 use App\Modules\CBT\Requests\AssignQuestionToAssessmentRequest;
 use App\Modules\CBT\Requests\CreateAssessmentQuestionSectionRequest;
 use App\Modules\CBT\Requests\CreateQuestionRequest;
+use App\Modules\CBT\Requests\DeleteQuestionRequest;
 use App\Modules\CBT\Requests\DownloadQuestionsRequest;
 use App\Modules\CBT\Requests\GetAssessmentQuestionSectionRequest;
 use App\Modules\CBT\Requests\ImportQuestionsRequest;
@@ -29,6 +30,7 @@ use App\Modules\CBT\Requests\UpdateQuestionRequest;
 use App\Modules\Excel\Export;
 use App\Modules\SchoolManager\Models\ClassModel;
 use App\Services\CSVWriter;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Tiptap\Editor;
 
@@ -163,6 +165,16 @@ class QuestionController extends Controller
         }
 
         return Excel::download( new Export( collect($newQuestionData), $headings), "questions_".now()->format('Y_m_d_H_i_s').".xlsx" );
+
+    }
+
+    public function deleteQuestions( DeleteQuestionRequest $request )
+    {
+        $data = $request->validated();
+
+        QuestionModel::whereIn('uuid', $data['questionIds'])->delete();
+
+        DB::table('assessment_questions')->where('assessment_id', $data['assessmentId'])->whereIn('question_id', $data['questionIds'])->delete();
 
     }
 }
