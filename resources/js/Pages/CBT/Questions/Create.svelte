@@ -226,7 +226,13 @@
 
     const getQuestions = (selectedQuestionBankId) => {
 
-        return router.getWithToken(`/api/questions?questionBankId=${selectedQuestionBankId}&assessmentId=${assessmentId}&perPage=20`, {
+
+        let url = `/api/questions?questionBankId=${selectedQuestionBankId}&assessmentId=${assessmentId}&perPage=20`;
+
+        if( subjectId ) url += `&subjectId=${subjectId}`;
+        if( classId ) url += `&classId=${classId}`;
+
+        return router.getWithToken(url, {
 
             onSuccess : async (response) => {
 
@@ -784,9 +790,9 @@
         <div class="fixed ml-56 h-16 z-30 inset-x-0 flex items-center justify-between border-b border-gray-100 bg-white">
             <div class="flex space-x-3 items-center py-4 px-8">
                 <Icons icon="chart" className="h-5 w-5" />
-                <span class="mx-2 text-sm font-medium text-gray-700 uppercase">Assessments</span>
+                <a use:inertia href={ `/assessments` }  class="mx-2 text-sm font-medium text-gray-700 uppercase">Assessments</a>
                 <Icons icon="chevron_right" className="h-4 w-4 fill-gray-700" />
-                <span class="mx-2 text-sm font-medium text-gray-700 uppercase">{ assessmentTitle }</span>
+                <a use:inertia href={ `/assessments/termly/manage/${assessmentId}` } class="mx-2 text-sm font-medium text-gray-700 uppercase">{ assessmentTitle }</a>
                 <Icons icon="chevron_right" className="h-4 w-4 fill-gray-700" />
                 <span class="text-sm font-medium text-gray-700 uppercase">{ subjectTitle } ( { questionBankClasses } )</span>
             </div>

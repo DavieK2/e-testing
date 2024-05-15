@@ -1,7 +1,4 @@
-import { createInertiaApp } from '@inertiajs/svelte'
-import('preline')
-import('pikaday')
-import('moment')
+import { createInertiaApp } from '@inertiajs/svelte';
 
 createInertiaApp({
   resolve: name => {

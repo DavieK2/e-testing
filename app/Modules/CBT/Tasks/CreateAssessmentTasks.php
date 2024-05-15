@@ -49,18 +49,22 @@ class CreateAssessmentTasks extends BaseTasks {
 
         $assessment = $this->getAssessment();
 
-        $data = collect($this->item['subjects'])->groupBy('classId');
+        $classes = collect($this->item['subjects']);
         
-        dd( $data );
         $assessment->subjects()->detach();
 
-        $data->each(function($subject) use($assessment) {
+        $assessment_subjects = collect();
 
-            $subjectData = collect($subject)->mapWithKeys( fn($subject) => [ $subject['subjectId'] =>  ['id' => ($subject['id'] ?? null), 'is_published' => ($subject['published'] ?? null), 'class_id' => $subject['classId'], 'start_date' => $subject['startDate'], 'end_date' => $subject['endDate'], 'assessment_duration' => $subject['duration'] * 60 ] ]);
+        $classes->each( fn( $subjects) => collect($subjects)->each( fn( $subject ) => $assessment_subjects->push( $subject ) ) );
 
-            $assessment->addSubject( $subjectData );
 
-        });
+        $assessment_subjects = $assessment_subjects->map( function($subject) use($assessment) {
+
+            return ['uuid' => ( $subject['id'] ?? Str::ulid()), 'is_published' => ($subject['published']), 'class_id' => $subject['classId'], 'start_date' => $subject['startDate'], 'end_date' => $subject['endDate'], 'assessment_duration' => $subject['duration'] * 60, 'assessment_id' => $assessment->uuid, 'subject_id' => $subject['subjectId'] ];
+
+        })->toArray();
+
+        $assessment->addSubjects( $assessment_subjects );
         
         return new static( $this->item );
     }

@@ -16,22 +16,40 @@ class QuestionListTasks extends BaseTasks{
         if( isset( $this->item['questionBankId'] ) ){
 
             $question_bank = QuestionBankModel::firstWhere( 'uuid', $this->item['questionBankId'] );
+
+            $assessment_questions = DB::table('assessment_questions')
+                                        ->where( function($query) {
+                                                        
+                                            $query->where('assessment_questions.assessment_id', $this->item['assessmentId']);
+
+                                            if( isset( $this->item['subjectId'] ) ) $query->where('assessment_questions.subject_id', $this->item['subjectId']);
+                                            if( isset( $this->item['classId'] ) ) $query->where('assessment_questions.class_id', ClassModel::firstWhere('class_code', $this->item['classId'])->uuid);     
+
+                                        })
+                                        ->select('assessment_questions.question_id', 'assessment_questions.assessment_id');
+
+
             $questions = QuestionModel::where( 'questions.question_bank_id', $question_bank->uuid )
-                                        ->leftJoin('assessment_questions', 'questions.uuid', '=', 'assessment_questions.question_id')
-                                        ->select('questions.*', 'assessment_questions.assessment_id as assessmentId');
+                                        ->leftJoinSub( $assessment_questions, 'class_assessment_questions', fn( $join ) => $join->on('questions.uuid', '=', 'class_assessment_questions.question_id')  )
+                                        ->latest()
+                                        ->select('questions.*', 'class_assessment_questions.assessment_id as assessmentId');
         }
 
+      
         if( isset( $this->item['assessmentId'] ) && ! isset( $this->item['questionBankId'] )){
 
             $assessment = AssessmentModel::firstWhere('uuid', $this->item['assessmentId'] );
+
             $questions = QuestionModel::where( 'questions.assessment_id', $assessment->uuid )
                                         ->leftJoin('assessment_questions', 'questions.uuid', '=', 'assessment_questions.question_id')
                                         ->select('questions.*', 'assessment_questions.assessment_id as assessmentId');
         }
         
+       
+
         if( isset( $questions ) ){
 
-            $questions = $questions->fromSub($questions, 'questions')
+            $questions =  $questions->fromSub($questions, 'questions')
                                     ->leftJoin('topics', 'topics.uuid', '=', 'questions.topic_id')
                                     ->leftJoin('sections', 'sections.uuid', '=', 'questions.section_id')
                                     ->selectRaw('questions.*, sections.uuid as sectionId, sections.title as sectionTitle, topics.uuid as topicId, IF(questions.assessmentId = questions.assessment_id, "Assigned", "Not Assigned") as isAssigned')

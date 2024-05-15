@@ -24,25 +24,18 @@
     const dispatch = createEventDispatcher();
 
     onMount(() => {
+
         initialValues['placeholder'] = placeholder
         initialValues['isSelected'] = isSelected
         initialValues['value'] = value
 
-        if( value || value?.length > 0 ){
-
-            let placeholderParam = options.filter((option) => option.value === value );
-            
-            if( placeholderParam[0] ){
-                onSelect(placeholderParam[0].placeholder, value);
-            }
-           
-        }
     })
 
     const onSelect = (placeholderParam, valueParam) => {
 
         placeholder = placeholderParam;
         value = valueParam;
+
         dropDown.blur();
         showDropdown = false;
         isSelected = true;
@@ -63,6 +56,21 @@
   
     const show = () => showDropdown = true
     const hide = () => showDropdown = false
+
+    $: {
+
+        if( value || value?.length > 0 ){
+
+            let placeholderParam = options.filter((option) => option.value === value );
+            
+            if( placeholderParam[0] ){
+
+                placeholder = placeholderParam[0].placeholder;
+                value = value;
+            }
+           
+        }
+    }
 
 </script>
   

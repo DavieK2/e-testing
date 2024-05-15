@@ -129,25 +129,9 @@ class AssessmentModel extends Model
                     ->withPivot(['class_id', 'start_date', 'end_date', 'assessment_duration', 'is_published']);
     }
 
-    public function addSubject(Collection $data)
+    public function addSubjects(array $data)
     {
-        $data->each(function($subject, $key) {
-
-            DB::table('assessment_subjects')
-                ->insert(
-                    [
-                        'uuid'                  => $subject['id'] ?? Str::ulid(),
-                        'assessment_id'         => $this->uuid, 
-                        'subject_id'            => $key, 
-                        'is_published'          => $subject['is_published'] === 'Published' ? true : false, 
-                        'class_id'              => $subject['class_id'],
-                        'assessment_duration'   => $subject['assessment_duration'],
-                        'start_date'            => $subject['start_date'],
-                        'end_date'              => $subject['end_date'],
-                    ]);
-        });
-
-        return ;
+        return DB::table('assessment_subjects')->insert($data);
     }
 
     public function cacheAssessmentQuestions($subject_id, $class_code)

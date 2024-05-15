@@ -38,7 +38,7 @@
 
     let importErrorsLink = '';
 
-    let edit = true;
+    let edit = false;
     let disabled = false;
     let questionEdit = false;
     let showModal = false;
@@ -165,6 +165,8 @@
     const updateQuestion = () => {
 
         disabled = false;
+
+        edit = false;
 
         questionEdit = ! questionEdit
 

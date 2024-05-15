@@ -181,7 +181,7 @@
                 <Select options={ sections } on:selected={ (e) => selectedSection = e.detail.value } on:deselected={ (e) => selectedSection = null } value={ selectedSection } placeholder="Select Question Section" className="text-sm ring-2"/>
             {/key}
         </div>
-        { #if create  && edit && ( ! assigned ) }
+        { #if create  && ( ! edit ) && ( ! assigned ) }
             <div class="space-y-4 pb-4 my-4">
                 <p class="text-gray-800 font-semibold text-sm">Select Question Topic</p>
                 { #key selectedTopic }

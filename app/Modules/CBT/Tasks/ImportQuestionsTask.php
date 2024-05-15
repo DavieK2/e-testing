@@ -47,8 +47,9 @@ class ImportQuestionsTask extends BaseTasks{
         $errors = [];
 
         $assessment = AssessmentModel::firstWhere('uuid', $this->item['assessmentId']);
+        $question_bank = QuestionBankModel::find( $this->item['questionBankId']);
 
-        SimpleExcelReader::create( storage_path("app/$importFileKey") )->trimHeaderRow()->getRows()->each(function($row) use($assessment) {
+        SimpleExcelReader::create( storage_path("app/$importFileKey") )->trimHeaderRow()->getRows()->each(function($row) use($assessment, $question_bank) {
                
             $mapping = $this->item['mappings'];
 
@@ -124,12 +125,22 @@ class ImportQuestionsTask extends BaseTasks{
             $correct_answer = $data['correctAnswer'];
             $question_score = $data['questionScore'];
             
-            unset($data['correctAnswer']);
-            unset($data['questionScore']);
+            unset( $data['correctAnswer'] );
+            unset( $data['questionScore'] );
 
 
 
-            $data =  $data + ['correct_answer' => $correct_answer, 'question_score' => $question_score, 'assessment_id' => $assessment->uuid, 'question_bank_id' => $this->item['questionBankId'] ?? null , 'uuid' => Str::ulid() ];
+            $data =  $data + [
+                'correct_answer'    => $correct_answer, 
+                'question_score'    => $question_score, 
+                'user_id'           => request()->user()->uuid,
+                'assessment_id'     => $assessment->uuid, 
+                'question_bank_id'  => $this->item['questionBankId'] ?? null , 
+                'uuid'              => Str::ulid(),
+                'subject_id'        => $question_bank->subject_id,
+                'created_at'        => now(),
+                'updated_at'        => now(),
+            ];
 
             $this->questions[] = $data;
 
@@ -150,11 +161,9 @@ class ImportQuestionsTask extends BaseTasks{
         //     $this->questions = [];
 
         // }
-
-        $question_bank = QuestionBankModel::find( $this->item['questionBankId']);
        
 
-        $classes = json_decode($question_bank->classes, true);
+        $classes = json_decode( $question_bank->classes, true );
 
         foreach( $classes as $class){
 
@@ -163,13 +172,14 @@ class ImportQuestionsTask extends BaseTasks{
             $this->assessment_questions[] = collect($this->questions)->map( function($question) use($question_bank, $classId){
 
                 return [
-                    'uuid' => Str::ulid(),
-                    'section_id' => $question['section_id'],
+                    'uuid'          => Str::ulid(),
+                    'section_id'    => $question['section_id'],
                     'assessment_id' => $question['assessment_id'],
-                    'question_id' => $question['uuid'],
-                    'subject_id' => $question_bank->subject_id,
-                    'class_id' => $classId
-
+                    'question_id'   => $question['uuid'],
+                    'subject_id'    => $question_bank->subject_id,
+                    'class_id'      => $classId,
+                    'created_at'    => now(),
+                    'updated_at'    => now(),
                 ];
 
             })->toArray(); 

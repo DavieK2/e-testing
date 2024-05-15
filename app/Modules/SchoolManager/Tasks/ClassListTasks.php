@@ -23,7 +23,9 @@ class ClassListTasks extends BaseTasks{
                         ->where( fn($query) => $query->whereIn('class_id', $classes))
                         ->select('subjects.uuid as subjectId', 'subjects.subject_name as subjectName', 'class_subjects.class_id as classId')
                         ->get()
-                        ->groupBy('classId');
+                        ->groupBy('classId')
+                        ->map( fn($subject) => $subject->groupBy('subjectId')->mapWithKeys(fn($subject, $key) => [ $key => $subject[0] ])->toArray() )
+                        ->toArray();
 
         
         return new static($subjects);

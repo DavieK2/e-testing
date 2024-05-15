@@ -14,18 +14,17 @@ class CompleteAssessmentRequest extends BaseRequest
 
     public function rules()
     {
-        // dd(request('subjects'));
         return [
             'step'                      => 'required|in:create_assessment,add_classes,complete_assessment',
             'assessmentId'              => 'required|exists:assessments,uuid',
             'subjects'                  => 'required|array',
-            'subjects.*.subjectId'      => 'required',
-            'subjects.*.published'      => 'nullable',
-            'subjects.*.id'             => 'nullable',
-            'subjects.*.classId'        => 'required',
-            'subjects.*.duration'       => 'required',
-            'subjects.*.startDate'      => 'required',
-            'subjects.*.endDate'        => 'required',
+            'subjects.*.*.subjectId'    => 'required',
+            'subjects.*.*.id'           => 'nullable',
+            'subjects.*.*.classId'      => 'required',
+            'subjects.*.*.duration'     => 'required',
+            'subjects.*.*.startDate'    => 'required',
+            'subjects.*.*.endDate'      => 'required',
+            'subjects.*.*.published'    => 'required',
         ];
     }
 }

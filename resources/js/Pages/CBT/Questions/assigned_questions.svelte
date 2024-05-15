@@ -123,7 +123,7 @@
             <p class="text-base font-bold">Total Questions: { initialQuestions.length }</p>
        </div>
        <div>
-            <button on:click={ () => dispatch('download-excel') } class="px-4 py-2 text-gray-800 rounded-lg border-2 border-gray-800">
+            <button { disabled }  on:click={ () => dispatch('download-excel') } class="px-4 py-2 text-gray-800 rounded-lg border-2 border-gray-800  disabled:border-gray-400 disabled:text-gray-400">
                 <div class="flex space-x-2 items-center">
                     <span class="text-sm">Export</span>
                     <Icons className="h-6 w-6 fill-current" icon="excel" />

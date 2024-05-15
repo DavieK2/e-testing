@@ -208,7 +208,7 @@
                                         {/if}
                                        
                                         { #if auth.can(role, 'view', 'assessments')}
-                                            <button on:click={ () => viewAssessmentQuestions(assessment) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">View Question Banks</button>
+                                            <button on:click={ () => viewAssessmentQuestions(assessment) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Question Banks</button>
                                         {/if}
 
                                         { #if auth.can(role, 'view', 'assessments')}
