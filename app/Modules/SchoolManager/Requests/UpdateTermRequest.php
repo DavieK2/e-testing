@@ -2,9 +2,9 @@
 
 namespace App\Modules\SchoolManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class UpdateTermRequest extends FormRequest
+class UpdateTermRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -14,7 +14,6 @@ class UpdateTermRequest extends FormRequest
     public function rules()
     {
         return [
-            'termId' => 'required|exists:school_terms,uuid',
             'term' => 'required'
         ];
     }

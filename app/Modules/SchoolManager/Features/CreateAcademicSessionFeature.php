@@ -4,21 +4,24 @@ namespace App\Modules\SchoolManager\Features;
 
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
-use App\Modules\SchoolManager\Tasks\CreateAcademicSessionTasks;
+use App\Modules\SchoolManager\Tasks\AcademicSessionTasks;
 
 class CreateAcademicSessionFeature extends FeatureContract {
 
     public function __construct(){
-        $this->tasks = new CreateAcademicSessionTasks();
+        $this->tasks = new AcademicSessionTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|AcademicSessionTasks $task, array $args = [])
     {
        try {
             
-            $builder = $task->start($args)->storeToDatabase();
-
-            return $task::formatResponse( $builder->empty(), options: ['message' => 'Academic Session created successfully']);
+            return $task->withParameters($args)
+                        ->createAcademicSession()
+                        ->empty()
+                        ->formatResponse( options: [
+                            'message' => 'Academic Session created successfully'
+                        ]);
 
        } catch (\Throwable $th) {
 

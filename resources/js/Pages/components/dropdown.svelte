@@ -58,7 +58,7 @@
 <div class="relative overflow-visible">
 
     <div class="min-w-max">
-        <button on:click={ show } use:hide name="" class={ cn(`block w-full rounded-lg border-0 py-2.5 px-3 bg-gray-800 text-white  placeholder:text-gray-400 focus:ring-inset focus:ring-gray-800 text-xs sm:leading-6`, className ) }>
+        <button on:click={ show } use:hide name="" class={ cn(`block min-w-max max-w-min rounded-lg border-0 py-1.5 px-3 bg-gray-800 text-white  placeholder:text-gray-400 focus:ring-inset focus:ring-gray-800 text-xs sm:leading-6`, className ) }>
             <div class="flex items-center justify-between space-x-3">
                 <span >{ placeholder }</span>
                 <div class="flex items-center justify-center space-x-2">
@@ -76,8 +76,9 @@
     
     { #if showDropdown }
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
-        <div use:flip on:mouseover={ () => isMouseOnDropDown = true } on:mouseleave={ () => isMouseOnDropDown = false } out:fade={{ duration: 100, easing: backOut }} in:fade={{ duration: 50, easing: quintIn }} class={`${ shouldFlip ? 'bottom-14' : '' } absolute isolate right-0  origin-bottom-right flex flex-col items-start p-3 min-w-max w-full min-h-max max-h-min mt-3  bg-white border rounded-lg z-50 text-gray-700`}>
-            <div class="flex flex-col h-full w-full overflow-y-auto">
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <div use:flip on:mouseover={ () => isMouseOnDropDown = true } on:mouseleave={ () => isMouseOnDropDown = false } out:fade={{ duration: 100, easing: backOut }} in:fade={{ duration: 50, easing: quintIn }} class={`${ shouldFlip ? 'bottom-14' : '' } absolute isolate left-0  origin-bottom-right flex flex-col items-start p-3 min-w-max max-w-min min-h-max max-h-min mt-2  bg-white border rounded-lg z-50 text-gray-700`}>
+            <div class="flex flex-col h-full overflow-y-auto">
                 <slot></slot>
             </div>
         </div>

@@ -10,6 +10,8 @@ return new class extends Migration
     public function up()
     {
 
+        if( Schema::hasTable('assessment_sessions') ) return ;
+
         Schema::create('assessment_sessions', function(Blueprint $table){
             $table->ulid('uuid')->unique()->index();
             $table->foreignUlid('student_profile_id')->constrained( table: 'student_profiles', column: 'uuid' );

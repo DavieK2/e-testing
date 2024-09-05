@@ -4,21 +4,24 @@ namespace App\Modules\SchoolManager\Features;
 
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
-use App\Modules\SchoolManager\Tasks\AssignTeacherToSubjectTask;
+use App\Modules\SchoolManager\Tasks\TeacherTasks;
+use App\Modules\UserManager\Models\UserModel;
 
 class AssignTeacherToSubjectFeature extends FeatureContract {
 
-    public function __construct(){
-        $this->tasks = new AssignTeacherToSubjectTask();
+    public function __construct( protected UserModel $teacher ){
+        $this->tasks = new TeacherTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|TeacherTasks $task, array $args = [])
     {
        try {
 
-            $builder = $task->start($args)->assignTeacherToSubject();
-
-            return $task::formatResponse( $builder->empty() );
+            return $task->withParameters($args)
+                        ->teacher($this->teacher)
+                        ->assignTeacherToSubject()
+                        ->empty()
+                        ->formatResponse();
 
        } catch (\Throwable $th) {
             

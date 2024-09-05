@@ -2,9 +2,9 @@
 
 namespace App\Modules\SchoolManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class UpdateAcademicSessionRequest extends FormRequest
+class UpdateAcademicSessionRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -14,8 +14,7 @@ class UpdateAcademicSessionRequest extends FormRequest
     public function rules()
     {
         return [
-            'academicSessionId' => 'required|exists:academic_sessions,uuid',
-            'session' => 'required'
+            'session' => 'required|string'
         ];
     }
 }

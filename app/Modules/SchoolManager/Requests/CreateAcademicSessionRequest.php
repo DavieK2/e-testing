@@ -2,9 +2,9 @@
 
 namespace App\Modules\SchoolManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class CreateAcademicSessionRequest extends FormRequest
+class CreateAcademicSessionRequest extends BaseRequest
 {
     public function authorize()
     {

@@ -4,21 +4,27 @@ namespace App\Modules\SchoolManager\Features;
 
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
-use App\Modules\SchoolManager\Tasks\UpdateAcademicSessionTasks;
+use App\Modules\SchoolManager\Models\AcademicSessionModel;
+use App\Modules\SchoolManager\Tasks\AcademicSessionTasks;
 
 class UpdateAcademicSessionFeature extends FeatureContract {
 
-    public function __construct(){
-        $this->tasks = new UpdateAcademicSessionTasks();
+    public function __construct(protected AcademicSessionModel $academic_session){
+        $this->tasks = new AcademicSessionTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|AcademicSessionTasks $task, array $args = [])
     {
        try {
-            
-            $builder = $task->start($args)->updateAcademicSession();
 
-            return $task::formatResponse( $builder->empty(), options:['status' => 200, 'message' => 'Academic updated successfuly'] );
+            return $task->withParameters($args)
+                        ->academicSession( $this->academic_session )
+                        ->updateAcademicSession()
+                        ->empty()
+                        ->formatResponse( options:[
+                            'status' => 200, 
+                            'message' => 'Academic updated successfuly'
+                        ] );
 
        } catch (\Throwable $th) {
         

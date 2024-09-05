@@ -14,7 +14,7 @@ return new class extends Migration
             $table->ulid('uuid');
             $table->foreignUlid('term_id')->constrained('school_terms', 'uuid');
             $table->foreignUlid('subject_id')->constrained('subjects', 'uuid');
-
+            $table->boolean('is_synced')->default(false);
         });
     }
 

@@ -169,6 +169,8 @@ export const router  = {
         }
     },
     navigateTo : (url) => {
-        return routr.get(url);
+        return routr.visit(url, {
+            method: 'get'
+        } );
     }
 }

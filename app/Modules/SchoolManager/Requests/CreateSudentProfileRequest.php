@@ -2,9 +2,9 @@
 
 namespace App\Modules\SchoolManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class CreateSudentProfileRequest extends FormRequest
+class CreateSudentProfileRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -20,9 +20,9 @@ class CreateSudentProfileRequest extends FormRequest
             'profilePic' => 'required',
             'level' => 'required',
             'session' => 'required',
-            'phoneNo' => 'required',
-            'programOfStudy' => 'required',
-            'email' => 'required',
+            'phoneNo' => 'nullable',
+            'programOfStudy' => 'nullable',
+            'email' => 'nullable',
         ];
     }
 }

@@ -4,21 +4,21 @@ namespace App\Modules\SchoolManager\Features;
 
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
-use App\Modules\SchoolManager\Tasks\AcademicSessionListTasks;
+use App\Modules\SchoolManager\Tasks\AcademicSessionTasks;
 
 class AcademicSessionListFeature extends FeatureContract {
 
     public function __construct(){
-        $this->tasks = new AcademicSessionListTasks();
+        $this->tasks = new AcademicSessionTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|AcademicSessionTasks $task, array $args = [])
     {
        try {
 
-            $builder = $task->start($args)->getSessions()->all();
-
-            return $task::formatResponse($builder);
+            return $task->getSessions()
+                        ->all()
+                        ->formatResponse();
             
        } catch (\Throwable $th) {
 

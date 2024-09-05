@@ -5,6 +5,8 @@ namespace App\Modules\CBT\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\CBT\Features\AssessmentsListFeature;
 use App\Modules\CBT\Features\CreateAssessmentFeature;
+use App\Modules\CBT\Features\CreateQuizFeature;
+use App\Modules\CBT\Features\EditQuizFeature;
 use App\Modules\CBT\Features\GetAssessmentClassesFeature;
 use App\Modules\CBT\Features\GetAssessmentFeature;
 use App\Modules\CBT\Features\GetAssessmentQuestionsFeature;
@@ -12,6 +14,7 @@ use App\Modules\CBT\Features\GetAssessmentSubjectsFeature;
 use App\Modules\CBT\Features\GetAssignedAssessmentFeature;
 use App\Modules\CBT\Features\GetPublishedAssessmentFeature;
 use App\Modules\CBT\Features\UpdateAssessmentFeature;
+use App\Modules\CBT\Features\UpdateQuizFeature;
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Models\QuestionBankModel;
 use App\Modules\CBT\Models\SectionModel;
@@ -20,29 +23,46 @@ use App\Modules\CBT\Requests\AssignClassesToAssessmentRequest;
 use App\Modules\CBT\Requests\CompleteAssessmentRequest;
 use App\Modules\CBT\Requests\CreateAssessmentQuestionSectionRequest;
 use App\Modules\CBT\Requests\CreateAssessmentRequest;
+use App\Modules\CBT\Requests\CreateQuizRequest;
 use App\Modules\CBT\Requests\GetAssessmentQuestionSectionRequest;
 use App\Modules\CBT\Requests\GetAssessmentSubjectRequest;
 use App\Modules\CBT\Requests\PublishAssessmentRequest;
 use App\Modules\CBT\Requests\PublishTermlyAssessmentRequest;
 use App\Modules\CBT\Requests\UpdateAssessmentRequest;
 use App\Modules\SchoolManager\Models\ClassModel;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 
 class AssessmentController extends Controller
 {
-    public function index(AssessmentListRequest $request)
+    public function index(AssessmentListRequest $request) : JsonResource
     {
         return $this->serve( new AssessmentsListFeature(), $request->validated() );
     }
 
-    public function create(CreateAssessmentRequest $request)
+    public function create(CreateAssessmentRequest $request) : JsonResource
     {
         return $this->serve( new CreateAssessmentFeature(), $request->validated() );
     }
 
-    public function publish(PublishAssessmentRequest $request)
+    public function createQuiz(CreateQuizRequest $request) : JsonResource
+    {
+       return $this->serve( new CreateQuizFeature(), $request->validated() );
+    }
+
+    public function editQuiz(AssessmentModel $assessment) : JsonResource
+    {
+        return $this->serve( new EditQuizFeature($assessment) );
+    }
+
+    public function updateQuiz(AssessmentModel $assessment, CreateQuizRequest $request) : JsonResource
+    {
+        return $this->serve( new UpdateQuizFeature($assessment), $request->validated() );
+    }
+
+    public function publish(PublishAssessmentRequest $request) : JsonResource
     {
         return $this->serve( new UpdateAssessmentFeature(), $request->validated() );
     }
@@ -112,18 +132,36 @@ class AssessmentController extends Controller
 
     public function getQuestionBanks(AssessmentModel $assessment)
     {
+        $is_assessment_QB = request('isAssessmentQB');
+
         $question_banks = QuestionBankModel::where('question_banks.assessment_id', $assessment->uuid)
                                             ->join('users', 'users.uuid', '=', 'question_banks.user_id')
                                             ->leftJoin('subjects', 'subjects.uuid', '=', 'question_banks.subject_id')
-                                            ->select('question_banks.*', 'subjects.subject_name', 'subjects.subject_code', 'users.fullname')
-                                            ->get();
+                                            ->select('question_banks.*', 'subjects.subject_name', 'subjects.subject_code', 'users.fullname');
+              
+        if( $is_assessment_QB ){
 
+            $question_banks->where('is_assessment_question_bank', true);
+
+        }else{
+
+            $question_banks->where('is_assessment_question_bank', false);
+        }
+
+        $question_banks = $question_banks->get();
+        
         $class = request('class');
         $subject = request('subject');
+      
 
-        if( $class && $subject ){
-            $question_banks = $question_banks->filter( fn( $question_bank ) => ( $question_bank->subject_id == $subject ) &&  ( in_array( $class, json_decode($question_bank->classes, true ) ?? [] ) ) );
+        if( $subject ){
+            $question_banks = $question_banks->filter( fn( $question_bank ) => ( $question_bank->subject_id == $subject )  );
         }
+
+        // if( $class ){
+
+        //     $question_banks = $question_banks->filter( fn( $question_bank ) => ( in_array( $class, json_decode($question_bank->classes, true ) ?? [] ) ) );
+        // }
 
         $question_banks = $question_banks->map( function( $question_bank ){
 
@@ -136,6 +174,7 @@ class AssessmentController extends Controller
                 'isVisible'      => true,
                 'classes'        => collect(json_decode($question_bank->classes, true))->flatMap( fn($class) => [ ClassModel::firstWhere('class_code', $class)->class_name ] )->toArray(),
             ];
+
         })->values()->toArray();
 
         
@@ -182,9 +221,9 @@ class AssessmentController extends Controller
         
         $sections = $sections->get();
         
-        if( isset( $data['classId'] ) ) {
+        if( isset( $data['classId'] )  ) {
 
-            $sections = $sections->filter( fn($section) => in_array( $data['classId'], json_decode( ( $section->classes ?? '' ), true ) ) );
+            $sections = $sections->filter( fn($section) => in_array( $data['classId'], ( json_decode( ( $section->classes ?? '' ), true ) ?? [] ) ) );
         }
       
         return response()->json([

@@ -7,6 +7,7 @@ use App\Modules\SchoolManager\Features\CreateSubjectFeature;
 use App\Modules\SchoolManager\Features\SubjectListFeature;
 use App\Modules\SchoolManager\Features\UpdateSubjectFeature;
 use App\Modules\SchoolManager\Models\ClassModel;
+use App\Modules\SchoolManager\Models\SubjectModel;
 use App\Modules\SchoolManager\Requests\CreateSubjectRequest;
 use App\Modules\SchoolManager\Requests\SubjectListRequest;
 use App\Modules\SchoolManager\Requests\UpdateSubjectRequest;
@@ -23,9 +24,9 @@ class SubjectController extends Controller
         return $this->serve( new CreateSubjectFeature(), $request->validated() );
     }
 
-    public function update(UpdateSubjectRequest $request)
+    public function update(SubjectModel $subject, UpdateSubjectRequest $request)
     {
-        return $this->serve( new UpdateSubjectFeature(), $request->validated() );
+        return $this->serve( new UpdateSubjectFeature($subject), $request->validated() );
     }
 
     public function classes(ClassModel $class)

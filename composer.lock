@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ca925ef313b37ebeeae6212ff499ad39",
+    "content-hash": "1042caf67186cc15d4999c22d207c495",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -8393,6 +8393,53 @@
             "time": "2022-02-21T01:04:05+00:00"
         },
         {
+            "name": "phpstan/phpdoc-parser",
+            "version": "1.29.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpdoc-parser.git",
+                "reference": "fcaefacf2d5c417e928405b71b400d4ce10daaf4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/fcaefacf2d5c417e928405b71b400d4ce10daaf4",
+                "reference": "fcaefacf2d5c417e928405b71b400d4ce10daaf4",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^2.0",
+                "nikic/php-parser": "^4.15",
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^1.5",
+                "phpstan/phpstan-phpunit": "^1.1",
+                "phpstan/phpstan-strict-rules": "^1.0",
+                "phpunit/phpunit": "^9.5",
+                "symfony/process": "^5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\PhpDocParser\\": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPDoc parser with support for nullable, intersection and generic types",
+            "support": {
+                "issues": "https://github.com/phpstan/phpdoc-parser/issues",
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.29.1"
+            },
+            "time": "2024-05-31T08:52:43+00:00"
+        },
+        {
             "name": "phpunit/php-code-coverage",
             "version": "10.1.6",
             "source": {
@@ -10035,6 +10082,71 @@
                 }
             ],
             "time": "2023-08-23T06:24:34+00:00"
+        },
+        {
+            "name": "stevebauman/autodoc-facades",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stevebauman/autodoc-facades.git",
+                "reference": "77b13ed44433446a2a203a889954e5c4d6e454c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stevebauman/autodoc-facades/zipball/77b13ed44433446a2a203a889954e5c4d6e454c8",
+                "reference": "77b13ed44433446a2a203a889954e5c4d6e454c8",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0",
+                "php": "^8.1",
+                "phpstan/phpdoc-parser": "^1.28"
+            },
+            "require-dev": {
+                "laravel/facade-documenter": "dev-main",
+                "laravel/pint": "^1.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0"
+            },
+            "bin": [
+                "facade.php"
+            ],
+            "type": "project",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Stevebauman\\AutodocFacades\\AutodocServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stevebauman\\AutodocFacades\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Steve Bauman",
+                    "email": "steven_bauman@outlook.com"
+                }
+            ],
+            "description": "Auto-generate PHP doc annotations for Laravel facades",
+            "homepage": "https://github.com/stevebauman",
+            "keywords": [
+                "annotate",
+                "autodoc",
+                "document",
+                "facade",
+                "facades"
+            ],
+            "support": {
+                "issues": "https://github.com/stevebauman/autodoc-facades/issues",
+                "source": "https://github.com/stevebauman/autodoc-facades"
+            },
+            "time": "2024-04-10T14:00:39+00:00"
         },
         {
             "name": "symfony/yaml",

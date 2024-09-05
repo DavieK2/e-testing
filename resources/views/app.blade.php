@@ -8,18 +8,18 @@
     @inertiaHead
 
     <style>
-      /* @font-face {
-        font-family: 'Nunito Black';
-        src: url('NunitoSans_Black.tff')
+      @font-face {
+        font-family: 'Satoshi Black';
+        src: url('/assets/fonts/Satoshi-Black.otf')
       }
       @font-face {
-        font-family: 'Nunito Regular';
-        src: url('assets/fonts/NunitoSans_Regular.ttf')
+        font-family: 'Satoshi Regular';
+        src: url('/assets/fonts/Satoshi-Variable.ttf')
       }
 
       body{
-        font-family: 'Nunito Regular'
-      } */
+        font-family: 'Satoshi Regular'
+      }
     </style>
 
   </head>

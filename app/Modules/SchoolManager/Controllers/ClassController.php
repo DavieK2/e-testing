@@ -27,18 +27,18 @@ class ClassController extends Controller
         return $this->serve( new CreateClassFeature(), $request->validated() );
     }
 
-    public function update(UpdateClassRequest $request)
+    public function update(ClassModel $class, UpdateClassRequest $request)
     {
-        return $this->serve( new UpdateClassFeature(), $request->validated() );
+        return $this->serve( new UpdateClassFeature($class), $request->validated() );
     }
 
-    public function subjects(GetClassSubjectsRequest $request)
+    public function subjects(ClassModel $class)
     {
-        return $this->serve( new GetClassSubjectsFeature(), $request->validated() );
+        return $this->serve( new GetClassSubjectsFeature($class) );
     }
 
-    public function assignSubjects(AssignSubjectToClassRequest $request)
+    public function assignSubjects(ClassModel $class, AssignSubjectToClassRequest $request)
     {
-        return $this->serve( new AssignSubjectToClassFeature(), $request->validated() );
+        return $this->serve( new AssignSubjectToClassFeature($class), $request->validated() );
     }
 }

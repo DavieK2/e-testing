@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+
+use App\Modules\{{ module }}\Tasks\{{ class }} as Tasks{{ class }};
+use Illuminate\Support\Facades\Facade;
+
+/**
+ * @see \App\Modules\{{ module }}\Tasks\{{ class }}
+ */
+
+class {{ class }} extends Facade{
+
+    protected static function getFacadeAccessor()
+    {
+        return Tasks{{ class }}::class;
+    }
+}

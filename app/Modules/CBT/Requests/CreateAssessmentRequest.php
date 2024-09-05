@@ -3,11 +3,11 @@
 namespace App\Modules\CBT\Requests;
 
 use App\Modules\CBT\Constants\CBTConstants;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
 
-class CreateAssessmentRequest extends FormRequest
+class CreateAssessmentRequest extends BaseRequest
 {
     public function authorize()
     {

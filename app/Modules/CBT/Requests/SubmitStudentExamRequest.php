@@ -2,10 +2,10 @@
 
 namespace App\Modules\CBT\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
-class SubmitStudentExamRequest extends FormRequest
+class SubmitStudentExamRequest extends BaseRequest
 {
     public function authorize()
     {

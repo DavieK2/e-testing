@@ -2,9 +2,9 @@
 
 namespace App\Modules\CBT\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class DeleteSectionRequest extends FormRequest
+class DeleteSectionRequest extends BaseRequest
 {
     public function authorize()
     {

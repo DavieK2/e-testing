@@ -11,13 +11,15 @@
     import Dropdown from "../../components/dropdown.svelte";
     import CsvImportCard from "../../CBT/components/CsvImportCard.svelte";
     import Importmapper from "../../components/importmapper.svelte";
+    import TopHeader from "../../layouts/top_header.svelte";
+    import AppContainer from "../../layouts/app_container.svelte";
 
 
 
     let disabled = false;
     let checkedAll = false;
 
-    let headings = ['', 'Name', 'Level', 'Student Code', 'Actions']
+    let headings = ['Name', 'Level', 'Student Code', 'Actions']
 
     let classes = [];
 
@@ -122,7 +124,7 @@
 
     const getStudents = () => {
 
-        router.get('/api/students', {
+        router.get('/api/students?fullDetails=1', {
             onSuccess : (res) => {
                 students = res.data
             }
@@ -175,7 +177,7 @@
 
         disabled = true ;
 
-        router.post('/api/student/update', { profilePic: uploadPic, studentId: studentData.id, classId: classId.value, firstName: firstName.value, surname: surname.value, studentCode: studentData.studentCode }, {
+        router.post(`/api/student/update/${studentData.id}`, { profilePic: uploadPic, classId: classId.value, firstName: firstName.value, surname: surname.value, studentCode: studentData.studentCode }, {
             onSuccess : (res) => {
                 getStudents();
                 closeSheet();
@@ -372,7 +374,9 @@
 
         disabled = true ;
 
-        router.post('/api/student/assign-subjects', { studentId : studentData.id, subjects : selectedSubjects }, {
+        let subjectIds = selectedSubjects.flatMap((subject) => [ subject.subjectId ]);
+
+        router.post(`/api/student/assign-subjects/${studentData.id}`, { subjects : subjectIds }, {
 
             onSuccess : (res) => {
 
@@ -443,13 +447,10 @@
 
 </script>
 
+
 <Layout>
-    <div class="container my-28">
-        <div class="flex items-center justify-between">
-            <div class="flex space-x-3 items-center">
-                <Icons icon="badge" className="h-6 w-6" />
-                <span class="mx-2 text-lg font-semibold text-gray-800">Students ( { students.length } )</span>
-            </div>
+    <SlidePanel  title={ slidePanelTitle } showSheet={ showStudentForm } on:onpanelstatus={ closeSheet }>
+        <TopHeader title={ `Students ( ${students.length}  )` } >
             <div class="flex space-x-3">
                 <Button on:click={ () => showSheet(panelState.addNewStudent) } buttonText="Add New Student" className="text-sm min-w-max max-w-min" />
                 <Button on:click={ () => showSheet(panelState.upload) } buttonText="Import Students" className="text-sm min-w-max max-w-min" />
@@ -457,124 +458,127 @@
                 <Button on:click={ checkAll } buttonText={ checkedAll ? 'Uncheck All' : 'Check All'} className="text-sm min-w-max max-w-min" />
                 <Button on:click={ () => showSheet(panelState.massAssignCourses) } buttonText="Assign Courses" className="text-sm min-w-max max-w-min"  />
             </div>
-        </div>
-       
-        <DataTable { headings } >
-            { #each students as student, index }
-                <tr>
-                    <td class="px-4">
-                        <input on:input={ (e) => e.target?.checked ?  checkStudent(student.studentId) : uncheckStudent(student.studentId) } checked={ checked( student.studentId ) } type="checkbox" value={ student.studentId }  name="" id="">
-                    </td>
-                    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ student.name }</td>
-                    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ student.class }</td>
-                    <td class="px-4 py-4 text-sm text-blue-500 dark:text-gray-300 whitespace-nowrap">{ student.studentCode }</td>
-                    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                        <div class="w-40">
-                            <Dropdown arrowColor="fill-gray-600" placeholder="Actions" className="bg-white border  border-gray-300 text-gray-600">
-                                <button on:click={ () => editStudent(student) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Edit Student</button>
-                                <button on:click={ () => assignSubjects(index) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Assign Courses</button>
-                            </Dropdown>
-                        </div>
-                    </td>
-                </tr>
-            { /each }
-        </DataTable>
-    </div>
-</Layout>
+        </TopHeader>
 
-<SlidePanel title={ slidePanelTitle } showSheet={ showStudentForm } on:close-button={ closeSheet }>
-    { #if ( slideFormState === panelState.addNewStudent ) || ( slideFormState === panelState.edit )  }
-        <div class="flex flex-col space-y-6 p-3">
-            <div>
-                <Input on:input={ (e) => studentData.firstName = e.detail.input } bind:this={ firstName } value={ studentData.firstName } label="Enter Student First Name" />
-            </div>
-
-            <div>
-                <Input on:input={ (e) => studentData.surname = e.detail.input } bind:this={ surname } value={ studentData.surname } label="Enter Student Surname" />
-            </div>
-
-            <div>
-                <Input on:input={ (e) => studentData.studentCode = e.detail.input } value={ studentData.studentCode } label="Enter Student Code" />
-            </div>
-
-            <div>
-                <Select on:selected={ (e) => { studentData.classId = e.detail.value; studentData.class = e.detail.placeholder } } bind:this={ classId } isSelected={ studentData.class ? true : false } value={ studentData.classId } options={ classes } placeholder={ studentData.class ? studentData.class : "Select Level" } label="Select Student Level" className="text-sm"  />
-            </div>
-
-            <div class="flex flex-col space-y-4">
-                <label for="pic" class="text-sm text-gray-800">Upload Student Photo</label>
-                <img alt="" class={`rounded-lg h-60 w-60 mt-4 ${ studentData.photo?.length > 0 ? '' : 'hidden' }`} src={ studentData.photo ? studentData.photo : uploadPic } id="preview">
-                <input bind:files={ pic } type="file" accept="image/*" id="pic">
-            </div>
-
-            <div class="w-20">
-                { #if slideFormState == panelState.edit }
-                    <Button { disabled } on:click={ updateStudent } buttonText="Update" className=""/>
-                { :else }
-                    <Button { disabled } on:click={ createStudent } buttonText="Save" className=""/>
-                {/if}
+        <AppContainer>
+        
+            <DataTable { headings } >
                
-            </div>
-        </div>
-    { /if }
-
-    { #if ( (slideFormState === panelState.assignSubjects) || (slideFormState === panelState.massAssignCourses) ) }
-        <div class="flex flex-col space-y-3 p-3">
-            <p class="text-gray-800 font-semibold pb-6">Courses</p>
-
-            <div class="space-y-3">
-                { #if subjects.length === 0 }
-                    <div class="flex w-full py-6">
-                        <p class="italic text-gray-500">No courses to add</p>
-                    </div>
-                { :else }
-                    { #each subjects as subject }
-                        <div class="flex space-x-2 items-center w-full">
-                            <button  on:click={ () => selectSubject(subject) } class={`flex items-center shrink-0 justify-center h-[3.2rem] w-[3.2rem] border-2 ${ isSelected(subject.subjectId) ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
-                                <Icons icon="check" className={`${ isSelected(subject.subjectId) ? "stroke-green-700" : "stroke-gray-300" }`} />
-                            </button>
-                            <div class="w-full">
-                                <button type="button" class={`flex p-3 border-2 ${ isSelected(subject.subjectId) ? 'border-green-700' : 'border-gray-300' }  w-full rounded-lg items-center justify-between space-x-2`}>
-                                    <span class={`${ isSelected(subject.subjectId) ? "text-green-700" : "text-gray-400" }`} >{ subject.subjectName }</span>
-                                </button>
+                { #each students as student, index }
+                    <tr>
+                        <td class="px-4">
+                            <input on:input={ (e) => e.target?.checked ?  checkStudent(student.studentId) : uncheckStudent(student.studentId) } checked={ checked( student.studentId ) } type="checkbox" value={ student.studentId }  name="" id="">
+                        </td>
+                        <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ student.name }</td>
+                        <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ student.class }</td>
+                        <td class="px-4 py-4 text-sm text-blue-500 dark:text-gray-300 whitespace-nowrap">{ student.studentCode }</td>
+                        <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
+                            <div class="w-40">
+                                <Dropdown arrowColor="fill-gray-600" placeholder="Actions" className="bg-white border  border-gray-300 text-gray-600">
+                                    <button on:click={ () => editStudent(student) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Edit Student</button>
+                                    <button on:click={ () => assignSubjects(index) } class="hover:bg-gray-100 p-3 text-sm rounded transition text-left">Assign Courses</button>
+                                </Dropdown>
                             </div>
-                        </div>
-                    { /each }
-                {/if}
+                        </td>
+                    </tr>
+                { /each }
+            </DataTable>
+        
+        </AppContainer>
+
+        <div slot="panel">
+            { #if ( slideFormState === panelState.addNewStudent ) || ( slideFormState === panelState.edit )  }
+                <div class="flex flex-col space-y-6 p-3">
+                    <div>
+                        <Input on:input={ (e) => studentData.firstName = e.detail.input } bind:this={ firstName } value={ studentData.firstName } label="Enter Student First Name" />
+                    </div>
+
+                    <div>
+                        <Input on:input={ (e) => studentData.surname = e.detail.input } bind:this={ surname } value={ studentData.surname } label="Enter Student Surname" />
+                    </div>
+
+                    <div>
+                        <Input on:input={ (e) => studentData.studentCode = e.detail.input } value={ studentData.studentCode } label="Enter Student Code" />
+                    </div>
+
+                    <div>
+                        <Select on:selected={ (e) => { studentData.classId = e.detail.value; studentData.class = e.detail.placeholder } } bind:this={ classId } isSelected={ studentData.class ? true : false } value={ studentData.classId } options={ classes } placeholder={ studentData.class ? studentData.class : "Select Level" } label="Select Student Level" className="text-sm"  />
+                    </div>
+
+                    <div class="flex flex-col space-y-4">
+                        <label for="pic" class="text-sm text-gray-800">Upload Student Photo</label>
+                        <img alt="" class={`rounded-lg h-60 w-60 mt-4 ${ studentData.photo?.length > 0 ? '' : 'hidden' }`} src={ studentData.photo ? studentData.photo : uploadPic } id="preview">
+                        <input bind:files={ pic } type="file" accept="image/*" id="pic">
+                    </div>
+
+                    <div class="w-20">
+                        { #if slideFormState == panelState.edit }
+                            <Button { disabled } on:click={ updateStudent } buttonText="Update" className=""/>
+                        { :else }
+                            <Button { disabled } on:click={ createStudent } buttonText="Save" className=""/>
+                        {/if}
+                    
+                    </div>
+                </div>
+            { /if }
+
+            { #if ( (slideFormState === panelState.assignSubjects) || (slideFormState === panelState.massAssignCourses) ) }
+                <div class="flex flex-col space-y-3 p-3">
+                    <p class="text-gray-800 font-semibold pb-6">Courses</p>
+
+                    <div class="space-y-3">
+                        { #if subjects.length === 0 }
+                            <div class="flex w-full py-6">
+                                <p class="italic text-gray-500">No courses to add</p>
+                            </div>
+                        { :else }
+                            { #each subjects as subject }
+                                <div class="flex space-x-2 items-center w-full">
+                                    <button  on:click={ () => selectSubject(subject) } class={`flex items-center shrink-0 justify-center h-[3.2rem] w-[3.2rem] border-2 ${ isSelected(subject.subjectId) ? 'border-green-700' : 'border-gray-300' } rounded-lg`}>
+                                        <Icons icon="check" className={`${ isSelected(subject.subjectId) ? "stroke-green-700" : "stroke-gray-300" }`} />
+                                    </button>
+                                    <div class="w-full">
+                                        <button type="button" class={`flex p-3 border-2 ${ isSelected(subject.subjectId) ? 'border-green-700' : 'border-gray-300' }  w-full rounded-lg items-center justify-between space-x-2`}>
+                                            <span class={`${ isSelected(subject.subjectId) ? "text-green-700" : "text-gray-400" }`} >{ subject.subjectName }</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            { /each }
+                        {/if}
+                    </div>
+
+                    <div class="pt-10 w-40">
+                        {  #if (slideFormState === panelState.assignSubjects) }
+                            <Button { disabled } on:click={ assignSubjectToStudent } buttonText="Assign Courses" />
+                        { /if }
+                        {  #if (slideFormState === panelState.massAssignCourses) }
+                            <Button { disabled } on:click={ massAssignSubjects } buttonText="Assign Courses" />
+                        { /if }
+                    </div>
+                </div>
+            { /if }
+
+
+            { #if  slideFormState === panelState.upload }
+                <CsvImportCard { disabled } bind:this={ importCard } on:on-upload={ uploadStudents } />
+            {/if} 
+
+            { #if  slideFormState === panelState.importStudents }
+            <Importmapper
+                { disabled }
+
+                options={ importOptions }
+                headings={ importHeadings }
+                on:import={ importStudents }
+            >
+
+            <div class="py-8">
+                    <input bind:files={ zipFile } type="file" accept=".zip" class="border border-gray-200 rounded-lg p-4">
             </div>
 
-            <div class="pt-10 w-40">
-                {  #if (slideFormState === panelState.assignSubjects) }
-                    <Button { disabled } on:click={ assignSubjectToStudent } buttonText="Assign Courses" />
-                { /if }
-                {  #if (slideFormState === panelState.massAssignCourses) }
-                    <Button { disabled } on:click={ massAssignSubjects } buttonText="Assign Courses" />
-                { /if }
-            </div>
-        </div>
-    { /if }
-
-
-    { #if  slideFormState === panelState.upload }
-        <CsvImportCard { disabled } bind:this={ importCard } on:on-upload={ uploadStudents } />
-    {/if} 
-
-    { #if  slideFormState === panelState.importStudents }
-       <Importmapper
-        { disabled }
-
-        options={ importOptions }
-        headings={ importHeadings }
-        on:import={ importStudents }
-       >
-
-       <div class="py-8">
-            <input bind:files={ zipFile } type="file" accept=".zip" class="border border-gray-200 rounded-lg p-4">
-       </div>
-
-       </Importmapper>
-       
-      
-    {/if}
-  
-</SlidePanel>
+            </Importmapper>
+            
+            
+            {/if}
+    </SlidePanel>
+</Layout>

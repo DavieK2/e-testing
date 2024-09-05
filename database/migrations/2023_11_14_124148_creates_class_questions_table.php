@@ -13,6 +13,7 @@ return new class extends Migration
             $table->ulid('uuid')->unique()->index();
             $table->foreignUlid('class_id')->nullable()->constrained( table: 'classes', column: 'uuid' )->onDelete('set null');
             $table->foreignUlid('question_id')->nullable()->constrained( table: 'questions', column: 'uuid' )->onDelete('set null');
+            $table->boolean('is_synced')->default(false);
         });
     }
 

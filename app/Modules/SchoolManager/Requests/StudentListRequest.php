@@ -2,9 +2,9 @@
 
 namespace App\Modules\SchoolManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class StudentListRequest extends FormRequest
+class StudentListRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -14,7 +14,7 @@ class StudentListRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'classId' => 'string'
         ];
     }
 }

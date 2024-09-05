@@ -6,6 +6,7 @@
     import Input from "../../components/input.svelte";
     import TextEditor from "./TextEditor.svelte";
     import Select from "../../components/select.svelte";
+    import { cn } from "../../components/utils";
 
 
     export let edit = false;
@@ -16,6 +17,8 @@
     export let options = [];
     export let sections = [];
     export let topics = [];
+
+    export let className = '';
     
     export let questionScore = "1";
     export let questionType = "";
@@ -30,7 +33,6 @@
     export let subjectId = null;
     export let classId = null;
     export let source;
-    export let create = false;
     
     let initOptions;
     let image = [];
@@ -151,6 +153,7 @@
             reader.readAsDataURL(image[0]);
 
             reader.onload = () => {
+                // @ts-ignore
                 questionImage = reader.result
             }
         }
@@ -172,7 +175,7 @@
     
 </script>
 
-<div class="flex flex-col px-3 pb-4">
+<div class={ cn("flex flex-col px-3 pb-4", className) } >
     <div class="pb-6">
 
         <div class="space-y-4 pb-4 my-4">
@@ -181,7 +184,7 @@
                 <Select options={ sections } on:selected={ (e) => selectedSection = e.detail.value } on:deselected={ (e) => selectedSection = null } value={ selectedSection } placeholder="Select Question Section" className="text-sm ring-2"/>
             {/key}
         </div>
-        { #if create  && ( ! edit ) && ( ! assigned ) }
+        { #if  ( ! edit )  }
             <div class="space-y-4 pb-4 my-4">
                 <p class="text-gray-800 font-semibold text-sm">Select Question Topic</p>
                 { #key selectedTopic }
@@ -192,7 +195,7 @@
             </div>
         { /if }
         <div class="space-y-4 my-4">
-            <p class="text-gray-800 font-semibold text-sm">Question</p>
+            <p class="text-blue-600 font-extrabold text-sm border uppercase border-blue-200 px-4 py-2 max-w-min min-w-max bg-blue-100 rounded-md">Question</p>
             { #key ( question && questionEdit) }
                 <TextEditor on:input={ (e) => setQuestionValue(e.detail) } id="questionEditor" content={ question } showTools />
             { /key }
@@ -200,7 +203,7 @@
 
         { #if selectedQuestionType != questionTypes.theory }
 
-            <p class="text-gray-800 font-semibold text-sm pt-4 pb-2">Options</p>
+            <p class="text-gray-800 font-bold text-lg pt-4 pb-2">Options</p>
             <ul class="flex flex-col w-full space-y-2 text-xs text-gray-600 pt-2">
                 { #each options as option, index }
                     <div class="flex space-x-2 items-center w-full">

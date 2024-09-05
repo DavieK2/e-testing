@@ -9,6 +9,8 @@ return new class extends Migration
     
     public function up()
     {
+        if( Schema::hasTable('formatter') ) return ;
+
         Schema::create('formatter', function(Blueprint $table){
             $table->string('type')->nullable();
             $table->string('format')->nullable();

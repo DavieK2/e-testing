@@ -3,9 +3,9 @@
 namespace App\Modules\SchoolManager\Requests;
 
 use App\Modules\SchoolManager\Models\SubjectModel;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class AssignTeacherToClassSubjectRequest extends FormRequest
+class AssignTeacherToClassSubjectRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -15,7 +15,6 @@ class AssignTeacherToClassSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'teacherId'             => 'required|exists:users,uuid',
             'classSubjects'         => 'required|array',
             'classSubjects'         => [ function($attr, $val, $fail){
                                             $keys = array_keys($val);

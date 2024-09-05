@@ -3,9 +3,8 @@
 namespace App\Modules\UserManager\Requests;
 
 use App\Http\Requests\BaseRequest;
-use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class LoginRequest extends BaseRequest
 {
     public function authorize()
     {

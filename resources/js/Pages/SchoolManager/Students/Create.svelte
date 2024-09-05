@@ -37,7 +37,7 @@
 
         webcam = new Webcam(webcamElement, 'user', canvasElement);
 
-         router.get('/api/classes', {
+        router.get('/api/classes', {
 
             onSuccess : (res) => {
                 classes = res.data.flatMap((grade) => [{ placeholder : grade.class_name, value : grade.id }])

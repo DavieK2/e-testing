@@ -12,10 +12,14 @@ class ImportStudentDataFromFileFeature extends FeatureContract {
         $this->tasks = new CreateStudentTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|CreateStudentTasks $task, array $args = [])
     {
-        $builder =  $task->start($args)->importStudentData();
-
-        return $task::formatResponse( $builder->empty(), options: ['message' => 'Data Imported Successfully']);
+        return $task->withParameters($args)
+                    ->importStudentData()
+                    ->empty()
+                    ->formatResponse( 
+                        options: [
+                            'message' => 'Data Imported Successfully'
+                    ]);
     }
 }

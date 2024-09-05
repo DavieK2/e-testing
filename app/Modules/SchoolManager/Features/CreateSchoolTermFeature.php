@@ -4,22 +4,27 @@ namespace App\Modules\SchoolManager\Features;
 
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
-use App\Modules\SchoolManager\Tasks\CreateTermTasks;
+use App\Modules\SchoolManager\Tasks\TermTasks;
 
 class CreateSchoolTermFeature extends FeatureContract {
 
     public function __construct(){
-        $this->tasks = new CreateTermTasks();
+        $this->tasks = new TermTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|TermTasks $task, array $args = [])
     {
         try {
-            $builder = $task->start($args)->storeToDatabase();
-
-            return $task::formatResponse( $builder->empty(), options: ['message' => 'Term created successfully', 'status' => 201 ]);
+            return $task->withParameters($args)
+                        ->createTerm()
+                        ->empty()
+                        ->formatResponse( options: [
+                            'message' => 'Term created successfully', 
+                            'status' => 201 
+                        ]);
             
         } catch (\Throwable $th) {
+
             throw $th;
         }
     }

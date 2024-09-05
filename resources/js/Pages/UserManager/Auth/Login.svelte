@@ -33,7 +33,7 @@
             <div class="flex items-center h-full px-20 bg-gray-900 bg-opacity-40">
                 <div>
                     <div>
-                        <h2 class="text-5xl font-bold text-white mt-10">CBT PORTAL</h2>
+                        <h2 class="text-5xl font-black text-white mt-10">SCHOOL PORTAL</h2>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
             <div class="flex-1">
                 <div class="text-center">
                     <div class="flex justify-center mx-auto">
-                        <img class="w-auto h-20" src="/images/logo.png" alt="">
+                        <img class="w-auto h-20" src="/images/vine-logo.png" alt="">
                     </div>
 
                     <p class="mt-3 text-gray-500 dark:text-gray-300">Sign in to access your account</p>

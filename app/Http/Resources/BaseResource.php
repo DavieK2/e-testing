@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 abstract class BaseResource extends JsonResource
 {
-    public function __construct($resource, protected int $status = 200)
+    public function __construct($resource, public int $status = 200)
     {
         JsonResource::withoutWrapping();
         parent::__construct($resource);
@@ -14,6 +14,6 @@ abstract class BaseResource extends JsonResource
 
     public function withResponse($request, $response)
     {
-         $response->setStatusCode($this->status);
+        $response->setStatusCode($this->status);
     }
 }

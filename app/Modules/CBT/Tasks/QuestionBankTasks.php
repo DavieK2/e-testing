@@ -13,12 +13,14 @@ class QuestionBankTasks extends BaseTasks {
 
     public function createQuestionBank()
     {
+
         $question_bank = QuestionBankModel::create([
-            'uuid'              =>  Str::ulid(),
-            'title'             =>  $this->item['title'] ?? null,
-            'assessment_id'     =>  AssessmentModel::firstWhere('uuid', $this->item['assessmentId'])->uuid,
-            'subject_id'        =>  $this->item['subjectId'] ?? null,
-            'user_id'           =>  request()->user()->uuid
+            'uuid'                          =>  Str::ulid(),
+            'title'                         =>  $this->item['title'] ?? null,
+            'assessment_id'                 =>  AssessmentModel::firstWhere('uuid', $this->item['assessmentId'])->uuid,
+            'subject_id'                    =>  $this->item['subjectId'] ?? null,
+            'user_id'                       =>  request()->user()->uuid,
+            'is_assessment_question_bank'   =>  $this->item['isAssessmentQB'] ?? false
         ]);
 
         return new static( [ ...$this->item, 'questionBankId' => $question_bank->uuid ]);

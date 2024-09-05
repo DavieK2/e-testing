@@ -4,10 +4,10 @@ namespace App\Modules\CBT\Requests;
 
 use App\Modules\CBT\Models\AssessmentModel;
 use App\Modules\CBT\Models\QuestionModel;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateQuestionRequest extends FormRequest
+class UpdateQuestionRequest extends BaseRequest
 {
     public function authorize()
     {

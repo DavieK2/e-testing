@@ -23,6 +23,7 @@ return new class extends Migration
             $table->double('total_score')->nullable();
             $table->string('grade')->nullable();
             $table->string('remarks')->nullable();
+            $table->boolean('is_published')->default(false);
             $table->boolean('is_synced')->default(false);
             $table->timestamps();
         });

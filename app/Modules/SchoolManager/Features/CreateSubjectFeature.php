@@ -4,21 +4,26 @@ namespace App\Modules\SchoolManager\Features;
 
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
-use App\Modules\SchoolManager\Tasks\CreateSubjectsTasks;
+use App\Modules\SchoolManager\Tasks\SubjectTasks;
 
 class CreateSubjectFeature extends FeatureContract {
 
     public function __construct(){
-        $this->tasks = new CreateSubjectsTasks();
+        $this->tasks = new SubjectTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|SubjectTasks $task, array $args = [])
     {
        try {
 
-            $builder = $task->start($args)->generateSubjectCode()->addSubjectToDatabase();
-
-            return $task::formatResponse($builder->empty(), options: ['message' => 'Subject successfully created', 'status' => 201 ]);
+            return $task->withParameters($args)
+                        ->generateSubjectCode()
+                        ->addSubjectToDatabase()
+                        ->empty()
+                        ->formatResponse( options: [
+                            'message' => 'Subject successfully created', 
+                            'status' => 201 
+                        ]);
         
        } catch (\Throwable $th) {
         

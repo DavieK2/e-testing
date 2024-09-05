@@ -3,8 +3,8 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"paths": {
-			"$components": ["resources/js/components"],
-            "$lib": ["resources/js/components"]
+			"$components": ["./resources/js/components"],
+            "$lib": ["./resources/js/components"]
 		}
 	},
     "include": ["./**/*.d.ts", "./**/*.ts", "./**/*.svelte"],

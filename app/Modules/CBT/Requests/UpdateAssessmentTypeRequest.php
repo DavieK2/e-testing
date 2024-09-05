@@ -2,9 +2,9 @@
 
 namespace App\Modules\CBT\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class UpdateAssessmentTypeRequest extends FormRequest
+class UpdateAssessmentTypeRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -14,7 +14,6 @@ class UpdateAssessmentTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'assessmentTypeId' => 'required|exists:assessment_types,uuid',
             'assessmentType' => 'nullable',
             'maxScore' => 'nullable'
         ];

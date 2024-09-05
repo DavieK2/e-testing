@@ -249,32 +249,32 @@ class ExamController extends Controller
 
         $student_academic_session = $student->academic_session_id;
 
-        $semester = match(true){
+        // $semester = match(true){
 
-            ($student_academic_session == '2022/2023') => TermModel::firstWhere('term', 'Second Semester')->uuid,
-            ($student_academic_session == '2023/2024') => TermModel::firstWhere('term', 'First Semester')->uuid,
+        //     ($student_academic_session == '2022/2023') => TermModel::firstWhere('term', 'Second Semester')->uuid,
+        //     ($student_academic_session == '2023/2024') => TermModel::firstWhere('term', 'First Semester')->uuid,
 
-        };
+        // };
         
-        $semester_subjects = DB::table('term_subjects')->where('term_id', $semester)->get()->pluck('subject_id')->toArray();
+        // $semester_subjects = DB::table('term_subjects')->where('term_id', $semester)->get()->pluck('subject_id')->toArray();
 
         $newAvailableSubjects = [];
 
-        foreach ( $available_subjects as $key => $subject ) {
+        // foreach ( $available_subjects as $key => $subject ) {
            
-            if( ! in_array( $subject->subId, $semester_subjects ) ) continue;
+        //     if( ! in_array( $subject->subId, $semester_subjects ) ) continue;
 
-            $data = [
-                'duration'      =>  $subject->duration,
-                'subjectName'   =>  $subject->subjectName,
-                'subjectCode'   =>  $subject->subjectCode
-            ];
+        //     $data = [
+        //         'duration'      =>  $subject->duration,
+        //         'subjectName'   =>  $subject->subjectName,
+        //         'subjectCode'   =>  $subject->subjectCode
+        //     ];
 
-            $newAvailableSubjects[] = $data;
-        }
+        //     $newAvailableSubjects[] = $data;
+        // }
        
         return response()->json([
-            'data' => $newAvailableSubjects
+            'data' => $available_subjects
         ]);
 
     }
@@ -434,6 +434,7 @@ class ExamController extends Controller
 
         $data = request()->validate([
             'studentId' => 'required',
+            'subjects'  => 'array'
         ]);
 
         $student = StudentProfileModel::firstWhere('student_code', 'like' ,"%{$data['studentId']}%");
@@ -483,7 +484,7 @@ class ExamController extends Controller
         CheckInModel::updateOrCreate([ 'assessment_id' => $assessment->uuid, 'student_profile_id' => $student ], [
             'uuid'                  => Str::ulid(),
             'assessment_id'         => $assessment->uuid,
-            // 'subject_ids'           => json_encode($data['subjects']),
+            'subject_ids'           => json_encode($data['subjects']),
             'student_profile_id'     => $student->uuid,
             'checked_in_at'         => now(),
             'checked_in_by'         => request()->user()->fullname,

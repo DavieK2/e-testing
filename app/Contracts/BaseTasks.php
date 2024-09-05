@@ -4,7 +4,6 @@ namespace App\Contracts;
 
 use App\Http\Resources\BaseResource;
 use App\Http\Resources\BaseViewResource;
-use App\Modules\CBT\Models\QuestionModel;
 use App\Modules\UserManager\Constants\UserManagerConstants;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -23,29 +23,18 @@ enum ResponseType
     case INERTIA;
 }
 
-abstract class BaseTasks {
+abstract class BaseTasks extends Facade {
 
-    public function __construct(protected LengthAwarePaginator|Builder|QueryBuilder|Model|Collection|array|null $item = []){}
+    public function __construct(protected LengthAwarePaginator|Builder|QueryBuilder|Model|Collection|array $item = []){}
 
-    protected function start($data)
+    public function withParameters( array $params ) : static
     {
-        return new static($data);
-    }
- 
-    public static function __callStatic($method, $args)
-    {
-        return (new static())->$method(...$args);
+        $this->item = $params;
+
+        return $this;
     }
 
-    public function __call($name, $args)
-    {
-        return match($name){
-            'start' => (new static())->$name(...$args),
-            default =>  new static($this->item)
-        };
-    }
-
-    public function except(array $keys, $recursive = false)
+    public function except(array $keys, bool $recursive = false) : static
     {
         foreach( $keys as $key ){
 
@@ -70,52 +59,77 @@ abstract class BaseTasks {
         
     }
 
-    public function only(array $keys)
+    public function only(array $keys) : static
     {
         $items = [];
 
         foreach($keys as $key){
-            if(is_array($this->item) && array_key_exists($key, $this->item)){
+
+            if( is_array($this->item) && array_key_exists($key, $this->item) ){
+
                 $items[$key] = $this->item[$key];
             }
         }
+        
         return new static($items);
         
     }
 
-    public function empty()
+    public function empty() : static
     {
         return new static([]);
     }
 
-    public function perPage()
+    public function perPage() : static
     {
         return new static($this->item['query']->paginate($this->item['perPage']));
     }
 
-    public function all()
+    public function all() : static
     {
-        return new static($this->item['query']->get());
+        
+        if( is_array( $this->item ) && array_key_exists( 'query', $this->item ) ){
+
+            return new static( $this->item['query']->get() );
+        }
+
+        if( $this->item instanceof QueryBuilder || $this->item instanceof Builder ){
+
+           return new static( $this->item->get() );
+        }
+
+        return new static( $this->item );
+       
     }
 
-    public function toArray()
+    public function asArray() : static
     {
-        return new static($this->item->toArray());
+        if( is_array( $this->item ) ){
+
+            return new static( $this->item );
+        }
+
+        return new static( $this->item->toArray() );
     }
 
-    public function get()
+    public function getItems()
     {
         return $this->item;
     }
 
-    public function search()
+    public function setItem( $value )
+    {
+        return new static( $value );
+    }
+
+    public function search() : static
     {
         $searchableColumns = collect(['first_name', 'last_name', 'dob']);
 
         return new static($this->item['query']->search($this->prepareSearchData($searchableColumns, $this->item['search'])));
     }
     
-    public function filter()
+    public function filter() : static
     {
         $data = json_decode($this->item['filter'], true);
         $filterableColumns = ['group_id' => 'integer', 'network_provider' => 'string'];
@@ -124,7 +138,7 @@ abstract class BaseTasks {
 
     }
 
-    public function sort()
+    public function sort() : static
     {
         $data = json_decode($this->item['sort'], true);
 
@@ -135,7 +149,7 @@ abstract class BaseTasks {
 
     }
     
-    protected function formatResponse(BaseTasks $builder, ResponseType $reponseType = ResponseType::JSON, array $options = [], string $formatter = "")
+    public function formatResponse(ResponseType $responseType = ResponseType::JSON, array $options = [], ?string $formatter = null, array $formatterOptions = [])
     {
 
         $message = "";
@@ -144,35 +158,31 @@ abstract class BaseTasks {
         $viewValidOptions = ['view', 'view_data'];
         $filtered_view_data = collect($options)->filter(fn($option, $index) => in_array($index, $viewValidOptions))->toArray();
 
-        if($reponseType == ResponseType::JSON){
+        if( $responseType == ResponseType::JSON ){
 
             $message = isset($options['message']) ? $options['message'] : $message;
             $status = isset($options['status']) ? $options['status'] : $status;
         }
 
-        if( empty($formatter) && $reponseType == ResponseType::JSON ){
-
-            return new class( empty($message) ? $builder->item : [...$builder->item, 'message' => $message], $status ) extends BaseResource {};
+        if( is_null($formatter) && $responseType == ResponseType::JSON ){
+            return new class( empty($message) ? $this->item : [...$this->item, 'message' => $message], $status ) extends BaseResource {};
         }
 
-        if(empty($formatter) && $reponseType == ResponseType::INERTIA){
-            return (new class($filtered_view_data) extends BaseViewResource {})();
+        if( is_null($formatter) && $responseType == ResponseType::INERTIA ){
+            return ( new class($filtered_view_data) extends BaseViewResource {} )();
         }
 
         if( ! class_exists($formatter) ){
             throw new Exception('Formatter class does not exist: '.$formatter);
         }
 
-        if( $reponseType == ResponseType::JSON ){
-
-            // dd( $builder->item );
-            return  new $formatter( $builder->item );
+        if( $responseType == ResponseType::JSON ){
+            return  new $formatter( $this->item, ...$formatterOptions );
         }
 
-        if($reponseType == ResponseType::INERTIA){
-
-            return  (new $formatter(UserManagerConstants::LOGIN_VIEW, $filtered_view_data ))();
-        }
+        // if( $responseType == ResponseType::INERTIA ){
+        //     return  ( new $formatter(UserManagerConstants::LOGIN_VIEW, $filtered_view_data ) )();
+        // }
     }
 
     protected function prepareSortData(array $data, array $sortableColumns, array $sortableDirections)

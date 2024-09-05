@@ -4,21 +4,28 @@ namespace App\Modules\SchoolManager\Features;
 
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
-use App\Modules\SchoolManager\Tasks\UpdateClassTasks;
+use App\Modules\SchoolManager\Models\ClassModel;
+use App\Modules\SchoolManager\Tasks\ClassTasks;
 
 class UpdateClassFeature extends FeatureContract {
 
-    public function __construct(){
-        $this->tasks = new UpdateClassTasks();
+    public function __construct( protected ClassModel $class ){
+        $this->tasks = new ClassTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|ClassTasks $task, array $args = [])
     {
        try {
-            
-            $builder = $task->start($args)->updateClass();
 
-            return $task::formatResponse( $builder->empty(), options:['status' => 200, 'message' => 'Class updated successfuly'] );
+            return $task->withParameters( $args )
+                        ->class($this->class)
+                        ->updateClass()
+                        ->empty()
+                        ->formatResponse( 
+                            options: [
+                                'status' => 200, 
+                                'message' => 'Class updated successfuly'
+                        ]);
 
        } catch (\Throwable $th) {
         

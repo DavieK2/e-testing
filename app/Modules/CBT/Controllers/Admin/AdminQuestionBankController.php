@@ -35,7 +35,8 @@ class AdminQuestionBankController extends Controller
 
     public function createQuestionBank(CreateQuestionBankRequest $request )
     {
-        $task = ( new QuestionBankTasks() )->start( $request->validated() )->createQuestionBank()->addClassesToQuestionBank();
+        
+        $task = ( new QuestionBankTasks() )->start( $request->validated() + [ 'isAssessmentQB' => request('isAssessmentQB') ] )->createQuestionBank()->addClassesToQuestionBank();
 
         return response()->json([
             'questionBankId' => $task->only(['questionBankId'])->get()['questionBankId'],

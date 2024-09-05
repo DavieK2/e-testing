@@ -9,6 +9,9 @@ return new class extends Migration
    
     public function up()
     {
+        if( Schema::hasTable('assessment_questions') ) return ;
+
+        
         Schema::create('assessment_questions', function(Blueprint $table){
             $table->ulid('uuid')->unique()->index();
             $table->foreignUlid('assessment_id')->nullable()->constrained( table: 'assessments', column: 'uuid' )->onDelete('set null');

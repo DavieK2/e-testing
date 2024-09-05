@@ -2,9 +2,9 @@
 
 namespace App\Modules\DatabaseSyncManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class DBSyncedToOnlineRequest extends FormRequest
+class DBSyncedToOnlineRequest extends BaseRequest
 {
     public function authorize()
     {

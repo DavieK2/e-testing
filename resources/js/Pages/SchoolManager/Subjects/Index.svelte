@@ -7,6 +7,8 @@
     import SlidePanel from "../../components/slide_panel.svelte";
     import Layout from "../../layouts/Layout.svelte";
     import { router } from "../../../util";
+    import TopHeader from "../../layouts/top_header.svelte";
+    import AppContainer from "../../layouts/app_container.svelte";
 
 
     let headings = ['SN', 'Course Name', 'Course Code', 'Actions'];
@@ -75,7 +77,7 @@
 
         disabled = true;
 
-        router.post('/api/subject/update', { subjectName, subjectId, subjectCode }, {
+        router.post('/api/subject/update/'+subjectId, { subjectName, subjectCode }, {
             onSuccess: (response) => {
 
                 getSubjectList();
@@ -110,49 +112,54 @@
 </script>
 
 <Layout>
-    <div class="container my-28">
-        <div class="flex items-center justify-between">
-            <div class="flex space-x-3 items-center">
-                <Icons icon="book" className="h-6 w-6" />
-                <span class="mx-2 text-lg font-medium text-gray-800">Courses</span>
-            </div>
+    <SlidePanel title="Create New Subject" showSheet={ showCreateSubjectSheet } on:onpanelstatus={ closeSheet }>
+        <TopHeader title="Subjects" >
             <div>
-                <Button on:click={ showSheet } buttonText="New Course" className="text-sm" />
+                <Button on:click={ showSheet } buttonText="New Subject" className="text-sm" />
             </div>
-        </div>
-      
-        <DataTable { headings } >
-            { #each subjects as subject,index(subject.subjectId) }
-                <tr>
-                    <td class="px-4 py-4 text-sm text-gray-800 dark:text-gray-300 whitespace-nowrap">{ index + 1  }</td>
-                    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ subject.subjectName }</td>
-                    <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ subject.subjectCode }</td>
-                    <td class="px-4 py-4 text-sm text-gray-800 dark:text-gray-300 whitespace-nowrap">
-                        <div class="flex space-x-3">
-                            <Button on:click={ () => editSubject(subject.subjectId, subject.subjectName, subject.subjectCode) } buttonText="Edit" className="text-xs w-20" />
-                            <Button buttonText="Delete" className="text-xs w-20 bg-red-500 hover:bg-red-400 focus:bg-red-500 focus:ring focus:ring-red-500 focus:ring-opacity-50" />
-                        </div>
-                    </td>
-                </tr>
-            {/each}
-        </DataTable>
-    </div>
-</Layout>
+        </TopHeader>
 
-<SlidePanel title="Create New Course" showSheet={ showCreateSubjectSheet } on:close-button={ closeSheet }>
-    <div class="flex flex-col space-y-6 p-3">
-        <div>
-            <Input value={ subjectName } on:input={ (e) => subjectName = e.detail.input }  label="Enter Course Name" />
-        </div>
-        <div>
-            <Input value={ subjectCode } on:input={ (e) => subjectCode = e.detail.input }  label="Enter Course Code" />
-        </div>
-        <div class="w-20">
-            { #if subjectId }
-                <Button { disabled } on:click={ updateSubject } buttonText="Update" className="text-sm"/>
-            { :else }
-                <Button { disabled } on:click={ createSubject } buttonText="Save" className="text-sm"/>
-            { /if }
-        </div>
-    </div>
-</SlidePanel>
+        <AppContainer>
+        
+            <DataTable { headings } >
+                { #each subjects as subject,index(subject.subjectId) }
+                    <tr>
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 text-sm text-gray-800 dark:text-gray-300 whitespace-nowrap">{ index + 1  }</td>
+                        <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ subject.subjectName }</td>
+                        <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{ subject.subjectCode }</td>
+                        <td class="px-4 py-4 text-sm text-gray-800 dark:text-gray-300 whitespace-nowrap">
+                            <div class="flex space-x-3">
+                                <Button on:click={ () => editSubject(subject.subjectId, subject.subjectName, subject.subjectCode) } buttonText="Edit" className="text-xs w-20" />
+                                <Button buttonText="Delete" className="text-xs w-20 bg-red-500 hover:bg-red-400 focus:bg-red-500 focus:ring focus:ring-red-500 focus:ring-opacity-50" />
+                            </div>
+                        </td>
+                    </tr>
+                {/each}
+            </DataTable>
+        
+        </AppContainer>
+
+        <div slot="panel">
+            <div class="flex flex-col space-y-6 p-3">
+                <div>
+                    <Input value={ subjectName } on:input={ (e) => subjectName = e.detail.input }  label="Enter Subject Name" />
+                </div>
+                <div>
+                    <Input value={ subjectCode } on:input={ (e) => subjectCode = e.detail.input }  label="Enter Subject Code" />
+                </div>
+                <div class="w-20">
+                    { #if subjectId }
+                        <Button { disabled } on:click={ updateSubject } buttonText="Update Subject" className="text-sm"/>
+                    { :else }
+                        <Button { disabled } on:click={ createSubject } buttonText="Save Subject" className="text-sm"/>
+                    { /if }
+                </div>
+            </div>
+    </SlidePanel>
+</Layout>

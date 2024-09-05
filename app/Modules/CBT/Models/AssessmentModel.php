@@ -99,14 +99,16 @@ class AssessmentModel extends Model
         return $this->belongsToMany(ClassModel::class, 'assessment_classes', 'assessment_id', 'class_id');
     }
 
-    public function addClassesToAssessment($classes)
+    public function addClassesToAssessment( array $classes)
     {
-        $this->classes()->detach();
+        DB::table('assessment_classes')->where('assessment_id', $this->uuid)->delete();
 
-        foreach( $classes as $class ){
-            DB::table('assessment_classes')->insert(['uuid' => Str::ulid(), 'assessment_id' => $this->uuid, 'class_id' => $class ]);
-        }
+        $data = collect( $classes )->map( fn($class) => ['uuid' => Str::ulid(), 'assessment_id' => $this->uuid, 'class_id' => $class] )->toArray();
+
+        return DB::table('assessment_classes')->insert( $data );
+
     }
+
 
     public function assessmentType()
     {
@@ -181,6 +183,24 @@ class AssessmentModel extends Model
     {
         $assessment_questions = DB::table('assessment_questions')->where( fn($query) => $query->where('assessment_questions.subject_id', $subject_id)->where('assessment_questions.class_id', $class_id)->where('assessment_questions.assessment_id', $this->uuid ) );
         
-        return DB::table('assessment_subjects')->where( fn($query) => $query->where('assessment_id', $this->id)->where('subject_id', $subject_id)->where('class_id', $class_id) )->first()->update(['total_questions' => $total_questions, 'total_score' => $total_score ]);
+        return DB::table('assessment_subjects')->where( fn($query) => $query->where('assessment_id', $this->uuid)->where('subject_id', $subject_id)->where('class_id', $class_id) )->first()->update(['total_questions' => $total_questions, 'total_score' => $total_score ]);
+    }
+
+    public function addContibutorsToAssessment( array $teachers)
+    {
+        DB::table('assessment_users')->where('assessment_id', $this->uuid)->delete();
+
+        $data = collect( $teachers )->map( fn($teacher) => ['uuid' => Str::ulid(), 'assessment_id' => $this->uuid, 'user_id' => $teacher ] )->toArray();
+
+        return DB::table('assessment_users')->insert( $data );
+    }
+
+    public function addStudentsToAssessment( array $students)
+    {
+        DB::table('assessment_students')->where('assessment_id', $this->uuid)->delete();
+
+        $data = collect( $students )->map( fn($student) => ['uuid' => Str::ulid(), 'assessment_id' => $this->uuid, 'student_profile_id' => $student ] )->toArray();
+
+        return DB::table('assessment_students')->insert( $data );
     }
 }

@@ -15,7 +15,7 @@ class ConvertStudentProfileImageFromDataURLToJPG extends Command
     {
        set_time_limit(0);
 
-       StudentProfileModel::get()->each( function($student)  {
+       StudentProfileModel::cursor()->each( function($student)  {
 
         if( ( substr( ($student->profile_pic ?? ''), 0, 5 ) === 'data:' ) ){
 

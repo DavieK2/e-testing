@@ -2,9 +2,9 @@
 
 namespace App\Modules\UserManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class TwoFactorAuthenticationOTPRequest extends FormRequest
+class TwoFactorAuthenticationOTPRequest extends BaseRequest
 {
     public function authorize()
     {

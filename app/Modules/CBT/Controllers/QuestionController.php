@@ -172,9 +172,15 @@ class QuestionController extends Controller
     {
         $data = $request->validated();
 
-        QuestionModel::whereIn('uuid', $data['questionIds'])->delete();
+        
+        QuestionModel::whereIn('uuid', $data['questionIds']);
+        
 
-        DB::table('assessment_questions')->where('assessment_id', $data['assessmentId'])->whereIn('question_id', $data['questionIds'])->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Question Successfully Deleted'
+        ]);
+        // DB::table('assessment_questions')->where('assessment_id', $data['assessmentId'])->whereIn('question_id', $data['questionIds'])->delete();
 
     }
 }

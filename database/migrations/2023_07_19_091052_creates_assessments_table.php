@@ -20,6 +20,11 @@ return new class extends Migration
             $table->integer('assessment_duration')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
+            $table->string('quiz_taker_type')->nullable();
+            $table->string('contributor_type')->nullable();
+            $table->boolean('should_display_results')->default(false);
+            $table->boolean('grade_with_assessment_type_max_score')->default(true);
+            $table->boolean('should_shuffle_questions')->default(false);
             $table->boolean('has_generated_results')->default(false);
             $table->boolean('is_synced')->default(false);
             $table->timestamps();

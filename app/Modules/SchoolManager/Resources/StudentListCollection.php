@@ -2,14 +2,20 @@
 
 namespace App\Modules\SchoolManager\Resources;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\BaseResource;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as SupportCollection;
+use Ramsey\Collection\Collection as CollectionCollection;
 
-class StudentListCollection extends ResourceCollection
+class StudentListCollection extends BaseResource
 {
-    public $collects = StudentListResource::class;
+   
+    public function __construct(public Collection|SupportCollection|CollectionCollection|array $items, public bool $more_student_info = false){
+        parent::__construct($items);
+    }
     
     public function toArray($request)
     {
-        return parent::toArray($request);
+       return $this->items->map( fn($item) => ( new StudentListResource( $item, $this->more_student_info ) ) );
     }
 }

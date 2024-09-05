@@ -2,9 +2,9 @@
 
 namespace App\Modules\SchoolManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class UpdateClassRequest extends FormRequest
+class UpdateClassRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -14,7 +14,6 @@ class UpdateClassRequest extends FormRequest
     public function rules()
     {
         return [
-            'classId' => 'required|exists:classes,uuid',
             'className' => 'required'
         ];
     }

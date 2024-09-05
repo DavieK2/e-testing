@@ -2,10 +2,10 @@
 
 namespace App\Modules\CBT\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
-class ExamSessionTimerRequest extends FormRequest
+class ExamSessionTimerRequest extends BaseRequest
 {
     public function authorize()
     {

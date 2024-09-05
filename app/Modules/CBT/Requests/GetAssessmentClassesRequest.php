@@ -2,9 +2,9 @@
 
 namespace App\Modules\CBT\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class GetAssessmentClassesRequest extends FormRequest
+class GetAssessmentClassesRequest extends BaseRequest
 {
     public function authorize()
     {

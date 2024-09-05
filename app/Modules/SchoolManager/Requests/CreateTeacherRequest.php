@@ -3,10 +3,10 @@
 namespace App\Modules\SchoolManager\Requests;
 
 use App\Modules\UserManager\Models\UserModel;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
-class CreateTeacherRequest extends FormRequest
+class CreateTeacherRequest extends BaseRequest
 {
     public function authorize()
     {

@@ -25,9 +25,8 @@
 </script>
 
 
-<div class="flex flex-col px-2.5 space-y-4">
+<div class="flex flex-col space-y-4">
     <div class="">
-        <h1 class="font-bold text-lg text-gray-800">Upload File</h1>
         <p class="text-gray-500 text-xs mx-auto mt-3">
             Click here to download the template 
         </p>

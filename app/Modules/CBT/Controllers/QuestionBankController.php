@@ -93,7 +93,7 @@ class QuestionBankController extends Controller
     }
 
     public function create(CreateQuestionBankRequest $request)
-    {
+    {        
         return $this->serve( new CreateQuestionBankFeature, $request->validated() );
         
     }

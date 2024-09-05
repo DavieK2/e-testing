@@ -10,6 +10,7 @@ use App\Modules\SchoolManager\Features\DownloadStudentDataFeature;
 use App\Modules\SchoolManager\Features\GetStudentAssignedSubjectsFeature;
 use App\Modules\SchoolManager\Features\ImportStudentDataFromFileFeature;
 use App\Modules\SchoolManager\Features\StudentListFeature;
+use App\Modules\SchoolManager\Features\UpdateStudentFeature;
 use App\Modules\SchoolManager\Features\UploadStudentsFeature;
 use App\Modules\SchoolManager\Models\StudentProfileModel;
 use App\Modules\SchoolManager\Requests\AssignSubjectToStudentRequest;
@@ -24,6 +25,7 @@ use App\Modules\SchoolManager\Requests\UploadStudentsRequest;
 use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Intervention\Image\Facades\Image;
 
 class StudentController extends Controller
 {
@@ -37,20 +39,14 @@ class StudentController extends Controller
         return $this->serve( new CreateStudentFeature(), $request->validated() );
     }
 
-    public function update(UpdateStudentProfileRequest $request)
+    public function update(StudentProfileModel $student, UpdateStudentProfileRequest $request)
     {
-        $data = $request->validated();
-        
-        $student = StudentProfileModel::firstWhere('uuid', $data['studentId']);
-
-        $student->update(['first_name' => $data['firstName'], 'surname' => $data['surname'], 'class_id' => $data['classId'], 'profile_pic' => $data['profilePic'] ?? null, 'student_code' => $data['studentCode'] ?? null ]);
-
-        return response()->json(['message' => 'Success']);
+        return $this->serve( new UpdateStudentFeature($student), $request->validated() );
     }
 
-    public function assignStudentToSubject(AssignSubjectToStudentRequest $request)
+    public function assignStudentToSubject(StudentProfileModel $student, AssignSubjectToStudentRequest $request)
     {
-        return $this->serve( new AssignSubjectToStudentFeature(), $request->validated() );
+        return $this->serve( new AssignSubjectToStudentFeature($student), $request->validated() );
     }
 
     public function getStudentAssignedSubjects(StudentProfileModel $student)
@@ -68,7 +64,7 @@ class StudentController extends Controller
         return $this->serve( new ImportStudentDataFromFileFeature(), $request->validated() );
     }
 
-    public function downloadStudentData( DownloadStudentDataRequest $request)
+    public function downloadStudentData( DownloadStudentDataRequest $request )
     {
 
         $stundentData = StudentProfileModel::get()->map(fn($student, $index) => [
@@ -91,6 +87,18 @@ class StudentController extends Controller
     public function createStudentProfile(CreateSudentProfileRequest $request)
     {
         $data = $request->validated();
+
+        $image = Image::make($data['profilePic']);
+
+        $image->resize(800, null, fn ($constraint) => $constraint->aspectRatio() );
+
+        $student_code = $data['regNo'];
+
+        $student_code = str_replace('/', '-', $student_code);
+
+        $pic_name = "profile_pics/".$student_code.".jpg";
+
+        $image->save(public_path($pic_name));
         
         StudentProfileModel::create([
             'uuid' => Str::ulid(),
@@ -100,10 +108,10 @@ class StudentController extends Controller
             'reg_no' => $data['regNo'],
             'profile_pic' => $data['profilePic'],
             'class_id' => $data['level'],
-            'email' => $data['email'],
-            'phone_no' => $data['phoneNo'],
+            'email' => $data['email'] ?? null,
+            'phone_no' => $data['phoneNo'] ?? null,
             'session' => $data['session'],
-            'program_of_study' => $data['programOfStudy'],
+            'program_of_study' => $data['programOfStudy'] ?? null,
             'academic_session_id' => $data['session'],
         ]);
 

@@ -70,7 +70,7 @@
 
         disabled = true;
 
-        router.postWithToken('/api/student/check-in/' + assessmentId, { studentId : studentCode.value }, {
+        router.postWithToken('/api/student/check-in/' + assessmentId, { studentId : studentCode.value, subjects: selectedSubjects }, {
 
             onSuccess : (res) => {
 
@@ -124,8 +124,8 @@
         <div class="flex flex-col py-12 w-full px-14">
             <h1 class="font-extrabold text-3xl">Student Info</h1>
             <div class="space-y-6 mt-12">
-              <div class="rounded-lg bg-contain">
-                <img src={ `/${studentData.studentPhoto}` } alt="" class="rounded-lg flex h-44 w-auto" >
+              <div class="rounded-lg bg-contain ">
+                <img src={ `/${studentData.studentPhoto}` } alt="" class="rounded-lg flex h-44 min-w-max max-w-[11rem] w-auto bg-gray-300" >
               </div>
             </div>
             <div class="space-y-6 mt-12">
@@ -134,7 +134,7 @@
                 <p class="font-semibold">Student Level: &nbsp;&nbsp;&nbsp;<span class="font-medium text-gray-700">{ studentData.studentLevel ?? "" }</span></p>
             </div>
 
-            <!-- { #if studentData.studentCode }
+            { #if studentData.studentCode }
                 <div class="mt-6">
                     <p class="font-extrabold my-6 text-2xl">Courses</p>
                     <ul class="space-y-4 text-gray-600 text-sm">
@@ -146,7 +146,7 @@
                         { /each }
                     </ul>
                 </div>
-            {/if} -->
+            {/if}
 
            <div class="mt-10">
                 <Button { disabled } className="max-w-fit" buttonText="Check In Student" on:click={ checkinStudent } />

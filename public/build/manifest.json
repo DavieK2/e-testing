@@ -1,14 +1,105 @@
 {
-  "node_modules/canvg/lib/index.es.js": {
-    "file": "assets/index.es-b34137a6.js",
+  "Layout.css": {
+    "file": "assets/Layout-77cf5b64.css",
+    "src": "Layout.css"
+  },
+  "_Layout-2cfd6595.js": {
+    "css": [
+      "assets/Layout-77cf5b64.css"
+    ],
+    "file": "assets/Layout-2cfd6595.js",
+    "imports": [
+      "resources/js/app.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_util-f704b04e.js"
+    ],
+    "isDynamicEntry": true
+  },
+  "_Result-6c4c1468.js": {
+    "dynamicImports": [
+      "node_modules/html2canvas/dist/html2canvas.esm.js",
+      "node_modules/dompurify/dist/purify.es.js",
+      "node_modules/canvg/lib/index.es.js"
+    ],
+    "file": "assets/Result-6c4c1468.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/components/button.svelte"
+    ],
+    "isDynamicEntry": true
+  },
+  "_datetimepicker.svelte_svelte_type_style_lang-ab33eabd.js": {
+    "css": [
+      "assets/datetimepicker-0245da4d.css"
+    ],
+    "file": "assets/datetimepicker.svelte_svelte_type_style_lang-ab33eabd.js",
+    "imports": [
+      "resources/js/app.js",
+      "_moment-55cb88ed.js"
+    ]
+  },
+  "_index-000d58f7.js": {
+    "file": "assets/index-000d58f7.js",
     "imports": [
       "resources/js/app.js"
+    ]
+  },
+  "_link-7d7fab16.js": {
+    "file": "assets/link-7d7fab16.js",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_moment-55cb88ed.js": {
+    "file": "assets/moment-55cb88ed.js"
+  },
+  "_tw-merge-0f2443f8.js": {
+    "file": "assets/tw-merge-0f2443f8.js"
+  },
+  "_util-f704b04e.js": {
+    "file": "assets/util-f704b04e.js",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_utils-27538abd.js": {
+    "file": "assets/utils-27538abd.js",
+    "imports": [
+      "resources/js/app.js",
+      "_tw-merge-0f2443f8.js"
+    ]
+  },
+  "_utils-4fba9a6a.js": {
+    "file": "assets/utils-4fba9a6a.js",
+    "imports": [
+      "_tw-merge-0f2443f8.js"
+    ]
+  },
+  "datetimepicker.css": {
+    "file": "assets/datetimepicker-0245da4d.css",
+    "src": "datetimepicker.css"
+  },
+  "node_modules/canvg/lib/index.es.js": {
+    "file": "assets/index.es-c53fb08a.js",
+    "imports": [
+      "resources/js/app.js",
+      "_Result-6c4c1468.js",
+      "_util-f704b04e.js",
+      "_Layout-2cfd6595.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "resources/js/Pages/components/button.svelte"
     ],
     "isDynamicEntry": true,
     "src": "node_modules/canvg/lib/index.es.js"
   },
   "node_modules/dompurify/dist/purify.es.js": {
-    "file": "assets/purify.es-cf254a40.js",
+    "file": "assets/purify.es-5d2bfac5.js",
     "isDynamicEntry": true,
     "src": "node_modules/dompurify/dist/purify.es.js"
   },
@@ -18,24 +109,1427 @@
     "src": "node_modules/html2canvas/dist/html2canvas.esm.js"
   },
   "resources/css/app.css": {
-    "file": "assets/app-b66874a7.css",
+    "file": "assets/app-a84694e2.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
-  "resources/js/app.css": {
-    "file": "assets/app-d2cac579.css",
-    "src": "resources/js/app.css"
+  "resources/js/Pages/CBT/Assessment/Dashboard/Index.svelte": {
+    "file": "assets/Index-e3aa54ac.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/dropdown.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "_Layout-2cfd6595.js",
+      "_util-f704b04e.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_index-000d58f7.js",
+      "resources/js/Pages/components/icons.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "_utils-27538abd.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Dashboard/Index.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/components/assessment_question_bank.svelte": {
+    "file": "assets/assessment_question_bank-043e60b4.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/select.svelte",
+      "_link-7d7fab16.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "resources/js/Pages/components/input.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/components/assessment_question_bank.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/components/question_bank.svelte": {
+    "file": "assets/question_bank-92ec3724.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/select.svelte",
+      "_link-7d7fab16.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "resources/js/Pages/components/input.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/components/question_bank.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/page/Create.svelte": {
+    "file": "assets/Create-84c778b6.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/components/button.svelte",
+      "_util-f704b04e.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/page/Create.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/page/Edit.svelte": {
+    "file": "assets/Edit-085b498d.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_Layout-2cfd6595.js",
+      "_util-f704b04e.js",
+      "_link-7d7fab16.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/page/Edit.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/page/Index.svelte": {
+    "file": "assets/Index-6f312901.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_Layout-2cfd6595.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/tabs.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/components/question_bank.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/components/assessment_question_bank.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/input.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/page/Index.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/assessment_question_banks.css": {
+    "file": "assets/assessment_question_banks-a0723bc1.css",
+    "src": "resources/js/Pages/CBT/Questions/components/question_bank.css"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/assessment_question_banks.svelte": {
+    "css": [
+      "assets/assessment_question_banks-a0723bc1.css"
+    ],
+    "file": "assets/assessment_question_banks-550c04a5.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/CBT/components/QuestionCard.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "resources/js/Pages/components/icons.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/assessment_question_banks.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/questions_bank.css": {
+    "file": "assets/assessment_question_banks-a0723bc1.css",
+    "src": "resources/js/Pages/CBT/Questions/components/question_bank.css"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/questions_bank.svelte": {
+    "css": [
+      "assets/assessment_question_banks-a0723bc1.css"
+    ],
+    "file": "assets/questions_bank-74930c69.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/CBT/components/QuestionCard.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/questions_bank.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/questions_list.css": {
+    "file": "assets/assessment_question_banks-a0723bc1.css",
+    "src": "resources/js/Pages/CBT/Questions/components/question_bank.css"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/questions_list.svelte": {
+    "css": [
+      "assets/assessment_question_banks-a0723bc1.css"
+    ],
+    "file": "assets/questions_list-cdb1e1f5.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/CBT/components/QuestionCard.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/questions_list.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/page/CreateSection.svelte": {
+    "file": "assets/CreateSection-c468823b.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/table.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "_util-f704b04e.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/page/CreateSection.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/page/Question.svelte": {
+    "file": "assets/Question-53001719.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/CBT/components/EditableQuestionCard.svelte",
+      "resources/js/Pages/CBT/components/CsvImportCard.svelte",
+      "resources/js/Pages/CBT/components/ImportMappingCard.svelte",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/modal.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/questions_list.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/questions_bank.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/assessment_question_banks.svelte",
+      "resources/js/Pages/components/drawer.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/CBT/components/TextEditor.svelte",
+      "resources/js/Pages/CBT/components/QuestionCard.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/page/Question.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Standalone/Create_Assessment/page/StandaloneAssessment.svelte": {
+    "file": "assets/StandaloneAssessment-ca94fc91.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "_datetimepicker.svelte_svelte_type_style_lang-ab33eabd.js",
+      "_moment-55cb88ed.js",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/layouts/top_header.svelte",
+      "resources/js/Pages/layouts/app_container.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_link-7d7fab16.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Standalone/Create_Assessment/page/StandaloneAssessment.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Standalone/Question_Bank/page/Create.svelte": {
+    "file": "assets/Create-b5253b62.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/components/button.svelte",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/input.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Standalone/Question_Bank/page/Create.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Standalone/Question_Bank/page/Index.svelte": {
+    "file": "assets/Index-453aae41.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_Layout-2cfd6595.js",
+      "_link-7d7fab16.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/table.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Standalone/Question_Bank/page/Index.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Standalone/Results/Index.svelte": {
+    "file": "assets/Index-6b2fb843.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/icons.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/components/dropdown.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "resources/js/Pages/components/input.svelte",
+      "_link-7d7fab16.js",
+      "_util-f704b04e.js",
+      "_index-000d58f7.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Standalone/Results/Index.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/Assessment.svelte": {
+    "file": "assets/Assessment-3eed07b2.js",
+    "imports": [
+      "resources/js/app.js",
+      "_link-7d7fab16.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/Assessment.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepOne.svelte": {
+    "file": "assets/TermlyStepOne-8e2acb01.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "resources/js/Pages/components/icons.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepOne.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepThree.svelte": {
+    "file": "assets/TermlyStepThree-b369c3e8.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/datetimepicker.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "_util-f704b04e.js",
+      "_datetimepicker.svelte_svelte_type_style_lang-ab33eabd.js",
+      "_moment-55cb88ed.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepThree.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepTwo.svelte": {
+    "file": "assets/TermlyStepTwo-6d468a3e.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_util-f704b04e.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepTwo.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessment.svelte": {
+    "file": "assets/TermlyAssessment-fd597b6a.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/Assessment.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepOne.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/select.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessment.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessmentClasses.svelte": {
+    "file": "assets/TermlyAssessmentClasses-df2f7980.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/Assessment.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepTwo.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessmentClasses.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessmentSchedule.svelte": {
+    "file": "assets/TermlyAssessmentSchedule-5827c40e.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/Assessment.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepThree.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/datetimepicker.svelte",
+      "_datetimepicker.svelte_svelte_type_style_lang-ab33eabd.js",
+      "_moment-55cb88ed.js",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/button.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessmentSchedule.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Termly/Manage_Assessment/components/manager.svelte": {
+    "file": "assets/manager-d353f017.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/dropdown.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_index-000d58f7.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Termly/Manage_Assessment/components/manager.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Termly/Manage_Assessment/page/Manage.svelte": {
+    "file": "assets/Manage-f0afd0d6.js",
+    "imports": [
+      "resources/js/app.js",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/CBT/Assessment/Termly/Manage_Assessment/components/manager.svelte",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/dropdown.svelte",
+      "_index-000d58f7.js",
+      "resources/js/Pages/components/button.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Termly/Manage_Assessment/page/Manage.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment/Termly/Results/page/Index.svelte": {
+    "file": "assets/Index-dd82177b.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/modal.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "_index-000d58f7.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment/Termly/Results/page/Index.svelte"
+  },
+  "resources/js/Pages/CBT/Assessment_Types/Index.svelte": {
+    "file": "assets/Index-65f1b7d4.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "_Layout-2cfd6595.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/layouts/top_header.svelte",
+      "resources/js/Pages/layouts/app_container.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Assessment_Types/Index.svelte"
+  },
+  "resources/js/Pages/CBT/CheckIn/Index.svelte": {
+    "file": "assets/Index-ff3f4cab.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/CheckIn/Index.svelte"
+  },
+  "resources/js/Pages/CBT/Exams/Complete.svelte": {
+    "file": "assets/Complete-9960a2e8.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Exams/Complete.svelte"
+  },
+  "resources/js/Pages/CBT/Exams/Standalone/page/Standalone.svelte": {
+    "file": "assets/Standalone-d9cc54e2.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/CBT/Exams/components/ExamIntro.svelte",
+      "resources/js/Pages/CBT/Exams/components/Exam.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "resources/js/Pages/CBT/components/qchip.svelte",
+      "resources/js/Pages/CBT/Exams/components/QuestionCard.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Exams/Standalone/page/Standalone.svelte"
+  },
+  "resources/js/Pages/CBT/Exams/Termly/page/Exam.svelte": {
+    "file": "assets/Exam-698da172.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/CBT/Exams/components/ExamIntro.svelte",
+      "resources/js/Pages/CBT/Exams/components/Exam.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "resources/js/Pages/CBT/components/qchip.svelte",
+      "resources/js/Pages/CBT/Exams/components/QuestionCard.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Exams/Termly/page/Exam.svelte"
+  },
+  "resources/js/Pages/CBT/Exams/Termly/page/Index.svelte": {
+    "file": "assets/Index-92c953bb.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Exams/Termly/page/Index.svelte"
+  },
+  "resources/js/Pages/CBT/Exams/components/Exam.svelte": {
+    "file": "assets/Exam-47c7a230.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/CBT/components/qchip.svelte",
+      "resources/js/Pages/CBT/Exams/components/QuestionCard.svelte",
+      "_util-f704b04e.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Exams/components/Exam.svelte"
+  },
+  "resources/js/Pages/CBT/Exams/components/ExamIntro.svelte": {
+    "file": "assets/ExamIntro-15eb8076.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Exams/components/ExamIntro.svelte"
+  },
+  "resources/js/Pages/CBT/Exams/components/QuestionCard.svelte": {
+    "file": "assets/QuestionCard-18e2fd0f.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Exams/components/QuestionCard.svelte"
+  },
+  "resources/js/Pages/CBT/Exams/page/Login.svelte": {
+    "file": "assets/Login-daa43504.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Exams/page/Login.svelte"
+  },
+  "resources/js/Pages/CBT/Questions/components/assessment_questions.css": {
+    "file": "assets/assessment_question_banks-a0723bc1.css",
+    "src": "resources/js/Pages/CBT/Questions/components/question_bank.css"
+  },
+  "resources/js/Pages/CBT/Questions/components/assessment_questions.svelte": {
+    "css": [
+      "assets/assessment_question_banks-a0723bc1.css"
+    ],
+    "file": "assets/assessment_questions-1790d1eb.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/CBT/components/QuestionCard.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Questions/components/assessment_questions.svelte"
+  },
+  "resources/js/Pages/CBT/Questions/components/assigned_questions.svelte": {
+    "file": "assets/assigned_questions-edfe66f7.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/CBT/components/QuestionCard.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Questions/components/assigned_questions.svelte"
+  },
+  "resources/js/Pages/CBT/Questions/components/question_bank.css": {
+    "file": "assets/assessment_question_banks-a0723bc1.css",
+    "src": "resources/js/Pages/CBT/Questions/components/question_bank.css"
+  },
+  "resources/js/Pages/CBT/Questions/components/question_bank.svelte": {
+    "css": [
+      "assets/assessment_question_banks-a0723bc1.css"
+    ],
+    "file": "assets/question_bank-aa997a87.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/CBT/components/QuestionCard.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Questions/components/question_bank.svelte"
+  },
+  "resources/js/Pages/CBT/Questions/page/Create.svelte": {
+    "file": "assets/Create-b0299b43.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/CBT/components/EditableQuestionCard.svelte",
+      "resources/js/Pages/CBT/Questions/components/question_bank.svelte",
+      "resources/js/Pages/CBT/Questions/components/assessment_questions.svelte",
+      "resources/js/Pages/CBT/Questions/components/assigned_questions.svelte",
+      "resources/js/Pages/CBT/components/CsvImportCard.svelte",
+      "resources/js/Pages/CBT/components/ImportMappingCard.svelte",
+      "_util-f704b04e.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/modal.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "_moment-55cb88ed.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js",
+      "resources/js/Pages/CBT/components/TextEditor.svelte",
+      "resources/js/Pages/CBT/components/QuestionCard.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Questions/page/Create.svelte"
+  },
+  "resources/js/Pages/CBT/Teacher/Dashboard/page/Dashboard.svelte": {
+    "file": "assets/Dashboard-08663f78.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/dropdown.svelte",
+      "resources/js/Pages/CBT/Teacher/components/layout.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "_link-7d7fab16.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/input.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_index-000d58f7.js",
+      "resources/js/Pages/components/icons.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Teacher/Dashboard/page/Dashboard.svelte"
+  },
+  "resources/js/Pages/CBT/Teacher/Question_Banks/page/CreateQuestions.svelte": {
+    "file": "assets/CreateQuestions-8c8bed31.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Teacher/Question_Banks/page/CreateQuestions.svelte"
+  },
+  "resources/js/Pages/CBT/Teacher/Question_Banks/page/QuestionBankClasses.svelte": {
+    "file": "assets/QuestionBankClasses-c6a8dd92.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Teacher/Question_Banks/page/QuestionBankClasses.svelte"
+  },
+  "resources/js/Pages/CBT/Teacher/Question_Banks/page/QuestionBankSections.svelte": {
+    "file": "assets/QuestionBankSections-c5850e57.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Teacher/Question_Banks/page/QuestionBankSections.svelte"
+  },
+  "resources/js/Pages/CBT/Teacher/Question_Banks/page/QuestionsIndex.svelte": {
+    "file": "assets/QuestionsIndex-2eb826f4.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Teacher/Question_Banks/page/QuestionsIndex.svelte"
+  },
+  "resources/js/Pages/CBT/Teacher/Subjects/page/Subjects.svelte": {
+    "file": "assets/Subjects-2a890b9a.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/CBT/Teacher/components/layout.svelte",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Teacher/Subjects/page/Subjects.svelte"
+  },
+  "resources/js/Pages/CBT/Teacher/Topics/page/SubjectTopics.svelte": {
+    "file": "assets/SubjectTopics-0595d526.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/dropdown.svelte",
+      "resources/js/Pages/CBT/Teacher/components/layout.svelte",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_index-000d58f7.js",
+      "_link-7d7fab16.js",
+      "_utils-27538abd.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Teacher/Topics/page/SubjectTopics.svelte"
+  },
+  "resources/js/Pages/CBT/Teacher/components/layout.svelte": {
+    "file": "assets/layout-f16eab42.js",
+    "imports": [
+      "resources/js/app.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_util-f704b04e.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/Teacher/components/layout.svelte"
+  },
+  "resources/js/Pages/CBT/components/CsvImportCard.svelte": {
+    "file": "assets/CsvImportCard-44751b91.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/components/CsvImportCard.svelte"
+  },
+  "resources/js/Pages/CBT/components/EditableQuestionCard.svelte": {
+    "file": "assets/EditableQuestionCard-ad1f884f.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/icons.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/CBT/components/TextEditor.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "resources/js/Pages/components/button.svelte",
+      "_index-000d58f7.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/components/EditableQuestionCard.svelte"
+  },
+  "resources/js/Pages/CBT/components/ImportMappingCard.svelte": {
+    "file": "assets/ImportMappingCard-fe510981.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/components/ImportMappingCard.svelte"
+  },
+  "resources/js/Pages/CBT/components/QuestionCard.svelte": {
+    "file": "assets/QuestionCard-23157eeb.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/components/QuestionCard.svelte"
+  },
+  "resources/js/Pages/CBT/components/TextEditor.svelte": {
+    "file": "assets/TextEditor-45bc4bcb.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/icons.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "_index-000d58f7.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/components/TextEditor.svelte"
+  },
+  "resources/js/Pages/CBT/components/qchip.svelte": {
+    "file": "assets/qchip-5bb5e704.js",
+    "imports": [
+      "resources/js/app.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/CBT/components/qchip.svelte"
+  },
+  "resources/js/Pages/Dashboard/Index.svelte": {
+    "file": "assets/Index-434361fe.js",
+    "imports": [
+      "resources/js/app.js",
+      "_Layout-2cfd6595.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_util-f704b04e.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Dashboard/Index.svelte"
+  },
+  "resources/js/Pages/Index.svelte": {
+    "file": "assets/Index-6e7aee10.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/Timeline.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Index.svelte"
+  },
+  "resources/js/Pages/ResultManager/Template/page/Index.svelte": {
+    "file": "assets/Index-e0e394dc.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/layouts/top_header.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/layouts/app_container.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_util-f704b04e.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/ResultManager/Template/page/Index.svelte"
+  },
+  "resources/js/Pages/ResultManager/Upload/pages/Index.svelte": {
+    "file": "assets/Index-2bdbc90e.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/layouts/top_header.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/layouts/app_container.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_util-f704b04e.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/ResultManager/Upload/pages/Index.svelte"
+  },
+  "resources/js/Pages/ResultManager/Upload/pages/Upload.svelte": {
+    "file": "assets/Upload-b84f3bac.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/layouts/top_header.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_util-f704b04e.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/ResultManager/Upload/pages/Upload.svelte"
+  },
+  "resources/js/Pages/SchoolManager/Classes/Index.svelte": {
+    "file": "assets/Index-3bd38510.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "_Layout-2cfd6595.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/dropdown.svelte",
+      "resources/js/Pages/layouts/top_header.svelte",
+      "resources/js/Pages/layouts/app_container.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js",
+      "_link-7d7fab16.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/SchoolManager/Classes/Index.svelte"
+  },
+  "resources/js/Pages/SchoolManager/Sessions/page/Index.svelte": {
+    "file": "assets/Index-b941ff63.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "_Layout-2cfd6595.js",
+      "_util-f704b04e.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/SchoolManager/Sessions/page/Index.svelte"
+  },
+  "resources/js/Pages/SchoolManager/Sessions/page/Session.svelte": {
+    "file": "assets/Session-20ff20b3.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/layouts/top_header.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/layouts/app_container.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "resources/js/Pages/components/dropdown.svelte",
+      "resources/js/Pages/components/drawer.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/input.svelte",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/SchoolManager/Sessions/page/Session.svelte"
+  },
+  "resources/js/Pages/SchoolManager/Students/Create.svelte": {
+    "file": "assets/Create-d71bd24c.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/select.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "resources/js/Pages/components/icons.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/SchoolManager/Students/Create.svelte"
+  },
+  "resources/js/Pages/SchoolManager/Students/Index.svelte": {
+    "file": "assets/Index-b35afb76.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/components/dropdown.svelte",
+      "resources/js/Pages/CBT/components/CsvImportCard.svelte",
+      "resources/js/Pages/components/importmapper.svelte",
+      "resources/js/Pages/layouts/top_header.svelte",
+      "resources/js/Pages/layouts/app_container.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js",
+      "_link-7d7fab16.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/SchoolManager/Students/Index.svelte"
+  },
+  "resources/js/Pages/SchoolManager/Subjects/Index.svelte": {
+    "file": "assets/Index-98bc8649.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "_Layout-2cfd6595.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/layouts/top_header.svelte",
+      "resources/js/Pages/layouts/app_container.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/SchoolManager/Subjects/Index.svelte"
+  },
+  "resources/js/Pages/SchoolManager/Teachers/Index.svelte": {
+    "file": "assets/Index-5d1df086.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "_Layout-2cfd6595.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/dropdown.svelte",
+      "resources/js/Pages/layouts/top_header.svelte",
+      "resources/js/Pages/layouts/app_container.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_link-7d7fab16.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/SchoolManager/Teachers/Index.svelte"
+  },
+  "resources/js/Pages/SchoolManager/Terms/Index.svelte": {
+    "file": "assets/Index-b3877bbd.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "_Layout-2cfd6595.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/layouts/top_header.svelte",
+      "resources/js/Pages/layouts/app_container.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js",
+      "_link-7d7fab16.js",
+      "resources/js/Pages/components/icons.svelte"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/SchoolManager/Terms/Index.svelte"
+  },
+  "resources/js/Pages/Timeline.svelte": {
+    "file": "assets/Timeline-579c4803.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Timeline.svelte"
+  },
+  "resources/js/Pages/UserManager/Auth/Login.svelte": {
+    "file": "assets/Login-8970a960.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js",
+      "resources/js/Pages/components/button.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/UserManager/Auth/Login.svelte"
+  },
+  "resources/js/Pages/UserManager/Auth/TwoFactorAuthentication.svelte": {
+    "file": "assets/TwoFactorAuthentication-35168d22.js",
+    "imports": [
+      "resources/js/app.js",
+      "_util-f704b04e.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/UserManager/Auth/TwoFactorAuthentication.svelte"
+  },
+  "resources/js/Pages/components/button.svelte": {
+    "file": "assets/button-8a7fdb21.js",
+    "imports": [
+      "resources/js/app.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/button.svelte"
+  },
+  "resources/js/Pages/components/checkbox.svelte": {
+    "file": "assets/checkbox-bd76dcd8.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/checkbox.svelte"
+  },
+  "resources/js/Pages/components/data_table.svelte": {
+    "file": "assets/data_table-2f3c9d25.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/input.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/data_table.svelte"
+  },
+  "resources/js/Pages/components/datetimepicker.svelte": {
+    "file": "assets/datetimepicker-01bf0f43.js",
+    "imports": [
+      "resources/js/app.js",
+      "_datetimepicker.svelte_svelte_type_style_lang-ab33eabd.js",
+      "_moment-55cb88ed.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/datetimepicker.svelte"
+  },
+  "resources/js/Pages/components/drawer.css": {
+    "file": "assets/drawer-a299fe62.css",
+    "src": "resources/js/Pages/components/drawer.css"
+  },
+  "resources/js/Pages/components/drawer.svelte": {
+    "css": [
+      "assets/drawer-a299fe62.css"
+    ],
+    "file": "assets/drawer-5c10bba6.js",
+    "imports": [
+      "resources/js/app.js",
+      "_utils-27538abd.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/drawer.svelte"
+  },
+  "resources/js/Pages/components/dropdown.svelte": {
+    "file": "assets/dropdown-c4477011.js",
+    "imports": [
+      "resources/js/app.js",
+      "_index-000d58f7.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/dropdown.svelte"
+  },
+  "resources/js/Pages/components/icon_button.svelte": {
+    "file": "assets/icon_button-a8e30f9e.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/icon_button.svelte"
+  },
+  "resources/js/Pages/components/icons.svelte": {
+    "file": "assets/icons-c5a046aa.js",
+    "imports": [
+      "resources/js/app.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/icons.svelte"
+  },
+  "resources/js/Pages/components/importmapper.svelte": {
+    "file": "assets/importmapper-864373ab.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/importmapper.svelte"
+  },
+  "resources/js/Pages/components/input.svelte": {
+    "file": "assets/input-694295df.js",
+    "imports": [
+      "resources/js/app.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/input.svelte"
+  },
+  "resources/js/Pages/components/modal.svelte": {
+    "file": "assets/modal-f0199d0f.js",
+    "imports": [
+      "resources/js/app.js",
+      "_index-000d58f7.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/modal.svelte"
+  },
+  "resources/js/Pages/components/select.svelte": {
+    "file": "assets/select-5f1b2e78.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/components/icons.svelte",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/select.svelte"
+  },
+  "resources/js/Pages/components/slide_panel.svelte": {
+    "file": "assets/slide_panel-2bd9836d.js",
+    "imports": [
+      "resources/js/app.js",
+      "_utils-27538abd.js",
+      "_index-000d58f7.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/slide_panel.svelte"
+  },
+  "resources/js/Pages/components/table.svelte": {
+    "file": "assets/table-b865601d.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/table.svelte"
+  },
+  "resources/js/Pages/components/tabs.svelte": {
+    "file": "assets/tabs-728cf370.js",
+    "imports": [
+      "resources/js/app.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/components/tabs.svelte"
+  },
+  "resources/js/Pages/layouts/app_container.svelte": {
+    "file": "assets/app_container-a54f34ce.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/layouts/app_container.svelte"
+  },
+  "resources/js/Pages/layouts/top_header.svelte": {
+    "file": "assets/top_header-1e968582.js",
+    "imports": [
+      "resources/js/app.js",
+      "_utils-4fba9a6a.js",
+      "_tw-merge-0f2443f8.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/layouts/top_header.svelte"
   },
   "resources/js/app.js": {
-    "css": [
-      "assets/app-d2cac579.css"
-    ],
     "dynamicImports": [
-      "node_modules/html2canvas/dist/html2canvas.esm.js",
-      "node_modules/dompurify/dist/purify.es.js",
-      "node_modules/canvg/lib/index.es.js"
+      "resources/js/Pages/CBT/Assessment/Dashboard/Index.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/components/assessment_question_bank.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/components/question_bank.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/page/Create.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/page/Edit.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/Termly/page/Index.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/assessment_question_banks.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/questions_bank.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/components/questions_list.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/page/CreateSection.svelte",
+      "resources/js/Pages/CBT/Assessment/QuestionsManager/shared/page/Question.svelte",
+      "resources/js/Pages/CBT/Assessment/Standalone/Create_Assessment/page/StandaloneAssessment.svelte",
+      "resources/js/Pages/CBT/Assessment/Standalone/Question_Bank/page/Create.svelte",
+      "resources/js/Pages/CBT/Assessment/Standalone/Question_Bank/page/Index.svelte",
+      "resources/js/Pages/CBT/Assessment/Standalone/Results/Index.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/Assessment.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepOne.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepThree.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/components/TermlyStepTwo.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessment.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessmentClasses.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessmentSchedule.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Manage_Assessment/components/manager.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Manage_Assessment/page/Manage.svelte",
+      "resources/js/Pages/CBT/Assessment/Termly/Results/page/Index.svelte",
+      "_Result-6c4c1468.js",
+      "resources/js/Pages/CBT/Assessment_Types/Index.svelte",
+      "resources/js/Pages/CBT/CheckIn/Index.svelte",
+      "resources/js/Pages/CBT/Exams/Complete.svelte",
+      "resources/js/Pages/CBT/Exams/Standalone/page/Standalone.svelte",
+      "resources/js/Pages/CBT/Exams/Termly/page/Exam.svelte",
+      "resources/js/Pages/CBT/Exams/Termly/page/Index.svelte",
+      "resources/js/Pages/CBT/Exams/components/Exam.svelte",
+      "resources/js/Pages/CBT/Exams/components/ExamIntro.svelte",
+      "resources/js/Pages/CBT/Exams/components/QuestionCard.svelte",
+      "resources/js/Pages/CBT/Exams/page/Login.svelte",
+      "resources/js/Pages/CBT/Questions/components/assessment_questions.svelte",
+      "resources/js/Pages/CBT/Questions/components/assigned_questions.svelte",
+      "resources/js/Pages/CBT/Questions/components/question_bank.svelte",
+      "resources/js/Pages/CBT/Questions/page/Create.svelte",
+      "resources/js/Pages/CBT/Teacher/Dashboard/page/Dashboard.svelte",
+      "resources/js/Pages/CBT/Teacher/Question_Banks/page/CreateQuestions.svelte",
+      "resources/js/Pages/CBT/Teacher/Question_Banks/page/QuestionBankClasses.svelte",
+      "resources/js/Pages/CBT/Teacher/Question_Banks/page/QuestionBankSections.svelte",
+      "resources/js/Pages/CBT/Teacher/Question_Banks/page/QuestionsIndex.svelte",
+      "resources/js/Pages/CBT/Teacher/Subjects/page/Subjects.svelte",
+      "resources/js/Pages/CBT/Teacher/Topics/page/SubjectTopics.svelte",
+      "resources/js/Pages/CBT/Teacher/components/layout.svelte",
+      "resources/js/Pages/CBT/components/CsvImportCard.svelte",
+      "resources/js/Pages/CBT/components/EditableQuestionCard.svelte",
+      "resources/js/Pages/CBT/components/ImportMappingCard.svelte",
+      "resources/js/Pages/CBT/components/QuestionCard.svelte",
+      "resources/js/Pages/CBT/components/TextEditor.svelte",
+      "resources/js/Pages/CBT/components/qchip.svelte",
+      "resources/js/Pages/Dashboard/Index.svelte",
+      "resources/js/Pages/Index.svelte",
+      "resources/js/Pages/ResultManager/Template/page/Index.svelte",
+      "resources/js/Pages/ResultManager/Upload/pages/Index.svelte",
+      "resources/js/Pages/ResultManager/Upload/pages/Upload.svelte",
+      "resources/js/Pages/SchoolManager/Classes/Index.svelte",
+      "resources/js/Pages/SchoolManager/Sessions/page/Index.svelte",
+      "resources/js/Pages/SchoolManager/Sessions/page/Session.svelte",
+      "resources/js/Pages/SchoolManager/Students/Create.svelte",
+      "resources/js/Pages/SchoolManager/Students/Index.svelte",
+      "resources/js/Pages/SchoolManager/Subjects/Index.svelte",
+      "resources/js/Pages/SchoolManager/Teachers/Index.svelte",
+      "resources/js/Pages/SchoolManager/Terms/Index.svelte",
+      "resources/js/Pages/Timeline.svelte",
+      "resources/js/Pages/UserManager/Auth/Login.svelte",
+      "resources/js/Pages/UserManager/Auth/TwoFactorAuthentication.svelte",
+      "resources/js/Pages/components/button.svelte",
+      "resources/js/Pages/components/checkbox.svelte",
+      "resources/js/Pages/components/data_table.svelte",
+      "resources/js/Pages/components/datetimepicker.svelte",
+      "resources/js/Pages/components/drawer.svelte",
+      "resources/js/Pages/components/dropdown.svelte",
+      "resources/js/Pages/components/icon_button.svelte",
+      "resources/js/Pages/components/icons.svelte",
+      "resources/js/Pages/components/importmapper.svelte",
+      "resources/js/Pages/components/input.svelte",
+      "resources/js/Pages/components/modal.svelte",
+      "resources/js/Pages/components/select.svelte",
+      "resources/js/Pages/components/slide_panel.svelte",
+      "resources/js/Pages/components/table.svelte",
+      "resources/js/Pages/components/tabs.svelte",
+      "_Layout-2cfd6595.js",
+      "resources/js/Pages/layouts/app_container.svelte",
+      "resources/js/Pages/layouts/top_header.svelte"
     ],
-    "file": "assets/app-4505a7e5.js",
+    "file": "assets/app-6d9f305e.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

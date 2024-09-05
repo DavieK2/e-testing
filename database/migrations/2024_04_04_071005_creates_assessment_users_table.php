@@ -10,10 +10,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('assessment_users', function(Blueprint $table){
+            
+            $table->ulid('uuid')->unique()->index();
+            $table->foreignUlid('user_id')->constrained( table: 'users', column: 'uuid');
+            $table->foreignUlid('assessment_id')->constrained( table: 'assessments', column: 'uuid');
 
-            $table->ulid('uuid');
-            $table->foreignUlid('user_id')->nullable()->constrained('users', 'uuid')->onDelete('set null');
-            $table->foreignUlid('assessment_id')->nullable()->constrained('assessments', 'uuid')->onDelete('set null');
+            $table->unique(['user_id', 'assessment_id']);
+            $table->boolean('is_synced')->default(false);
         });
     }
 

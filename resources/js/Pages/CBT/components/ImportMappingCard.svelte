@@ -22,12 +22,12 @@
 
 </script>
 
-<div class="flex flex-col px-3 pb-5">
-    <div class="flex items-center space-x-3 mb-5 py-5">
+<div class="flex flex-col pb-6 w-[40rem]">
+    <div class="flex items-center space-x-3 mb-8">
         <button on:click={ () => dispatch('back-button') }>
             <Icons icon="back_arrow" />
         </button>
-        <h1 class="font-bold text-lg text-gray-800">Map Questions</h1>
+        <h1 class="font-bold text-2xl text-gray-800">Map Questions</h1>
     </div>
     <div class="flex space-y-4 flex-col px-6 pt-6 pb-12 border-t border-e border-x rounded-t-lg">
         <Select on:selected={ (e) => selectSection(e.detail.value) } on:deselected={ (e) => dispatch('de-section', { value: null }) } options={ sections } className="text-sm py-2.5" placeholder="Select Section" label="Select Section" labelStyle="font-semibold text-sm text-gray-800" />

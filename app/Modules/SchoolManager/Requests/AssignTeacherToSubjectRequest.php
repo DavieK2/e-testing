@@ -2,9 +2,9 @@
 
 namespace App\Modules\SchoolManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class AssignTeacherToSubjectRequest extends FormRequest
+class AssignTeacherToSubjectRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -14,9 +14,8 @@ class AssignTeacherToSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'teacherId'             => 'required|exists:users,uuid',
-            'subjects'              => 'required|array',
-            'subjects.*.subjectId'  => 'required|exists:subjects,uuid',
+            'subjects'    => 'required|array',
+            'subjects.*'  => 'required|exists:subjects,uuid',
         ];
     }
 }

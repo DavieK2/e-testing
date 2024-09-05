@@ -4,10 +4,10 @@ namespace App\Modules\CBT\Requests;
 
 use App\Modules\SchoolManager\Models\ClassModel;
 use App\Modules\SchoolManager\Models\SubjectModel;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
-class MassAssignQuestionsRequest extends FormRequest
+class MassAssignQuestionsRequest extends BaseRequest
 {
     public function authorize()
     {

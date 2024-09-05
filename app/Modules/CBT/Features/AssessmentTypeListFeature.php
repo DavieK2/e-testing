@@ -4,21 +4,21 @@ namespace App\Modules\CBT\Features;
 
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
-use App\Modules\CBT\Tasks\AssessmentTypeListTasks;
+use App\Modules\CBT\Tasks\AssessmentTypeTasks;
 
 class AssessmentTypeListFeature extends FeatureContract {
 
     public function __construct(){
-        $this->tasks = new AssessmentTypeListTasks();
+        $this->tasks = new AssessmentTypeTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle( BaseTasks|AssessmentTypeTasks $task, array $args = [] )
     {
         try {
 
-            $builder = $task->start($args)->getTypes()->all();
-
-            return $task::formatResponse($builder);
+            return $task->getTypes()
+                        ->all()
+                        ->formatResponse();
 
         } catch (\Throwable $th) {
             

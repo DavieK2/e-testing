@@ -2,9 +2,9 @@
 
 namespace App\Modules\SchoolManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class UpdateStudentProfileRequest extends FormRequest
+class UpdateStudentProfileRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -14,11 +14,10 @@ class UpdateStudentProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'studentId'     => 'required|exists:student_profiles,uuid',
             'firstName'      => 'required|string',
-            'studentCode'   => 'nullable|string',
             'surname'       => 'required|string',
             'classId'       => 'required|exists:classes,uuid',
+            'studentCode'   => 'nullable|string',
             'profilePic'     => 'nullable|string'
         ];
     }

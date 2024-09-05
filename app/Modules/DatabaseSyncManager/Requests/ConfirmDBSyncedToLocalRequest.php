@@ -2,9 +2,9 @@
 
 namespace App\Modules\DatabaseSyncManager\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class ConfirmDBSyncedToLocalRequest extends FormRequest
+class ConfirmDBSyncedToLocalRequest extends BaseRequest
 {
     public function authorize()
     {

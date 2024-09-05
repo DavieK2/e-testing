@@ -10,11 +10,11 @@
             <thead class="bg-gray-100">
               <tr class="">
                 { #each headings as heading }
-                    <th scope="col" class="px-4 py-3 text-left text-sm font-bold text-gray-500 uppercase">{ heading }</th>
+                    <th scope="col" class="px-4 py-3 text-left text-xs font-extrabold text-gray-700 uppercase">{ heading }</th>
                 {/each}
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-600">
                 <slot></slot>
             </tbody>
           </table>

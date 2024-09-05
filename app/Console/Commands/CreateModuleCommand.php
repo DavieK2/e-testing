@@ -19,7 +19,8 @@ class CreateModuleCommand extends BaseModuleCommand
         'Requests',
         'Resources',
         'Tasks',
-        'Jobs'
+        'Jobs',
+        'Facades'
     ];
 
     public function handle()

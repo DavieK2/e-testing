@@ -59,8 +59,12 @@ class ImportQuestionsTask extends BaseTasks{
 
                 if( is_array($map) ) {
 
-                    foreach($map as $value){
-                        $options[ trim( strtolower($value) ) ] = trim( $row[$value] );
+                    foreach( $map as $value ){
+
+                        $value = preg_replace('/[\t\n\r\0\x0B\xc2\xa0]/', '', $value);
+
+                        $options[ trim( strtolower($value) ) ] = trim( preg_replace('/[\t\n\r\0\x0B\xc2\xa0]/', '', $row[$value]) );  
+
                     }
                 }
 
@@ -71,8 +75,9 @@ class ImportQuestionsTask extends BaseTasks{
                 ];
 
             })->toArray();
-            
+                        
             $data['correctAnswer'] = $data['options'][ strtolower( $data['correctAnswer'] ?? '' ) ] ?? null;
+
 
             $validator = Validator::make($data, [
                 'question'          => 'required',

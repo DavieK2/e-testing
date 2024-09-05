@@ -3,9 +3,9 @@
 namespace App\Modules\CBT\Requests;
 
 use App\Modules\CBT\Models\QuestionModel;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class CreateSectionRequest extends FormRequest
+class CreateSectionRequest extends BaseRequest
 {
     public function authorize()
     {

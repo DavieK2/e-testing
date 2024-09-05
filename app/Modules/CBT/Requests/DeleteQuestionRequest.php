@@ -2,9 +2,9 @@
 
 namespace App\Modules\CBT\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class DeleteQuestionRequest extends FormRequest
+class DeleteQuestionRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -15,6 +15,7 @@ class DeleteQuestionRequest extends FormRequest
     {
         return [
             'questionIds'   => 'required|array',
+            'questionIds.*' => 'exists:questions,uuid',
             'assessmentId'  => 'required|exists:assessments,uuid'
         ];
     }

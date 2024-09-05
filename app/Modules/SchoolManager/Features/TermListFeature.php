@@ -4,21 +4,21 @@ namespace App\Modules\SchoolManager\Features;
 
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
-use App\Modules\SchoolManager\Tasks\TermListTasks;
+use App\Modules\SchoolManager\Tasks\TermTasks;
 
 class TermListFeature extends FeatureContract {
 
     public function __construct(){
-        $this->tasks = new TermListTasks();
+        $this->tasks = new TermTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|TermTasks $task, array $args = [])
     {
        try {
 
-            $builder = $task->start($args)->getTerms()->all();
-
-            return $task::formatResponse($builder);
+            return $task->getTerms()
+                        ->all()
+                        ->formatResponse();
             
        } catch (\Throwable $th) {
             throw $th;

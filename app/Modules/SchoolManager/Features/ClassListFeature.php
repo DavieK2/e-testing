@@ -4,21 +4,19 @@ namespace App\Modules\SchoolManager\Features;
 
 use App\Contracts\BaseTasks;
 use App\Contracts\FeatureContract;
-use App\Modules\SchoolManager\Tasks\ClassListTasks;
+use App\Modules\SchoolManager\Tasks\ClassTasks;
 
 class ClassListFeature extends FeatureContract {
 
     public function __construct(){
-        $this->tasks = new ClassListTasks();
+        $this->tasks = new ClassTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|ClassTasks $task, array $args = [])
     {
        try {
 
-            $builder = $task->start($args)->getClasses()->all();
-
-            return $task::formatResponse( $builder );
+            return $task->getClasses()->all()->formatResponse();
 
        } catch (\Throwable $th) {
 

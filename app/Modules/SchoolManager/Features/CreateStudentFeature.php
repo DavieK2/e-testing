@@ -12,13 +12,15 @@ class CreateStudentFeature extends FeatureContract {
         $this->tasks = new CreateStudentTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|CreateStudentTasks $task, array $args = [])
     {
         try {
             
-            $builder = $task->start($args)->createStudent();
-
-            return $task::formatResponse( $builder->empty() );
+            return $task->withParameters($args)->createStudent()->empty()->formatResponse(
+                options: [
+                    'message' => 'Student Added Successfully'
+                ]
+            );
 
         } catch (\Throwable $th) {
 

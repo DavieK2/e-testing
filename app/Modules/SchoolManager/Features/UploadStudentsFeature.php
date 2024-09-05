@@ -12,13 +12,13 @@ class UploadStudentsFeature extends FeatureContract {
         $this->tasks = new CreateStudentTasks();
     }
     
-    public function handle(BaseTasks $task, array $args = [])
+    public function handle(BaseTasks|CreateStudentTasks $task, array $args = [])
     {
         try {
             
-            $builder = $task->start($args)->uploadCSV();
-
-            return $task::formatResponse( $builder );
+            return $task->withParameters($args)
+                        ->uploadCSV()
+                        ->formatResponse();
 
        } catch (\Throwable $th) {
         

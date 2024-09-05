@@ -4,6 +4,7 @@ namespace App\Modules\CBT\Resources;
 
 use App\Http\Resources\BaseResource;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AssessmentListResource extends BaseResource
 {
@@ -12,7 +13,7 @@ class AssessmentListResource extends BaseResource
         return [
             'assessmentId' => $this->uuid,
             'isStandalone' => $this->is_standalone ? 'Quiz' : 'Exam',
-            'title' => $this->title,
+            'title' => Str::headline($this->title),
             'assessment_code' => $this->assessment_code,
             'assessmentType' => $this->type,
             'session' => $this->session ? $this->session : '',
