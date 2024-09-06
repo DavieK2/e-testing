@@ -17,7 +17,7 @@ A comprehensive application for managing assessments and tests. This project is 
 
 ## 🛠️ Tech Stack
 
-- **Backend**: PHP, Laravel, Python
+- **Backend**: PHP, Laravel, Python, NodeJS
 - **Frontend**: Inertia, TailwindCSS, Svelte
-- **Environment**: NodeJS, Docker
+- **Environment**: Docker
 - **Database**: MySQL, Redis
