@@ -17,6 +17,7 @@ RUN  apt-get update && apt-get install -y \
      git-all \
      libzip-dev \
      supervisor \ 
+     poppler-utils \
      python3 \
      python3-venv \
      python3-pip

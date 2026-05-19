@@ -132,8 +132,8 @@
 
 </script>
 
-<div class="container my-12 space-x-10">
-    <div class="shadow bg-white px-8 py-12 rounded-lg w-full">
+
+    <div class="shadow bg-white px-8 py-12 rounded-lg w-full mt-10">
         <div class="mx-auto max-w-4xl">
             <div class="flex items-center justify-between my-2 border-b border-gray-50 pb-8">
                 <div class="space-y-2">
@@ -214,4 +214,3 @@
         </div>
         
     </div>
-</div>

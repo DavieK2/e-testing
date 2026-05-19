@@ -16,7 +16,7 @@ Route::get('/assessments/quiz/question-manager/create/{assessment:uuid}', fn(Ass
 
 
 //Termly Assessments
-Route::get('/assessments/termly', fn() => Inertia::render('CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessment') );
-Route::get('/assessments/termly/classes/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessmentClasses', ['assessmentId' => $assessment->uuid, 'title' => Str::headline($assessment->title) ]) );
-Route::get('/assessments/termly/schedule/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Assessment/Termly/Create_Assessment/page/TermlyAssessmentSchedule', ['assessmentId' => $assessment->uuid, 'title' => Str::headline($assessment->title) ]) );
-Route::get('/assessments/termly/manage/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/Assessment/Termly/Manage_Assessment/page/Manage', ['assessmentId' => $assessment->uuid, 'assessmentTitle' => Str::headline($assessment->title) ]) );
+Route::get('/assessments/termly', fn() => Inertia::render('CBT/AssessmentManager/Exam/Create_Assessment/page/TermlyAssessment') );
+Route::get('/assessments/termly/classes/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/AssessmentManager/Exam/Create_Assessment/page/TermlyAssessmentClasses', ['assessmentId' => $assessment->uuid, 'title' => Str::headline($assessment->title) ]) );
+Route::get('/assessments/termly/schedule/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/AssessmentManager/Exam/Create_Assessment/page/TermlyAssessmentSchedule', ['assessmentId' => $assessment->uuid, 'title' => Str::headline($assessment->title) ]) );
+Route::get('/assessments/termly/manage/{assessment:uuid}', fn(AssessmentModel $assessment) => Inertia::render('CBT/AssessmentManager/Exam/Manage_Assessment/page/Manage', ['assessmentId' => $assessment->uuid, 'assessmentTitle' => Str::headline($assessment->title) ]) );

@@ -73,7 +73,7 @@ abstract class BaseModuleCommand extends Command
             'notification' => base_path('stubs/notification.stub'),
         };
 
-        if( ! file_exists(app_path($classPath)) ){
+        if( ! file_exists( app_path($classPath) ) ){
 
             mkdir( app_path($classPath), recursive: true );
         }

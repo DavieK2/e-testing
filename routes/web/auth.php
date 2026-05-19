@@ -5,7 +5,7 @@ use App\Modules\UserManager\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Route::get('adminer/login', fn() => Inertia::render(UserManagerConstants::LOGIN_VIEW));
+Route::get('adminer/login', fn() => Inertia::render('UserManager/Auth/Login') );
 
 // Route::get('teacher/login', fn() => Inertia::render(UserManagerConstants::LOGIN_VIEW));
 
