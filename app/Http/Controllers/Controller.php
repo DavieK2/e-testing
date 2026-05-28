@@ -17,4 +17,4 @@ class Controller extends BaseController
     {
         return $feature->handle($feature->tasks, $data);
     }
-}÷"
+}

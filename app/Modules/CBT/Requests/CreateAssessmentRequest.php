@@ -2,7 +2,6 @@
 
 namespace App\Modules\CBT\Requests;
 
-use App\Modules\CBT\Constants\CBTConstants;
 use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
